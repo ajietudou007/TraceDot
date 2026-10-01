@@ -49,13 +49,13 @@
 ## 🚀 快速开始
 
 > **本仓库已开通在线访问**：官网 <https://ajietudou007.github.io/TraceDot/>（自动进入官网），
-> 直接使用应用：<https://ajietudou007.github.io/TraceDot/release/迹点点-V4.0.3-行程地图.html>
+> 直接使用应用：<https://ajietudou007.github.io/TraceDot/release/TraceDot-V4.0.3.html>
 
 本项目是**零构建、零运行时依赖的单文件应用**，无需安装任何包。
 
 ### 方式一：直接打开
 
-下载 `release/迹点点-V4.0.3-行程地图.html` 后用现代浏览器双击打开即可使用。
+下载 `release/TraceDot-V4.0.3.html` 后用现代浏览器双击打开即可使用。
 
 ### 方式二：本地服务（推荐）
 
@@ -84,7 +84,7 @@ python3 -m http.server 8080
 ├── website/
 │   └── index.html               # 官方网站（苹果风格，纯静态单文件）
 └── release/
-    └── 迹点点-V4.0.3-行程地图.html   # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
+    └── TraceDot-V4.0.3.html        # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
 ```
 
 ## 🛠 技术实现
