@@ -48,6 +48,9 @@
 
 ## 🚀 快速开始
 
+> **本仓库已开通在线访问**：官网 <https://ajietudou007.github.io/TraceDot/>（自动进入官网），
+> 直接使用应用：<https://ajietudou007.github.io/TraceDot/release/迹点点-V4.0.3-行程地图.html>
+
 本项目是**零构建、零运行时依赖的单文件应用**，无需安装任何包。
 
 ### 方式一：直接打开
