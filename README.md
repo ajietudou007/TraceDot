@@ -48,8 +48,8 @@
 
 ## 🚀 快速开始
 
-> **本仓库已开通在线访问**：官网 <https://ajietudou007.github.io/TraceDot/>（自动进入官网），
-> 直接使用应用：<https://ajietudou007.github.io/TraceDot/release/TraceDot-V4.0.3.html>
+> **在线访问**：官网 <https://jidiandian.eu.cc>（Cloudflare 托管）· 备用线路：<https://ajietudou007.github.io/TraceDot/>，
+> 直接使用应用：<https://jidiandian.eu.cc/release/TraceDot-V4.0.3.html>
 
 本项目是**零构建、零运行时依赖的单文件应用**，无需安装任何包。
 
