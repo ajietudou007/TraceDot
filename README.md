@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🧳 迹点点 · 行程地图 V4.0.7
+# 🧳 迹点点 · 行程地图 V4.0.8
 
 *纯前端 · 单文件 · 零框架 · 数据不出浏览器*
 
@@ -49,13 +49,13 @@
 ## 🚀 快速开始
 
 > **在线访问**：官网 <https://jidiandian.top>（Cloudflare 托管）· 备用线路：<https://ajietudou007.github.io/TraceDot/>，
-> 直接使用应用：<https://jidiandian.top/release/TraceDot-V4.0.7.html>
+> 直接使用应用：<https://jidiandian.top/release/TraceDot-V4.0.8.html>
 
 本项目是**零构建、零运行时依赖的单文件应用**，无需安装任何包。
 
 ### 方式一：直接打开
 
-下载 `release/TraceDot-V4.0.7.html` 后用现代浏览器双击打开即可使用。
+下载 `release/TraceDot-V4.0.8.html` 后用现代浏览器双击打开即可使用。
 
 ### 方式二：本地服务（推荐）
 
@@ -76,7 +76,7 @@ python3 -m http.server 8080
 ```text
 迹点点v4/
 ├── README.md                    # 本文件
-├── CHANGELOG.md                 # 全量版本日志（前身项目 V4.0 → 迹点点 V4.0.7）
+├── CHANGELOG.md                 # 全量版本日志（前身项目 V4.0 → 迹点点 V4.0.8）
 ├── CREDITS.md                   # 开源项目 / 数据源 / 云服务 / 开发平台与工具
 ├── LICENSE                      # MIT（含第三方组件许可声明）
 ├── docs/
@@ -84,7 +84,7 @@ python3 -m http.server 8080
 ├── website/
 │   └── index.html               # 官方网站（苹果风格，纯静态单文件）
 └── release/
-    ├── TraceDot-V4.0.7.html        # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
+    ├── TraceDot-V4.0.8.html        # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
     ├── TraceDot-V4.0.4.html        # 上一版本快照
     └── TraceDot-V4.0.3.html        # 历史版本快照
 ```
@@ -119,7 +119,7 @@ python3 -m http.server 8080
 
 ## 📋 版本日志
 
-完整修改记录见 [CHANGELOG.md](CHANGELOG.md)——涵盖前身项目「12306 火车票票根编辑器」V4.0 → V6.2.4 全部 26 个版本，以及迹点点 V2.x 内部迭代、V3.0.0 → V4.0.7 全部公开版本。
+完整修改记录见 [CHANGELOG.md](CHANGELOG.md)——涵盖前身项目「12306 火车票票根编辑器」V4.0 → V6.2.4 全部 26 个版本，以及迹点点 V2.x 内部迭代、V3.0.0 → V4.0.8 全部公开版本。
 
 ## 🤝 参与贡献
 
