@@ -1,0 +1,4 @@
+node_modules/
+dist_electron/
+icon.iconset/
+app/

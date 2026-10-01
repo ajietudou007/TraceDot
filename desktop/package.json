@@ -1,0 +1,64 @@
+{
+  "name": "tracedot-desktop",
+  "productName": "迹点点",
+  "version": "4.0.8",
+  "description": "迹点点 TraceDot 桌面端：单文件应用包装为原生窗口",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "npm run prep && electron .",
+    "prep": "mkdir -p app && cp ../release/TraceDot-V4.0.8.html app/index.html",
+    "dist:mac": "npm run prep && electron-builder --mac",
+    "dist:win": "npm run prep && electron-builder --win",
+    "dist": "npm run prep && electron-builder --mac --win"
+  },
+  "build": {
+    "appId": "top.jidiandian.tracedot",
+    "productName": "迹点点",
+    "directories": {
+      "output": "dist_electron",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "app/**"
+    ],
+    "asar": true,
+    "artifactName": "TraceDot-${version}-${arch}.${ext}",
+    "mac": {
+      "target": [
+        { "target": "dmg", "arch": ["arm64", "x64"] },
+        { "target": "zip", "arch": ["arm64", "x64"] }
+      ],
+      "category": "public.app-category.utilities",
+      "identity": null
+    },
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "artifactName": "TraceDot-Setup-${version}-${arch}.exe"
+    },
+    "dmg": {
+      "artifactName": "TraceDot-${version}-${arch}.dmg"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "ajietudou007",
+      "repo": "TraceDot",
+      "releaseType": "release"
+    }
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^26.15.3"
+  },
+  "dependencies": {
+    "electron-updater": "^6.6.9"
+  }
+}
