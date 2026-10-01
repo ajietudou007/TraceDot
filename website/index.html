@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>迹点点 · 行程地图 — 每一张票，都是一段旅程</title>
+<meta name="description" content="迹点点：九种票面一站式制作收藏，一张地图把旅程连成线。纯前端单文件应用，数据不出浏览器。">
+<style>
+/* ============ 基础与令牌 ============ */
+:root{
+  --blue:#0071e3; --blue-hover:#0077ed;
+  --ink:#1d1d1f; --ink-2:#6e6e73; --ink-3:#86868b;
+  --paper:#ffffff; --paper-2:#f5f5f7; --night:#000000; --night-2:#101010;
+  --celadon:#1e7f6b; --celadon-bright:#2fbf9a; --gold:#c9a86a;
+  --radius:18px; --maxw:1200px;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;line-height:1.5;overflow-x:hidden}
+img,svg{display:block;max-width:100%}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:4px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+section{position:relative}
+
+/* ============ 导航 ============ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:48px;background:rgba(255,255,255,.72);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid transparent;transition:border-color .3s}
+.nav.scrolled{border-bottom-color:rgba(0,0,0,.08)}
+.nav-inner{max-width:1024px;margin:0 auto;height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+.logo{display:flex;align-items:center;gap:8px;color:var(--ink);font-weight:600;font-size:17px;letter-spacing:.2px}
+.logo:hover{text-decoration:none}
+.logo-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--celadon-bright),var(--celadon))}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{color:rgba(29,29,31,.8);font-size:12.5px;transition:color .2s}
+.nav-links a:hover{color:var(--ink);text-decoration:none}
+.nav-cta{background:var(--blue);color:#fff;font-size:12.5px;padding:6px 14px;border-radius:980px;transition:background .2s}
+.nav-cta:hover{background:var(--blue-hover);text-decoration:none}
+@media(max-width:768px){.nav-links li:not(:last-child){display:none}}
+
+/* ============ Hero ============ */
+.hero{padding:132px 0 40px;text-align:center;overflow:hidden;
+  background:
+    radial-gradient(1100px 520px at 50% -8%,rgba(47,191,154,.14),transparent 62%),
+    radial-gradient(800px 420px at 82% 8%,rgba(0,113,227,.08),transparent 60%),
+    var(--paper);}
+.eyebrow{font-size:14px;color:var(--ink-2);letter-spacing:.6px;margin-bottom:14px}
+.eyebrow b{color:var(--celadon);font-weight:600}
+.hero h1{font-size:clamp(44px,7.4vw,88px);line-height:1.06;font-weight:700;letter-spacing:-.028em;color:var(--ink)}
+.hero h1 .grad{background:linear-gradient(96deg,var(--celadon) 8%,var(--celadon-bright) 42%,var(--blue) 96%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .sub{font-size:clamp(19px,2.4vw,26px);color:var(--ink-2);margin:22px auto 0;max-width:640px;line-height:1.42;font-weight:400}
+.hero-ctas{display:flex;gap:18px;justify-content:center;align-items:center;margin-top:30px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:#fff;font-size:17px;padding:13px 26px;border-radius:980px;transition:background .2s,transform .2s;cursor:pointer}
+.btn:hover{background:var(--blue-hover);text-decoration:none}
+.btn:active{transform:scale(.97)}
+.btn-lg{font-size:19px;padding:16px 34px}
+.link-more{font-size:17px;display:inline-flex;align-items:center;gap:2px}
+.link-more .chev{transition:transform .2s}
+.link-more:hover .chev{transform:translateX(3px)}
+.hero-meta{margin-top:14px;font-size:12.5px;color:var(--ink-3)}
+
+/* ============ 地图主视觉 ============ */
+.stage{position:relative;margin:34px auto 0;max-width:980px;height:min(58vw,470px)}
+.stage svg{width:100%;height:100%}
+.map-glow{position:absolute;inset:auto 0 -40px 0;height:180px;background:radial-gradient(50% 100% at 50% 0,rgba(30,127,107,.16),transparent 70%);filter:blur(6px);pointer-events:none}
+@keyframes dashmove{to{stroke-dashoffset:-64}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes pulse{0%{transform:scale(.6);opacity:.9}70%{transform:scale(2.4);opacity:0}100%{opacity:0}}
+.city-ring{transform-origin:center;transform-box:fill-box;animation:pulse 2.8s var(--ease) infinite}
+.route{stroke-dasharray:4 6;animation:dashmove 3.2s linear infinite}
+@media(prefers-reduced-motion:reduce){.route,.city-ring{animation:none}.reveal{opacity:1!important;transform:none!important;transition:none!important}}
+
+/* 悬浮车票 */
+.ticket{position:absolute;background:linear-gradient(178deg,#fbfdff,#eef4fb);border:1px solid rgba(29,29,31,.08);border-radius:14px;box-shadow:0 22px 44px rgba(15,40,60,.16),0 2px 8px rgba(15,40,60,.08);padding:14px 18px;text-align:left;animation:floatY 5.2s ease-in-out infinite}
+.tk-route{display:flex;align-items:baseline;gap:10px;font-weight:700;color:var(--ink)}
+.tk-route .stn{font-size:20px;letter-spacing:-.01em}
+.tk-route .arrow{color:var(--celadon);font-size:14px}
+.tk-meta{display:flex;gap:14px;margin-top:7px;font-size:11px;color:var(--ink-2)}
+.tk-tag{display:inline-block;margin-top:9px;font-size:10px;color:var(--celadon);border:1px solid rgba(30,127,107,.35);border-radius:99px;padding:2px 9px;letter-spacing:.4px}
+.tk-perf{position:absolute;left:50%;bottom:-7px;width:14px;height:14px;border-radius:50%;background:var(--paper);border:1px solid rgba(29,29,31,.08);transform:translateX(-50%) rotate(45deg)}
+.ticket.t1{top:6%;left:2%;transform:rotate(-4deg);animation-delay:.4s;z-index:3}
+.ticket.t2{bottom:8%;right:3%;transform:rotate(3.5deg);animation-delay:1.6s;z-index:3}
+@media(max-width:640px){.ticket .stn{font-size:15px}.tk-meta{gap:8px;font-size:9.5px}.ticket{padding:10px 12px}}
+
+/* ============ 区块通用 ============ */
+.sec{padding:110px 0}
+.sec-gray{background:var(--paper-2)}
+.sec-night{background:var(--night);color:#f5f5f7}
+.sec-night .kicker,.sec-night h2{color:#f5f5f7}
+.sec-night p.lead{color:#a1a1a6}
+.kicker{font-size:15px;font-weight:600;color:var(--celadon);letter-spacing:1px;margin-bottom:12px}
+h2{font-size:clamp(34px,4.8vw,56px);font-weight:700;letter-spacing:-.022em;line-height:1.1}
+p.lead{font-size:clamp(17px,2vw,21px);color:var(--ink-2);max-width:660px;line-height:1.55;margin-top:16px}
+.center{text-align:center}
+.center p.lead{margin-left:auto;margin-right:auto}
+
+/* 滚动显现 */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}.d5{transition-delay:.4s}
+
+/* ============ 模块 Bento ============ */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:56px}
+.cell{background:var(--paper-2);border-radius:var(--radius);padding:34px 30px;min-height:230px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .35s var(--ease),box-shadow .35s var(--ease);position:relative;overflow:hidden}
+.cell:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(0,0,0,.09)}
+.cell h3{font-size:22px;font-weight:700;letter-spacing:-.01em;margin-top:18px}
+.cell p{font-size:14.5px;color:var(--ink-2);margin-top:8px;line-height:1.5}
+.cell.w3{grid-column:span 3}.cell.w2{grid-column:span 2}
+.cell .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#fff}
+.ic.i1{background:linear-gradient(135deg,#2fbf9a,#1e7f6b)}.ic.i2{background:linear-gradient(135deg,#4a90e2,#1d5fbf)}
+.ic.i3{background:linear-gradient(135deg,#7c8ff8,#4f5fd6)}.ic.i4{background:linear-gradient(135deg,#f0a44c,#d97a1f)}
+.ic.i5{background:linear-gradient(135deg,#ef6a8b,#d5466e)}.ic.i6{background:linear-gradient(135deg,#8a6ef2,#5f43cf)}
+.cell .num{position:absolute;top:26px;right:28px;font-size:12px;color:var(--ink-3);font-weight:600;letter-spacing:.5px}
+@media(max-width:900px){.cell.w3,.cell.w2{grid-column:span 6}.cell{min-height:0}}
+
+/* ============ 九种票面 ============ */
+.strip{display:flex;gap:16px;margin-top:56px;overflow-x:auto;padding:10px 22px 26px;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.mini{flex:0 0 auto;width:216px;background:#fff;border-radius:14px;border:1px solid rgba(29,29,31,.08);box-shadow:0 8px 22px rgba(0,0,0,.06);overflow:hidden;transition:transform .3s var(--ease)}
+.mini:hover{transform:translateY(-4px)}
+.mini .head{height:52px;display:flex;align-items:center;gap:9px;padding:0 15px;color:#fff;font-weight:600;font-size:14px}
+.mini .body{padding:13px 15px 15px}
+.mini .line{height:6px;border-radius:3px;background:#eef0f3;margin-bottom:7px}
+.mini .line.s{width:58%}
+.mini .foot{display:flex;justify-content:space-between;align-items:center;padding-top:4px}
+.mini .chip{font-size:10.5px;color:var(--ink-3)}
+.mini .dotqr{width:18px;height:18px;border-radius:3px;background:
+  conic-gradient(var(--ink) 25%,transparent 0 50%,var(--ink) 0 75%,transparent 0);opacity:.75}
+.h-bus{background:linear-gradient(135deg,#34b3a0,#1e7f6b)}.h-metro{background:linear-gradient(135deg,#e05a3a,#b93a1f)}
+.h-taxi{background:linear-gradient(135deg,#f2b03c,#d98f14)}.h-coach{background:linear-gradient(135deg,#4a90e2,#2b6cb0)}
+.h-train{background:linear-gradient(135deg,#3f7bd9,#1d4f9e)}.h-plane{background:linear-gradient(135deg,#5c8ff5,#3555c8)}
+.h-film{background:linear-gradient(135deg,#141414,#3a3a3a)}.h-scenic{background:linear-gradient(135deg,#59b978,#2e8b52)}
+.h-show{background:linear-gradient(135deg,#a26ef2,#6d3fd1)}
+
+/* ============ 地图深色区 ============ */
+.night-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;margin-top:64px}
+@media(max-width:900px){.night-grid{grid-template-columns:1fr;gap:36px}}
+.stat-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:22px 26px;backdrop-filter:blur(8px);transition:background .3s,transform .3s var(--ease)}
+.stat-card:hover{background:rgba(255,255,255,.09);transform:translateY(-3px)}
+.stat-card .lab{font-size:12.5px;color:#a1a1a6;letter-spacing:.5px}
+.stat-card .val{font-size:34px;font-weight:700;letter-spacing:-.02em;margin-top:6px;font-variant-numeric:tabular-nums}
+.stat-card .val small{font-size:15px;font-weight:500;color:#a1a1a6;margin-left:4px}
+.stat-row{display:grid;gap:14px}
+.ranklist{margin-top:16px;display:grid;gap:10px}
+.rank{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:11px 16px;font-size:14px;color:#e8e8ed}
+.rank .r-no{color:var(--gold);font-weight:700;margin-right:10px;font-variant-numeric:tabular-nums}
+.rank .r-val{color:#a1a1a6;font-variant-numeric:tabular-nums}
+
+/* ============ OCR 区 ============ */
+.ocr-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;margin-top:60px}
+@media(max-width:900px){.ocr-grid{grid-template-columns:1fr;gap:36px}}
+.rec-card{background:#fff;border:1px solid rgba(29,29,31,.09);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.1);padding:26px 28px}
+.rec-head{display:flex;align-items:center;gap:10px;padding-bottom:14px;border-bottom:1px dashed rgba(29,29,31,.14);font-size:13px;color:var(--ink-2)}
+.rec-photo{width:38px;height:28px;border-radius:6px;background:linear-gradient(135deg,#dfe8f2,#c6d5e6);position:relative;flex:none}
+.rec-photo::after{content:"";position:absolute;inset:5px 7px;border-radius:3px;background:linear-gradient(135deg,#7fa8d9,#4a6fa5)}
+.field{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(29,29,31,.06);font-size:14.5px}
+.field:last-child{border-bottom:none}
+.field .k{color:var(--ink-2)}
+.field .v{font-weight:600;font-variant-numeric:tabular-nums}
+.field .ok{width:16px;height:16px;border-radius:50%;background:rgba(47,191,154,.16);color:var(--celadon);display:grid;place-items:center;margin-left:10px;flex:none}
+.engine-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.badge{font-size:12px;padding:6px 13px;border-radius:99px;background:var(--paper-2);color:var(--ink-2);border:1px solid rgba(29,29,31,.07)}
+.badge.on{background:rgba(30,127,107,.1);color:var(--celadon);border-color:rgba(30,127,107,.25);font-weight:600}
+
+/* ============ 隐私 ============ */
+.shield{width:84px;height:84px;margin:0 auto 30px;border-radius:24px;background:linear-gradient(135deg,rgba(47,191,154,.2),rgba(0,113,227,.14));display:grid;place-items:center;color:var(--celadon-bright)}
+.priv-points{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:60px;text-align:left}
+@media(max-width:820px){.priv-points{grid-template-columns:1fr}}
+.priv-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.11);border-radius:var(--radius);padding:28px}
+.priv-card h4{font-size:17px;font-weight:600;margin:14px 0 8px}
+.priv-card p{font-size:14px;color:#a1a1a6;line-height:1.55}
+.priv-card .p-ic{width:38px;height:38px;border-radius:10px;background:rgba(47,191,154,.14);color:var(--celadon-bright);display:grid;place-items:center}
+
+/* ============ 规格 ============ */
+.spec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
+@media(max-width:820px){.spec-grid{grid-template-columns:1fr}}
+.spec{background:#fff;border-radius:var(--radius);padding:28px;border:1px solid rgba(29,29,31,.07)}
+.spec .sk{font-size:12.5px;color:var(--ink-3);letter-spacing:.6px}
+.spec .sv{font-size:21px;font-weight:700;margin-top:8px;letter-spacing:-.01em}
+.spec .sd{font-size:13.5px;color:var(--ink-2);margin-top:6px;line-height:1.5}
+
+/* ============ 下载 CTA ============ */
+.dl-card{max-width:760px;margin:0 auto;background:linear-gradient(160deg,#0c0c0e,#16161a);border-radius:26px;color:#f5f5f7;padding:64px 40px;text-align:center;position:relative;overflow:hidden}
+.dl-card::before{content:"";position:absolute;inset:-40%;background:radial-gradient(42% 42% at 50% 42%,rgba(47,191,154,.22),transparent 70%)}
+.dl-card>*{position:relative}
+.dl-card .ver{font-size:13px;color:#a1a1a6;letter-spacing:.5px}
+.dl-card h2{margin:10px 0 14px}
+.dl-card p{color:#a1a1a6;font-size:16px;max-width:480px;margin:0 auto}
+.dl-actions{display:flex;gap:16px;justify-content:center;margin-top:28px;flex-wrap:wrap}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff}
+.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
+
+/* ============ 页脚 ============ */
+footer{background:var(--paper-2);padding:44px 0 60px;font-size:12px;color:var(--ink-3)}
+.f-note{padding:14px 0;border-bottom:1px solid rgba(29,29,31,.1);line-height:1.6}
+.f-cols{display:flex;justify-content:space-between;gap:30px;padding-top:22px;flex-wrap:wrap}
+.f-cols nav{display:flex;gap:22px;flex-wrap:wrap}
+.f-cols a{color:var(--ink-2)}
+.f-cols a:hover{color:var(--ink)}
+.copyright{margin-top:18px}
+</style>
+</head>
+<body>
+
+<!-- 导航 -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="logo" href="#top" aria-label="迹点点首页"><span class="logo-dot" aria-hidden="true"></span>迹点点</a>
+    <nav aria-label="主导航">
+      <ul class="nav-links" style="display:flex;align-items:center;gap:28px;list-style:none">
+        <li><a href="#modules">六大模块</a></li>
+        <li><a href="#map">行程地图</a></li>
+        <li><a href="#tickets">九种票面</a></li>
+        <li><a href="#ocr">AI 识别</a></li>
+        <li><a href="#privacy">隐私</a></li>
+        <li><a class="nav-cta" href="#download">免费下载</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- Hero -->
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow reveal">迹点点 · 行程地图 <b>V4.0.3</b> — 纯前端 · 单文件 · 零依赖</p>
+    <h1 class="reveal d1">每一张票，<br>都是<span class="grad">一段旅程</span>。</h1>
+    <p class="sub reveal d2">火车票、登机牌、公交、地铁、出租、客运、电影票、景区门票、演唱会票——九种票面一站式制作收藏，一张地图把旅程连成线。</p>
+    <div class="hero-ctas reveal d3">
+      <a class="btn btn-lg" href="#download">免费下载</a>
+      <a class="link-more" href="#modules">了解六大模块 <span class="chev" aria-hidden="true">›</span></a>
+    </div>
+    <p class="hero-meta reveal d4">双击即用 · 数据保存在本机 · 无需注册登录</p>
+  </div>
+
+  <!-- 主视觉：航路图 + 悬浮票 -->
+  <div class="stage reveal d4" role="img" aria-label="行程地图示意：连接多座城市的铁路与航路，两侧悬浮火车票与登机牌">
+    <svg viewBox="0 0 980 440" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="arcA" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#2fbf9a" stop-opacity=".15"/><stop offset=".5" stop-color="#2fbf9a"/><stop offset="1" stop-color="#0e5e4e" stop-opacity=".2"/>
+        </linearGradient>
+        <linearGradient id="arcB" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#5c8ff5" stop-opacity=".1"/><stop offset=".5" stop-color="#5c8ff5"/><stop offset="1" stop-color="#3555c8" stop-opacity=".15"/>
+        </linearGradient>
+        <filter id="soft"><feGaussianBlur stdDeviation="1.1"/></filter>
+      </defs>
+      <!-- 底部点阵 -->
+      <g fill="#1d1d1f" opacity=".05" id="dotgrid"></g>
+      <!-- 铁路实线弧 -->
+      <path d="M 300 300 Q 420 160 560 210" stroke="url(#arcA)" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M 560 210 Q 660 250 750 330" stroke="url(#arcA)" stroke-width="2.4" stroke-linecap="round" opacity=".85"/>
+      <path d="M 180 250 Q 240 320 300 300" stroke="url(#arcA)" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+      <!-- 航路虚线 -->
+      <path class="route" d="M 560 210 Q 640 90 820 140" stroke="url(#arcB)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+      <path class="route" d="M 300 300 Q 480 380 750 330" stroke="url(#arcB)" stroke-width="2" stroke-linecap="round" fill="none" opacity=".8"/>
+      <path class="route" d="M 180 250 Q 300 120 560 210" stroke="url(#arcB)" stroke-width="1.8" stroke-linecap="round" fill="none" opacity=".65"/>
+      <!-- 飞机标记 -->
+      <g transform="translate(705,132) rotate(24)" fill="#5c8ff5" filter="url(#soft)">
+        <path d="M0-7 L2-1 L8 1 L2 2.4 L1.2 7 L0 4.6 L-1.2 7 L-2 2.4 L-8 1 L-2-1 Z"/>
+      </g>
+      <g transform="translate(520,338) rotate(-12)" fill="#5c8ff5" opacity=".9" filter="url(#soft)">
+        <path d="M0-6 L1.8-0.8 L7 0.8 L1.8 2 L1 6 L0 4 L-1 6 L-1.8 2 L-7 0.8 L-1.8-0.8 Z"/>
+      </g>
+      <!-- 列车标记 -->
+      <g transform="translate(430,236) rotate(28)" fill="#1e7f6b" filter="url(#soft)">
+        <rect x="-7" y="-5" width="14" height="10" rx="3"/><rect x="-4.5" y="-7.5" width="9" height="3" rx="1.5"/>
+      </g>
+      <!-- 城市点 -->
+      <g font-family="var(--font)" font-size="12" fill="#6e6e73" id="cities">
+        <g transform="translate(180,250)"><circle r="4.5" fill="#1e7f6b"/><circle class="city-ring" r="4.5" fill="none" stroke="#2fbf9a" stroke-width="1.6"/><text x="-10" y="22" text-anchor="middle">成都</text></g>
+        <g transform="translate(300,300)"><circle r="5" fill="#1e7f6b"/><circle class="city-ring" style="animation-delay:.9s" r="5" fill="none" stroke="#2fbf9a" stroke-width="1.6"/><text x="0" y="26" text-anchor="middle">西安</text></g>
+        <g transform="translate(560,210)"><circle r="6" fill="#0e5e4e"/><circle class="city-ring" style="animation-delay:1.6s" r="6" fill="none" stroke="#2fbf9a" stroke-width="1.8"/><text x="0" y="-16" text-anchor="middle">北京</text></g>
+        <g transform="translate(750,330)"><circle r="5.5" fill="#1e7f6b"/><circle class="city-ring" style="animation-delay:.4s" r="5.5" fill="none" stroke="#2fbf9a" stroke-width="1.6"/><text x="0" y="26" text-anchor="middle">上海</text></g>
+        <g transform="translate(820,140)"><circle r="4" fill="#5c8ff5"/><text x="0" y="-14" text-anchor="middle">哈尔滨</text></g>
+        <g transform="translate(140,120)"><circle r="4" fill="#5c8ff5"/><text x="0" y="-12" text-anchor="middle">乌鲁木齐</text></g>
+      </g>
+    </svg>
+    <div class="map-glow" aria-hidden="true"></div>
+
+    <div class="ticket t1" aria-hidden="true">
+      <div class="tk-route"><span class="stn">北京南</span><span class="arrow">⇒</span><span class="stn">上海虹桥</span></div>
+      <div class="tk-meta"><span>G103</span><span>08:05 开</span><span>二等座</span></div>
+      <span class="tk-tag">铁路 · 实线弧</span>
+      <span class="tk-perf"></span>
+    </div>
+    <div class="ticket t2" aria-hidden="true">
+      <div class="tk-route"><span class="stn">PEK</span><span class="arrow">✈</span><span class="stn">SHA</span></div>
+      <div class="tk-meta"><span>MU5101</span><span>09:00</span><span>登机口 C18</span></div>
+      <span class="tk-tag">航班 · 虚线航路</span>
+      <span class="tk-perf"></span>
+    </div>
+  </div>
+</section>
+
+<!-- 六大模块 -->
+<section class="sec sec-gray" id="modules">
+  <div class="wrap center">
+    <p class="kicker reveal">六大模块 · 一个文件</p>
+    <h2 class="reveal d1">一个工作台，<br>装下旅行的全部凭证。</h2>
+    <p class="lead reveal d2">从制作到收藏再到绘制成图，六大模块在一个单文件 HTML 里协同工作。</p>
+    <div class="bento" style="text-align:left">
+      <div class="cell w3 reveal d1">
+        <div><span class="num">01</span>
+          <div class="ic i1" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h12M3 18h7"/><circle cx="18" cy="16" r="3.5"/></svg></div>
+          <h3>行程地图</h3>
+          <p>收藏的每张票自动绘制到自绘中国底图：铁路实线弧、航班虚线航路、到访城市点亮，附距离、时长、费用榜单。</p>
+        </div>
+      </div>
+      <div class="cell w3 reveal d2">
+        <div><span class="num">02</span>
+          <div class="ic i2" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 8h8M8 12h5"/><path d="M10.5 17h3"/></svg></div>
+          <h3>火车票工坊</h3>
+          <p>源自 12306 票根编辑器：六款底图、正反面制作、18 模块细节精修、行程 PDF 智能导入。</p>
+        </div>
+      </div>
+      <div class="cell w2 reveal d1">
+        <div><span class="num">03</span>
+          <div class="ic i3" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2.5 19 8v8l-7 5.5L5 16V8z"/><path d="M12 2.5V22M5 8l14 8M19 8 5 16"/></svg></div>
+          <h3>登机牌工坊</h3>
+          <p>全球机场、航司数据库联想，扫描件 AI 识别回填。</p>
+        </div>
+      </div>
+      <div class="cell w2 reveal d2">
+        <div><span class="num">04</span>
+          <div class="ic i4" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="12" rx="2.5"/><path d="M8 20h8M9.5 16v4M14.5 16v4"/><path d="M8 11h8"/></svg></div>
+          <h3>交通票工坊</h3>
+          <p>公交、地铁、出租车、客运，四种票面差异化版式。</p>
+        </div>
+      </div>
+      <div class="cell w2 reveal d3">
+        <div><span class="num">05</span>
+          <div class="ic i5" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5.5h16v13H4z"/><path d="M4 9.5h16M8.5 5.5v4"/></svg></div>
+          <h3>影演票工坊</h3>
+          <p>电影、景区、演唱会三票种，海报自动匹配与自定义取景。</p>
+        </div>
+      </div>
+      <div class="cell w3 reveal d2">
+        <div><span class="num">06</span>
+          <div class="ic i6" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M5 7.5l14 9M19 7.5l-14 9"/><circle cx="12" cy="12" r="2.6"/></svg></div>
+          <h3>珍藏册 · 行程时间轴</h3>
+          <p>所有票面按出行时间串成旅行编年史，支持票种与城市筛选，一键导入导出。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 行程地图深色区 -->
+<section class="sec sec-night" id="map">
+  <div class="wrap">
+    <p class="kicker reveal" style="color:var(--celadon-bright)">行程地图</p>
+    <h2 class="reveal d1">轨迹，会自己讲故事。</h2>
+    <p class="lead reveal d2">任何工坊里点一下「存入珍藏册」，行程地图就会同步更新。站名、机场、城市、景区多级解析，画不出来的地点自动回退到城市级标记。</p>
+    <div class="night-grid">
+      <div class="reveal d2">
+        <svg viewBox="0 0 520 300" fill="none" role="img" aria-label="深色底图上的铁路与航路示意">
+          <path class="route" d="M60 210 Q 170 120 260 150" stroke="#2fbf9a" stroke-width="2.2" stroke-linecap="round" fill="none" opacity=".9"/>
+          <path d="M260 150 Q 350 180 430 240" stroke="#2fbf9a" stroke-width="2.2" stroke-linecap="round" opacity=".8"/>
+          <path class="route" d="M260 150 Q 330 60 470 90" stroke="#5c8ff5" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <g transform="translate(375,102) rotate(20)" fill="#5c8ff5"><path d="M0-6.5 L2-1 L7.5 1 L2 2.2 L1.1 6.5 L0 4.2 L-1.1 6.5 L-2 2.2 L-7.5 1 L-2-1 Z"/></g>
+          <g transform="translate(160,171) rotate(32)" fill="#1e7f6b"><rect x="-6.5" y="-4.5" width="13" height="9" rx="3"/><rect x="-4" y="-7" width="8" height="2.8" rx="1.4"/></g>
+          <g transform="translate(60,210)"><circle r="4.5" fill="#2fbf9a"/><circle class="city-ring" r="4.5" fill="none" stroke="#2fbf9a" stroke-width="1.5"/></g>
+          <g transform="translate(260,150)"><circle r="5.5" fill="#2fbf9a"/><circle class="city-ring" style="animation-delay:1s" r="5.5" fill="none" stroke="#2fbf9a" stroke-width="1.5"/></g>
+          <g transform="translate(430,240)"><circle r="4.5" fill="#2fbf9a"/></g>
+          <g transform="translate(470,90)"><circle r="3.6" fill="#5c8ff5"/></g>
+        </svg>
+        <div class="ranklist" aria-label="行程榜单示例">
+          <div class="rank"><span><span class="r-no">01</span>成都 → 北京</span><span class="r-val">1,540 km</span></div>
+          <div class="rank"><span><span class="r-no">02</span>北京 → 上海</span><span class="r-val">1,318 km</span></div>
+          <div class="rank"><span><span class="r-no">03</span>上海 → 哈尔滨</span><span class="r-val">1,204 km</span></div>
+        </div>
+      </div>
+      <div class="stat-row reveal d3">
+        <div class="stat-card"><div class="lab">行程距离</div><div class="val" data-count="4062">0<small>km</small></div></div>
+        <div class="stat-card"><div class="lab">总时长</div><div class="val" data-count="27">0<small>小时</small></div></div>
+        <div class="stat-card"><div class="lab">总费用</div><div class="val" data-count="1268">0<small>元</small></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 九种票面 -->
+<section class="sec" id="tickets" style="overflow:hidden">
+  <div class="wrap center">
+    <p class="kicker reveal">九种票面</p>
+    <h2 class="reveal d1">站得住的，不只是回忆。</h2>
+    <p class="lead reveal d2">每种票面都以真实票样为参照设计，固定像素还原版式，支持明暗双主题与 2x 高清导出。</p>
+  </div>
+  <div class="strip" role="list" aria-label="九种票面一览">
+    <div class="mini" role="listitem"><div class="head h-train">火车票</div><div class="body"><div class="line"></div><div class="line"></div><div class="line s"></div><div class="foot"><span class="chip">六款底图 · 正反面</span><span class="dotqr" aria-hidden="true"></span></div></div></div>
+    <div class="mini" role="listitem"><div class="head h-plane">登机牌</div><div class="body"><div class="line"></div><div class="line"></div><div class="line s"></div><div class="foot"><span class="chip">全球机场库</span><span class="dotqr" aria-hidden="true"></span></div></div></div>
+    <div class="mini" role="listitem"><div class="head h-bus">公交卡</div><div class="body"><div class="line"></div><div class="line s"></div><div class="foot"><span class="chip">方形纪念卡</span></div></div></div>
+    <div class="mini" role="listitem"><div class="head h-metro">地铁票</div><div class="body"><div class="line"></div><div class="line s"></div><div class="foot"><span class="chip">横长单程票</span></div></div></div>
+    <div class="mini" role="listitem"><div class="head h-taxi">出租车发票</div><div class="body"><div class="line"></div><div class="line"></div><div class="line s"></div><div class="foot"><span class="chip">纵向发票条</span></div></div></div>
+    <div class="mini" role="listitem"><div class="head h-coach">长途客票</div><div class="body"><div class="line"></div><div class="line"></div><div class="line s"></div><div class="foot"><span class="chip">经典公路版式</span><span class="dotqr" aria-hidden="true"></span></div></div></div>
+    <div class="mini" role="listitem"><div class="head h-film">电影票</div><div class="body"><div class="line"></div><div class="line s"></div><div class="foot"><span class="chip">海报自动匹配</span></div></div></div>
+    <div class="mini" role="listitem"><div class="head h-scenic">景区门票</div><div class="body"><div class="line"></div><div class="line"></div><div class="line s"></div><div class="foot"><span class="chip">5A/4A 联想搜索</span></div></div></div>
+    <div class="mini" role="listitem"><div class="head h-show">演唱会票</div><div class="body"><div class="line"></div><div class="line s"></div><div class="foot"><span class="chip">自定义取景</span><span class="dotqr" aria-hidden="true"></span></div></div></div>
+  </div>
+</section>
+
+<!-- AI 识别 -->
+<section class="sec sec-gray" id="ocr">
+  <div class="wrap">
+    <div class="ocr-grid">
+      <div>
+        <p class="kicker reveal">AI 识别</p>
+        <h2 class="reveal d1">拍张照片，<br>字段自己归位。</h2>
+        <p class="lead reveal d2">视觉大模型直接「看」懂票面：逐行转录、匹配字段、标注置信度。云端失败自动回退本地引擎，本地推理全程离线。</p>
+        <div class="engine-badges reveal d3" aria-label="五种识别引擎">
+          <span class="badge on">Agnes 3.0 Flash · 默认</span>
+          <span class="badge on">PP-OCRv6 · 本地</span>
+          <span class="badge">PP-OCRv5 · 高精度</span>
+          <span class="badge">Tesseract.js · 轻量</span>
+          <span class="badge">OCR.space / 百度 OCR · 联网备选</span>
+        </div>
+      </div>
+      <div class="rec-card reveal d3" role="img" aria-label="票面识别结果示意：各字段已自动回填并标注置信度">
+        <div class="rec-head"><span class="rec-photo" aria-hidden="true"></span><span>纸质票照片 · 已自动矫正 90°</span><span style="margin-left:auto;color:var(--celadon);font-weight:600">识别完成</span></div>
+        <div class="field"><span class="k">车次</span><span style="display:flex;align-items:center"><span class="v">G103</span><span class="ok" aria-hidden="true"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 6.5 5 9l5-6"/></svg></span></span></div>
+        <div class="field"><span class="k">到发站</span><span style="display:flex;align-items:center"><span class="v">北京南 → 上海虹桥</span><span class="ok" aria-hidden="true"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 6.5 5 9l5-6"/></svg></span></span></div>
+        <div class="field"><span class="k">日期时间</span><span style="display:flex;align-items:center"><span class="v">2026-09-30 08:05</span><span class="ok" aria-hidden="true"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 6.5 5 9l5-6"/></svg></span></span></div>
+        <div class="field"><span class="k">车厢 / 座位</span><span style="display:flex;align-items:center"><span class="v">07 车 12F</span><span class="ok" aria-hidden="true"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 6.5 5 9l5-6"/></svg></span></span></div>
+        <div class="field"><span class="k">票价</span><span style="display:flex;align-items:center"><span class="v">¥ 553.0</span><span class="ok" aria-hidden="true"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 6.5 5 9l5-6"/></svg></span></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 隐私 -->
+<section class="sec sec-night" id="privacy">
+  <div class="wrap center">
+    <div class="shield reveal" aria-hidden="true">
+      <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2.5 20 6v5.5c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V6z"/><path d="M8.5 12l2.4 2.4L15.5 9.6"/></svg>
+    </div>
+    <h2 class="reveal d1">你的数据，只属于你。</h2>
+    <p class="lead reveal d2">没有账号，没有服务器，没有追踪。所有票面与记录保存在你的浏览器里，断网也能完整使用。</p>
+    <div class="priv-points">
+      <div class="priv-card reveal d1">
+        <div class="p-ic" aria-hidden="true"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="5" width="16" height="14" rx="2.5"/><path d="M8 10h8M8 14h5"/></svg></div>
+        <h4>本地双保险</h4><p>localStorage 同步总线 + IndexedDB 镜像，清除数据需二次确认且仅清除用户内容。</p>
+      </div>
+      <div class="priv-card reveal d2">
+        <div class="p-ic" aria-hidden="true"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M5 7.5l14 9M19 7.5l-14 9"/></svg></div>
+        <h4>联网需你点头</h4><p>仅两类操作会联网且需明确确认：选择联网 OCR 引擎上传照片、点击自动匹配查询电影海报。</p>
+      </div>
+      <div class="priv-card reveal d3">
+        <div class="p-ic" aria-hidden="true"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v12m0 0-4-4m4 4 4-4M5 20h14"/></svg></div>
+        <h4>备份自由</h4><p>珍藏册数据支持 JSON 导入导出，随时带走全部旅程。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 技术规格 -->
+<section class="sec sec-gray" id="specs">
+  <div class="wrap center">
+    <p class="kicker reveal">技术规格</p>
+    <h2 class="reveal d1">简单，是一种实力。</h2>
+    <div class="spec-grid" style="text-align:left">
+      <div class="spec reveal d1"><div class="sk">形态</div><div class="sv">单文件 HTML</div><div class="sd">全部样式、脚本、底图与数据库 Base64 / gzip 内嵌，双击即用。</div></div>
+      <div class="spec reveal d2"><div class="sk">运行时依赖</div><div class="sv">0 个</div><div class="sd">无框架、无构建、无后端。pdf.js、html2canvas 等按需内嵌。</div></div>
+      <div class="spec reveal d3"><div class="sk">主题</div><div class="sv">明暗双主题</div><div class="sd">青瓷绿品牌色贯穿六个模块，移动端逐级自适应。</div></div>
+      <div class="spec reveal d1"><div class="sk">共享资源去重</div><div class="sv">V4.0.0 起</div><div class="sd">html2canvas、机场库等 7 份跨模块资源只存一份。</div></div>
+      <div class="spec reveal d2"><div class="sk">导出</div><div class="sv">2x 高清 PNG</div><div class="sd">离屏克隆渲染，导出与预览逐像素一致；多张自动打包 ZIP。</div></div>
+      <div class="spec reveal d3"><div class="sk">兼容</div><div class="sv">现代浏览器</div><div class="sd">Chrome / Edge / Safari / Firefox 最新版，兼容夸克、UC 移动内核。</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 下载 -->
+<section class="sec" id="download">
+  <div class="wrap">
+    <div class="dl-card reveal">
+      <p class="ver">V4.0.3 · 迹点点-V4.0.3-行程地图.html · 约 12 MB</p>
+      <h2>现在，开始收藏旅程。</h2>
+      <p>下载后双击即可使用。也欢迎在 GitHub 上查看源码、提交 Issue 与 PR。</p>
+      <div class="dl-actions">
+        <a class="btn btn-lg" href="../release/迹点点-V4.0.3-行程地图.html" download="迹点点-V4.0.3-行程地图.html">下载最新版</a>
+        <a class="btn btn-lg btn-ghost" href="https://github.com/ajietudou007/12306-train-ticket-editor" target="_blank" rel="noopener">GitHub 源码</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="f-note">免责声明：迹点点仅供个人纪念与娱乐创作使用，与中国国家铁路集团（12306）、各航空公司、文旅机构均无任何隶属或合作关系。严禁将生成的票面用于报销、退票、逃票、诈骗或其他任何违法违规用途。</p>
+    <div class="f-cols">
+      <nav aria-label="页脚链接">
+        <a href="https://github.com/ajietudou007/12306-train-ticket-editor" target="_blank" rel="noopener">前身项目</a>
+        <a href="#modules">六大模块</a>
+        <a href="#privacy">隐私说明</a>
+        <a href="#download">下载</a>
+      </nav>
+      <div class="copyright">© 2026 迹点点 Contributors · 基于 MIT License 开源 · 内嵌组件许可见项目 LICENSE</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* 导航滚动态 */
+  var nav = document.getElementById('nav');
+  addEventListener('scroll', function(){ nav.classList.toggle('scrolled', scrollY > 8); }, {passive:true});
+
+  /* 底部点阵（程序化生成，克制密度） */
+  var grid = document.getElementById('dotgrid');
+  if(grid){
+    var frag = document.createDocumentFragment();
+    for(var y=6; y<15; y++){
+      for(var x=3; x<45; x++){
+        var c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+        c.setAttribute('cx', x*22); c.setAttribute('cy', y*22 + 60);
+        c.setAttribute('r', (x+y)%3===0?1.6:1);
+        frag.appendChild(c);
+      }
+    }
+    grid.appendChild(frag);
+  }
+
+  /* 滚动显现 */
+  var els = document.querySelectorAll('.reveal');
+  if(reduced || !('IntersectionObserver' in window)){
+    els.forEach(function(el){ el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, {threshold:.16, rootMargin:'0px 0px -40px 0px'});
+    els.forEach(function(el){ io.observe(el); });
+  }
+
+  /* 数字滚动 */
+  var nums = document.querySelectorAll('[data-count]');
+  function animateNum(el){
+    var target = +el.getAttribute('data-count'), t0 = null, dur = 1400;
+    function step(ts){
+      if(!t0) t0 = ts;
+      var p = Math.min((ts-t0)/dur, 1), eased = 1-Math.pow(1-p,3);
+      el.firstChild.nodeValue = Math.round(target*eased).toLocaleString();
+      if(p<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  if(reduced || !('IntersectionObserver' in window)){
+    nums.forEach(function(el){ el.firstChild.nodeValue = (+el.getAttribute('data-count')).toLocaleString(); });
+  } else {
+    var io2 = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ animateNum(e.target); io2.unobserve(e.target); }
+      });
+    }, {threshold:.5});
+    nums.forEach(function(el){ io2.observe(el); });
+  }
+})();
+</script>
+</body>
+</html>
