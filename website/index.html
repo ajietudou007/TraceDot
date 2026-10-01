@@ -272,6 +272,20 @@
     .download-actions .secondary-btn { color: #fff; background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.38); }
     .download-actions .secondary-btn:hover { background: rgba(255,255,255,.16); }
 
+    .desktop-band { margin-top: 18px; padding: clamp(24px, 4vw, 36px); border: 1px solid var(--soft-line); border-radius: 28px; background: var(--paper); box-shadow: 0 18px 48px rgba(12,107,88,.07); }
+    .desktop-head { max-width: 720px; }
+    .desktop-head h3 { margin: 10px 0 6px; font-size: var(--type-3); font-weight: 800; letter-spacing: -.05em; }
+    .desktop-head p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .desktop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-top: 22px; }
+    .desktop-card { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 18px 20px; border: 1px solid var(--soft-line); border-radius: 18px; background: #fff; text-decoration: none; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+    .desktop-card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(12,107,88,.12); border-color: var(--trace); }
+    .desktop-card.is-recommended { border-color: var(--trace); box-shadow: 0 0 0 3px rgba(12,107,88,.1); }
+    .dc-name { color: var(--ink); font-size: 15px; font-weight: 700; letter-spacing: -.02em; }
+    .dc-meta { color: var(--muted); font-size: 12px; }
+    .dc-tag { position: absolute; top: -9px; right: 14px; padding: 2px 10px; border-radius: 999px; background: var(--trace); color: #fff; font-size: 11px; font-weight: 700; }
+    .dc-more { justify-content: center; align-items: center; background: transparent; border-style: dashed; }
+    .dc-more .dc-name { color: var(--trace-deep); }
+
     .creator-card { display: grid; grid-template-columns: 68px minmax(0,1fr); gap: 24px; align-items: start; max-width: 850px; margin: 45px auto 0; padding: clamp(24px, 4vw, 40px); border: 1px solid var(--soft-line); border-radius: 26px; background: var(--paper); box-shadow: 0 18px 48px rgba(12,107,88,.07); }
     .creator-avatar { width: 68px; height: 68px; display: grid; place-items: center; overflow: hidden; border-radius: 21px; background: linear-gradient(145deg, #24a17e, #075344); box-shadow: 0 10px 25px rgba(12,107,88,.22); }
     .creator-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
@@ -536,7 +550,17 @@
       <div class="container mx-auto max-w-[1320px] px-6">
         <div class="download-band reveal">
           <div><div class="section-kicker">GET TRACEDOT</div><h2>下载后，双击就能开始。</h2><p>TraceDot V4.0.8 · 单文件 HTML · 约 12 MB · 无需安装</p></div>
-          <div class="download-actions"><a class="primary-btn" href="../release/TraceDot-V4.0.8.html" download="TraceDot-V4.0.8.html">下载最新版 <span aria-hidden="true">↓</span></a><a class="secondary-btn" href="https://jidiandian.top/release/TraceDot-V4.0.8.html" target="_blank" rel="noopener">在线体验 <span aria-hidden="true">↗</span></a></div>
+          <div class="download-actions"><a class="primary-btn" href="../release/TraceDot-V4.0.8.html" download="TraceDot-V4.0.8.html">下载网页版 <span aria-hidden="true">↓</span></a><a class="secondary-btn" href="https://jidiandian.top/release/TraceDot-V4.0.8.html" target="_blank" rel="noopener">在线体验 <span aria-hidden="true">↗</span></a></div>
+        </div>
+        <!-- 桌面版：Mac 双架构 + Windows，来自 GitHub Release v4.0.8 -->
+        <div class="desktop-band reveal delay-1">
+          <div class="desktop-head"><span class="section-kicker">DESKTOP APP</span><h3>桌面版 V4.0.8</h3><p>原生窗口应用，内置自动更新渠道。Mac 首次打开请右键选择「打开」；Windows 如遇 SmartScreen 提示请选择「仍要运行」。</p></div>
+          <div class="desktop-grid">
+            <a class="desktop-card" id="dl-mac-arm" href="https://github.com/ajietudou007/TraceDot/releases/download/v4.0.8/TraceDot-4.0.8-arm64.dmg" download><span class="dc-name">macOS · Apple 芯片</span><span class="dc-meta">V4.0.8 · .dmg · 102 MB</span><span class="dc-tag" hidden>你的设备</span></a>
+            <a class="desktop-card" id="dl-mac-intel" href="https://github.com/ajietudou007/TraceDot/releases/download/v4.0.8/TraceDot-4.0.8-x64.dmg" download><span class="dc-name">macOS · Intel 芯片</span><span class="dc-meta">V4.0.8 · .dmg · 106 MB</span><span class="dc-tag" hidden>你的设备</span></a>
+            <a class="desktop-card" id="dl-win" href="https://github.com/ajietudou007/TraceDot/releases/download/v4.0.8/TraceDot-Setup-4.0.8-x64.exe" download><span class="dc-name">Windows</span><span class="dc-meta">V4.0.8 · .exe · 82 MB</span><span class="dc-tag" hidden>你的设备</span></a>
+            <a class="desktop-card dc-more" href="https://github.com/ajietudou007/TraceDot/releases/tag/v4.0.8" target="_blank" rel="noopener"><span class="dc-name">全部版本与历史</span><span class="dc-meta">GitHub Releases ↗</span></a>
+          </div>
         </div>
       </div>
     </section>
@@ -629,6 +653,33 @@
       });
     }, { threshold: .7 });
     counters.forEach(el => counterObserver.observe(el));
+
+    // 桌面版：按访问者设备高亮推荐对应安装包
+    (function () {
+      const ua = navigator.userAgent;
+      let target = null;
+      if (/Win(dows)?/i.test(ua)) target = 'dl-win';
+      else if (/Mac OS X/.test(ua) && navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+        // 仅在可查询架构的浏览器（Chromium 系）上推荐，避免误标
+        navigator.userAgentData.getHighEntropyValues(['architecture']).then(h => {
+          highlight(h && h.architecture === 'x86' ? 'dl-mac-intel' : 'dl-mac-arm');
+        }).catch(() => {});
+      }
+      function highlight(id) {
+        document.querySelectorAll('.desktop-card').forEach(c => {
+          c.classList.remove('is-recommended');
+          const t = c.querySelector('.dc-tag');
+          if (t) t.hidden = true;
+        });
+        const el = document.getElementById(id);
+        if (el) {
+          el.classList.add('is-recommended');
+          const t = el.querySelector('.dc-tag');
+          if (t) t.hidden = false;
+        }
+      }
+      if (target) highlight(target);
+    })();
   </script>
 </body>
 </html>
