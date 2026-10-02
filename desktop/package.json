@@ -1,13 +1,13 @@
 {
   "name": "tracedot-desktop",
   "productName": "迹点点",
-  "version": "4.0.9",
+  "version": "4.0.10",
   "description": "迹点点 TraceDot 桌面端：单文件应用包装为原生窗口",
   "main": "main.js",
   "private": true,
   "scripts": {
     "start": "npm run prep && electron .",
-    "prep": "mkdir -p app && cp ../release/TraceDot-V4.0.9.html app/index.html",
+    "prep": "mkdir -p app && cp ../release/TraceDot-V4.0.10.html app/index.html",
     "dist:mac": "npm run prep && electron-builder --mac",
     "dist:win": "npm run prep && electron-builder --win",
     "dist": "npm run prep && electron-builder --mac --win"
