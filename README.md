@@ -1,10 +1,10 @@
 <div align="center">
 
-# 🧳 迹点点 · 行程地图 V4.0.11
+# 🧳 迹点点 · 行程地图 V4.0.16
 
 *纯前端 · 单文件 · 零框架 · 数据不出浏览器*
 
-![Version](https://img.shields.io/badge/version-4.0.11-2E7CF6)
+![Version](https://img.shields.io/badge/version-4.0.16-2E7CF6)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Dependencies](https://img.shields.io/badge/runtime_dependencies-0-success)
 ![Runtime](https://img.shields.io/badge/runtime-浏览器%20%2B%20Canvas%20%2B%20SVG-9B59B6)
@@ -49,13 +49,13 @@
 ## 🚀 快速开始
 
 > **在线访问**：官网 <https://jidiandian.top>（Cloudflare 托管）· 备用线路：<https://ajietudou007.github.io/TraceDot/>，
-> 直接使用应用：<https://jidiandian.top/release/TraceDot-V4.0.11.html>
+> 直接使用应用：<https://jidiandian.top/release/TraceDot-V4.0.16.html>
 
 本项目是**零构建、零运行时依赖的单文件应用**，无需安装任何包。
 
 ### 方式一：直接打开
 
-下载 `release/TraceDot-V4.0.11.html` 后用现代浏览器双击打开即可使用。
+下载 `release/TraceDot-V4.0.16.html` 后用现代浏览器双击打开即可使用。
 
 ### 方式二：本地服务（推荐）
 
@@ -69,14 +69,14 @@ python3 -m http.server 8080
 将 `release/` 中的 HTML 重命名为 `index.html` 推送到仓库根目录，
 在 **Settings → Pages** 中选择分支根目录后即可在线访问。
 
-> 💡 建议在链接后附加版本参数（如 `?v=4.0.11`）以绕过 CDN / 浏览器缓存。
+> 💡 建议在链接后附加版本参数（如 `?v=4.0.16`）以绕过 CDN / 浏览器缓存。
 
 ## 📁 项目结构
 
 ```text
 迹点点v4/
 ├── README.md                    # 本文件
-├── CHANGELOG.md                 # 全量版本日志（前身项目 V4.0 → 迹点点 V4.0.11）
+├── CHANGELOG.md                 # 全量版本日志（前身项目 V4.0 → 迹点点 V4.0.16）
 ├── CREDITS.md                   # 开源项目 / 数据源 / 云服务 / 开发平台与工具
 ├── LICENSE                      # MIT（含第三方组件许可声明）
 ├── docs/
@@ -84,9 +84,9 @@ python3 -m http.server 8080
 ├── website/
 │   └── index.html               # 官方网站（苹果风格，纯静态单文件）
 └── release/
-    ├── TraceDot-V4.0.11.html       # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
-    ├── TraceDot-V4.0.10.html       # 上一版本快照
-    └── TraceDot-V4.0.9.html        # 历史版本快照
+    ├── TraceDot-V4.0.16.html       # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
+    ├── TraceDot-V4.0.15.html       # 上一版本快照
+    └── TraceDot-V4.0.14.html       # 历史版本快照
 ```
 
 ## 🛠 技术实现
@@ -119,7 +119,7 @@ python3 -m http.server 8080
 
 ## 📋 版本日志
 
-完整修改记录见 [CHANGELOG.md](CHANGELOG.md)——涵盖前身项目「12306 火车票票根编辑器」V4.0 → V6.2.4 全部 26 个版本，以及迹点点 V2.x 内部迭代、V3.0.0 → V4.0.11 全部公开版本。
+完整修改记录见 [CHANGELOG.md](CHANGELOG.md)——涵盖前身项目「12306 火车票票根编辑器」V4.0 → V6.2.4 全部 26 个版本，以及迹点点 V2.x 内部迭代、V3.0.0 → V4.0.16 全部公开版本。
 
 ## 🤝 参与贡献
 
