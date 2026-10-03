@@ -1,10 +1,10 @@
 <div align="center">
 
-# 🧳 迹点点 · 行程地图 V4.0.16
+# 🧳 迹点点 · 行程地图 V4.0.19
 
 *纯前端 · 单文件 · 零框架 · 数据不出浏览器*
 
-![Version](https://img.shields.io/badge/version-4.0.16-2E7CF6)
+![Version](https://img.shields.io/badge/version-4.0.19-2E7CF6)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Dependencies](https://img.shields.io/badge/runtime_dependencies-0-success)
 ![Runtime](https://img.shields.io/badge/runtime-浏览器%20%2B%20Canvas%20%2B%20SVG-9B59B6)
@@ -29,7 +29,7 @@
 
 | # | 模块 | 说明 |
 |---|------|------|
-| 01 | **行程地图** | 收藏的每张票自动绘制到自绘中国底图上：铁路实线弧、航班虚线航路 + 飞机标记、到访城市点亮、榜单统计（距离 / 时长 / 费用） |
+| 01 | **行程地图** | 收藏的每张票自动绘制到自绘中国底图上：铁路实线弧、航班虚线航路 + 飞机标记、到访城市点亮、榜单统计（距离 / 时长 / 费用）；添加行程支持即时预览真实票面 |
 | 02 | **火车票工坊** | 12306 风格票根编辑器（源自前身项目）：六款底图、正反面制作、18 模块级细节精修、行程 PDF 智能导入、纸质票拍照 OCR |
 | 03 | **登机牌工坊** | 航班登机牌制作：全球机场 / 航司数据库联想、扫描件 AI 识别回填、登机牌导出 |
 | 04 | **交通票工坊** | 公交、地铁、出租车发票、长途客运四种票面差异化版式，固定像素还原票样 |
@@ -49,13 +49,13 @@
 ## 🚀 快速开始
 
 > **在线访问**：官网 <https://jidiandian.top>（Cloudflare 托管）· 备用线路：<https://ajietudou007.github.io/TraceDot/>，
-> 直接使用应用：<https://jidiandian.top/release/TraceDot-V4.0.16.html>
+> 直接使用应用：<https://jidiandian.top/release/TraceDot-V4.0.19.html>
 
 本项目是**零构建、零运行时依赖的单文件应用**，无需安装任何包。
 
 ### 方式一：直接打开
 
-下载 `release/TraceDot-V4.0.16.html` 后用现代浏览器双击打开即可使用。
+下载 `release/TraceDot-V4.0.19.html` 后用现代浏览器双击打开即可使用。
 
 ### 方式二：本地服务（推荐）
 
@@ -69,14 +69,14 @@ python3 -m http.server 8080
 将 `release/` 中的 HTML 重命名为 `index.html` 推送到仓库根目录，
 在 **Settings → Pages** 中选择分支根目录后即可在线访问。
 
-> 💡 建议在链接后附加版本参数（如 `?v=4.0.16`）以绕过 CDN / 浏览器缓存。
+> 💡 建议在链接后附加版本参数（如 `?v=4.0.19`）以绕过 CDN / 浏览器缓存。
 
 ## 📁 项目结构
 
 ```text
 迹点点v4/
 ├── README.md                    # 本文件
-├── CHANGELOG.md                 # 全量版本日志（前身项目 V4.0 → 迹点点 V4.0.16）
+├── CHANGELOG.md                 # 全量版本日志（前身项目 V4.0 → 迹点点 V4.0.19）
 ├── CREDITS.md                   # 开源项目 / 数据源 / 云服务 / 开发平台与工具
 ├── LICENSE                      # MIT（含第三方组件许可声明）
 ├── docs/
@@ -84,9 +84,9 @@ python3 -m http.server 8080
 ├── website/
 │   └── index.html               # 官方网站（苹果风格，纯静态单文件）
 └── release/
-    ├── TraceDot-V4.0.16.html       # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
-    ├── TraceDot-V4.0.15.html       # 上一版本快照
-    └── TraceDot-V4.0.14.html       # 历史版本快照
+    ├── TraceDot-V4.0.19.html       # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
+    ├── TraceDot-V4.0.18.html       # 上一版本快照
+    └── TraceDot-V4.0.17.html       # 历史版本快照
 ```
 
 ## 🛠 技术实现
@@ -119,7 +119,7 @@ python3 -m http.server 8080
 
 ## 📋 版本日志
 
-完整修改记录见 [CHANGELOG.md](CHANGELOG.md)——涵盖前身项目「12306 火车票票根编辑器」V4.0 → V6.2.4 全部 26 个版本，以及迹点点 V2.x 内部迭代、V3.0.0 → V4.0.16 全部公开版本。
+完整修改记录见 [CHANGELOG.md](CHANGELOG.md)——涵盖前身项目「12306 火车票票根编辑器」V4.0 → V6.2.4 全部 26 个版本，以及迹点点 V2.x 内部迭代、V3.0.0 → V4.0.19 全部公开版本。
 
 ## 🤝 参与贡献
 
