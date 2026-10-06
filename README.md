@@ -1,10 +1,10 @@
 <div align="center">
 
-# 🧳 迹点点 · 行程地图 V4.1.1
+# 🧳 迹点点 · 行程地图 V4.1.2
 
 *纯前端 · 单文件 · 零框架 · 数据不出浏览器*
 
-![Version](https://img.shields.io/badge/version-4.1.1-2E7CF6)
+![Version](https://img.shields.io/badge/version-4.1.2-2E7CF6)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Dependencies](https://img.shields.io/badge/runtime_dependencies-0-success)
 ![Runtime](https://img.shields.io/badge/runtime-浏览器%20%2B%20Canvas%20%2B%20SVG-9B59B6)
@@ -42,6 +42,7 @@
 - **九种票面一站式制作**：所有票面以真实票样为参照设计，支持明暗双主题、移动端自适应
 - **行程地图自动绘制**：任何工坊「存入珍藏册」后同步写入行程地图；站名 / 机场 / 城市 / 景区多级地点解析，解析失败自动回退城市级单点标记
 - **我的旅游计划（V4.1.1）**：对话式 AI 行程规划——高德 JS API v2.0 实时查询地理编码 / POI / 天气（Key 用户自配、附五步申请教程），Agnes 生成按天行程卡与行李清单（AI 大语言模型接口内置、全量可用），未配置 Key 自动引导、接口不可用自动降级 AI 推荐
+- **手机端「添加票面 / 我的」页（V4.1.2）**：底栏精简为 5 个标签（行程地图 / 我的旅游计划 / 添加票面 / 珍藏册 / 我的），四个票务工坊统一从「添加票面」进入；「我的」页含用户信息与改名、数据管理（导出 / 导入 / 云端更新 / 清除行程数据）、软件更新与联系方式、关于与隐私声明
 - **AI 能力开箱即用**：视觉大模型（Agnes 3.0 Flash，内置体验 Key）转录票面文字并匹配字段；电影海报自动匹配（OMDb）
 - **本地 OCR 多引擎**：PP-OCRv6 / v5（浏览器端 ONNX 推理）、Tesseract.js 轻量引擎、OCR.space 与百度 OCR 联网备选引擎——联网引擎仅在用户明确确认后上传
 - **行程时间轴**：珍藏册把每张票按出行时间串成编年史视图；9 票种示例票面一键导入；票种 / 城市筛选
@@ -51,13 +52,13 @@
 ## 🚀 快速开始
 
 > **在线访问**：官网 <https://jidiandian.top>（Cloudflare 托管）· 备用线路：<https://ajietudou007.github.io/TraceDot/>，
-> 直接使用应用：<https://jidiandian.top/release/TraceDot-V4.1.1.html>
+> 直接使用应用：<https://jidiandian.top/release/TraceDot-V4.1.2.html>
 
 本项目是**零构建、零运行时依赖的单文件应用**，无需安装任何包。
 
 ### 方式一：直接打开
 
-下载 `release/TraceDot-V4.1.1.html` 后用现代浏览器双击打开即可使用。
+下载 `release/TraceDot-V4.1.2.html` 后用现代浏览器双击打开即可使用。
 
 ### 方式二：本地服务（推荐）
 
@@ -71,14 +72,14 @@ python3 -m http.server 8080
 将 `release/` 中的 HTML 重命名为 `index.html` 推送到仓库根目录，
 在 **Settings → Pages** 中选择分支根目录后即可在线访问。
 
-> 💡 建议在链接后附加版本参数（如 `?v=4.1.1`）以绕过 CDN / 浏览器缓存。
+> 💡 建议在链接后附加版本参数（如 `?v=4.1.2`）以绕过 CDN / 浏览器缓存。
 
 ## 📁 项目结构
 
 ```text
 迹点点v4/
 ├── README.md                    # 本文件
-├── CHANGELOG.md                 # 全量版本日志（前身项目 V4.0 → 迹点点 V4.1.1）
+├── CHANGELOG.md                 # 全量版本日志（前身项目 V4.0 → 迹点点 V4.1.2）
 ├── CREDITS.md                   # 开源项目 / 数据源 / 云服务 / 开发平台与工具
 ├── LICENSE                      # MIT（含第三方组件许可声明）
 ├── docs/
@@ -86,10 +87,10 @@ python3 -m http.server 8080
 ├── website/
 │   └── index.html               # 官方网站（苹果风格，纯静态单文件）
 └── release/
-    ├── TraceDot-V4.1.1.html       # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
-    ├── TraceDot-V4.0.20.html       # 上一版本快照
-    ├── TraceDot-V4.0.19.html       # 历史版本快照
-    └── TraceDot-V4.0.18.html       # 历史版本快照
+    ├── TraceDot-V4.1.2.html       # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
+    ├── TraceDot-V4.1.1.html       # 上一版本快照
+    ├── TraceDot-V4.0.20.html       # 历史版本快照
+    └── TraceDot-V4.0.19.html       # 历史版本快照
 ```
 
 ## 🛠 技术实现
@@ -122,7 +123,7 @@ python3 -m http.server 8080
 
 ## 📋 版本日志
 
-完整修改记录见 [CHANGELOG.md](CHANGELOG.md)——涵盖前身项目「12306 火车票票根编辑器」V4.0 → V6.2.4 全部 26 个版本，以及迹点点 V2.x 内部迭代、V3.0.0 → V4.1.1 全部公开版本。
+完整修改记录见 [CHANGELOG.md](CHANGELOG.md)——涵盖前身项目「12306 火车票票根编辑器」V4.0 → V6.2.4 全部 26 个版本，以及迹点点 V2.x 内部迭代、V3.0.0 → V4.1.2 全部公开版本。
 
 ## 🤝 参与贡献
 
