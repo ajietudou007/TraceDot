@@ -1,0 +1,37 @@
+name: build-windows
+
+on:
+  push:
+    tags:
+      - "v4.*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-win:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: desktop
+
+      - name: Build Windows installer
+        run: npm run prep && npx electron-builder --win --publish never
+        working-directory: desktop
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: desktop/dist_electron/TraceDot-Setup-*.exe
+          fail_on_unmatched_files: false
