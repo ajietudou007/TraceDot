@@ -325,124 +325,8 @@
 <span class="font-label-caps text-label-caps text-on-surface-variant mt-1 uppercase">独立纯前端开源</span>
 </div>
 </div>
-<!-- 快捷交互栏：搜索与筛选托盘 -->
-<div class="w-full max-w-4xl mt-10 p-2 sm:p-2.5 rounded-3xl bg-surface-container shadow-inner flex flex-col md:flex-row items-center gap-2 sm:gap-3">
-<!-- 搜索输入框 -->
-<div class="relative w-full md:w-72 flex items-center">
-<span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant text-[20px]">search</span>
-<input class="w-full pl-10 pr-4 py-2.5 rounded-full bg-surface-container-lowest text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary-container shadow-sm transition-all" id="changelogSearchInput" placeholder="搜索版本号或改动特性..." type="text">
-</div>
-<!-- 阶段筛选药丸组 -->
-<div class="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto py-1 px-1 scrollbar-none" id="stageFilters">
-<button class="stage-pill active-pill whitespace-nowrap px-4 py-2 rounded-full font-headline-sm text-[13px] bg-primary-container text-on-primary font-semibold shadow-md transition-all" data-filter="all">
-              全部阶段
-            </button>
-<button class="stage-pill whitespace-nowrap px-3.5 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-lowest transition-all" data-filter="stage-4">
-              阶段四 (V4.x)
-            </button>
-<button class="stage-pill whitespace-nowrap px-3.5 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-lowest transition-all" data-filter="stage-3">
-              阶段三 (V3.x)
-            </button>
-<button class="stage-pill whitespace-nowrap px-3.5 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-lowest transition-all" data-filter="stage-2">
-              阶段二 (V2.x)
-            </button>
-<button class="stage-pill whitespace-nowrap px-3.5 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-lowest transition-all" data-filter="stage-1">
-              阶段一 (前身)
-            </button>
-</div>
-<!-- 动作右侧链接 -->
-<div class="ml-auto hidden md:flex items-center pr-2">
-<a class="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-primary font-body-md text-body-md transition-colors px-3 py-1.5" href="index.html">
-<span class="material-symbols-outlined text-[18px]">arrow_back</span>
-<span class="">返回首页</span>
-</a>
-</div>
-</div>
 </section>
-<!-- 2. 四大发展阶段概览表 (Stage Milestones Bento) -->
-<section class="py-8" id="overview-section">
-<div class="flex items-center justify-between mb-6 px-1">
-<div>
-<span class="font-label-caps text-label-caps text-primary tracking-widest uppercase">Chronicle Map</span>
-<h2 class="font-headline-md text-headline-md text-on-surface">四大发展阶段里程碑</h2>
-</div>
-<span class="font-label-code text-label-code text-on-surface-variant hidden sm:inline">2026.09 — 2026.10</span>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-<!-- 阶段一 -->
-<div class="flex flex-col p-6 rounded-2xl bg-surface-container-lowest shadow-md transition-all hover:shadow-xl hover:-translate-y-1 relative overflow-hidden group">
-<div class="flex items-center justify-between mb-4">
-<span class="font-label-caps text-label-caps px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant">STAGE 01</span>
-<span class="font-label-code text-label-code text-outline">09.24 — 09.26</span>
-</div>
-<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
-              12306 火车票票根编辑器
-            </h3>
-<p class="font-label-code text-label-code text-primary mt-1">V4.0 → V6.2.4</p>
-<p class="font-body-md text-body-md text-on-surface-variant mt-3 flex-1">
-              前身独立工具，专精铁路红色软纸票与蓝色磁介质票的高保真排版、防伪条码算法与纸质纹理仿真。
-            </p>
-<div class="mt-4 pt-3 flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps">
-<span class="material-symbols-outlined text-[16px] text-primary">train</span>
-<span class="">火车票工坊内核奠定</span>
-</div>
-</div>
-<!-- 阶段二 -->
-<div class="flex flex-col p-6 rounded-2xl bg-surface-container-lowest shadow-md transition-all hover:shadow-xl hover:-translate-y-1 relative overflow-hidden group">
-<div class="flex items-center justify-between mb-4">
-<span class="font-label-caps text-label-caps px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant">STAGE 02</span>
-<span class="font-label-code text-label-code text-outline">09.28 前后</span>
-</div>
-<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
-              迹点点平台雏形
-            </h3>
-<p class="font-label-code text-label-code text-primary mt-1">迹点点 V2.x (内部孵化)</p>
-<p class="font-body-md text-body-md text-on-surface-variant mt-3 flex-1">
-              完成从单票据生成器向旅行记忆工作台跨越。搭建应用外壳，登机牌与行程地图等模块进入初期孵化。
-            </p>
-<div class="mt-4 pt-3 flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps">
-<span class="material-symbols-outlined text-[16px] text-secondary">flight_takeoff</span>
-<span class="">多票种架构与地图探索</span>
-</div>
-</div>
-<!-- 阶段三 -->
-<div class="flex flex-col p-6 rounded-2xl bg-surface-container-lowest shadow-md transition-all hover:shadow-xl hover:-translate-y-1 relative overflow-hidden group">
-<div class="flex items-center justify-between mb-4">
-<span class="font-label-caps text-label-caps px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant">STAGE 03</span>
-<span class="font-label-code text-label-code text-outline">09.29 — 10.01</span>
-</div>
-<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
-              六大模块全面成型
-            </h3>
-<p class="font-label-code text-label-code text-primary mt-1">V3.0.0 → V3.3.9</p>
-<p class="font-body-md text-body-md text-on-surface-variant mt-3 flex-1">
-              确立火车票、飞机票、公交地铁、轮船、景区及影演票六维工坊。发布公开快照，提供纯前端离线单文件部署。
-            </p>
-<div class="mt-4 pt-3 flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps">
-<span class="material-symbols-outlined text-[16px] text-primary">view_quilt</span>
-<span class="">六模块矩阵 + 3D 展台</span>
-</div>
-</div>
-<!-- 阶段四 (当前) -->
-<div class="flex flex-col p-6 rounded-2xl bg-surface-container-lowest shadow-lg transition-all hover:shadow-xl hover:-translate-y-1 relative overflow-hidden group bg-gradient-to-b from-surface-container-lowest to-surface-container-low">
-<div class="flex items-center justify-between mb-4">
-<span class="font-label-caps text-label-caps px-2.5 py-1 rounded-full bg-primary-container text-on-primary font-bold">STAGE 04 · CURRENT</span>
-<span class="font-label-code text-label-code text-secondary font-bold">10.01 — 10.13</span>
-</div>
-<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
-              现代全栈 7 模块与移动端重塑
-            </h3>
-<p class="font-label-code text-label-code text-primary mt-1">V4.0.0 → V4.1.5</p>
-<p class="font-body-md text-body-md text-on-surface-variant mt-3 flex-1">
-              新增「我的旅游计划」AI 对话生成、全国地铁 8067+ 站离线矢量、端到端隐私引擎、原生移动端体验与设计系统级重构。
-            </p>
-<div class="mt-4 pt-3 flex items-center gap-2 text-primary font-label-caps text-label-caps">
-<span class="material-symbols-outlined text-[16px]">devices</span>
-<span class="">全平台响应与 AI 深度赋能</span>
-</div>
-</div>
-</div>
-</section>
+
 <!-- 3. 详细更新日志时间轴列表 (Detailed Changelog Timeline) -->
 <section class="py-10" id="timeline-section">
 <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
@@ -452,11 +336,6 @@
 <span class="font-label-caps text-label-caps uppercase tracking-wider">Release Timeline</span>
 </div>
 <h2 class="font-headline-lg text-headline-lg text-on-surface mt-1">全版本更新档案库</h2>
-</div>
-<div class="text-right">
-<span class="font-label-code text-label-code text-on-surface-variant">
-              显示状态：<span class="text-primary font-semibold" id="activeFilterLabel">全部版本</span>
-</span>
 </div>
 </div>
 <!-- 时间轴主容器 -->
@@ -813,15 +692,7 @@
 </div>
 </div>
 </div>
-<!-- 空搜索兜底状态卡 -->
-<div class="hidden flex-col items-center justify-center p-12 text-center rounded-3xl bg-surface-container-lowest shadow-md mt-6" id="noResultsNotice">
-<span class="material-symbols-outlined text-[44px] text-outline mb-3">search_off</span>
-<h4 class="font-headline-sm text-headline-sm text-on-surface">未匹配到相关版本记录</h4>
-<p class="font-body-md text-body-md text-on-surface-variant mt-1">请尝试搜索其他关键字，例如 "V4.1", "AI", "地图", "修复" 等</p>
-<button class="mt-4 px-4 py-2 rounded-full bg-primary-container text-on-primary font-body-md text-body-md font-medium shadow-sm hover:scale-105 transition-transform" id="resetSearchBtn">
-              重置筛选与搜索
-            </button>
-</div>
+
 </div>
 </section>
 <!-- 4. 底部温情声明与开源号召 -->
@@ -849,7 +720,7 @@
 </div>
 </div>
 </div>
-<!-- 客户端交互脚本：即时阶段筛选、关键词过滤与导航高亮维护 -->
+<!-- 客户端交互脚本：导航高亮与返回顶部维护 -->
 <script>
   (function initChangelogInteractivity() {
     // 1. 高亮导航栏中当前页签
@@ -866,90 +737,8 @@
       console.warn('Navbar active state initialization skipped');
     }
 
-    // 2. 搜索与筛选逻辑
-    const searchInput = document.getElementById('changelogSearchInput');
-    const filterButtons = document.querySelectorAll('.stage-pill');
-    const cards = document.querySelectorAll('.changelog-entry');
-    const noResults = document.getElementById('noResultsNotice');
-    const resetBtn = document.getElementById('resetSearchBtn');
-    const activeFilterLabel = document.getElementById('activeFilterLabel');
-    const scrollTopBtn = document.getElementById('scrollToTopBtn');
-
-    let currentStage = 'all';
-    let searchQuery = '';
-
-    function applyFilterAndSearch() {
-      let visibleCount = 0;
-
-      cards.forEach(card => {
-        const cardStage = card.getAttribute('data-stage');
-        const textContent = card.innerText.toLowerCase();
-
-        const matchStage = (currentStage === 'all') || (cardStage === currentStage);
-        const matchSearch = (!searchQuery) || textContent.includes(searchQuery);
-
-        if (matchStage && matchSearch) {
-          card.style.display = '';
-          visibleCount++;
-        } else {
-          card.style.display = 'none';
-        }
-      });
-
-      if (visibleCount === 0) {
-        noResults.classList.remove('hidden');
-        noResults.classList.add('flex');
-      } else {
-        noResults.classList.add('hidden');
-        noResults.classList.remove('flex');
-      }
-    }
-
-    // 监听阶段筛选标签切换
-    filterButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        filterButtons.forEach(b => {
-          b.classList.remove('bg-primary-container', 'text-on-primary', 'font-semibold', 'shadow-md');
-          b.classList.add('text-on-surface-variant');
-        });
-        btn.classList.add('bg-primary-container', 'text-on-primary', 'font-semibold', 'shadow-md');
-        btn.classList.remove('text-on-surface-variant');
-
-        currentStage = btn.getAttribute('data-filter');
-        activeFilterLabel.innerText = btn.innerText.trim();
-        applyFilterAndSearch();
-      });
-    });
-
-    // 监听输入框实时过滤
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        searchQuery = e.target.value.trim().toLowerCase();
-        applyFilterAndSearch();
-      });
-    }
-
-    // 重置按钮
-    if (resetBtn) {
-      resetBtn.addEventListener('click', () => {
-        if (searchInput) searchInput.value = '';
-        searchQuery = '';
-        currentStage = 'all';
-        filterButtons.forEach((b, idx) => {
-          if (idx === 0) {
-            b.classList.add('bg-primary-container', 'text-on-primary', 'font-semibold', 'shadow-md');
-            b.classList.remove('text-on-surface-variant');
-          } else {
-            b.classList.remove('bg-primary-container', 'text-on-primary', 'font-semibold', 'shadow-md');
-            b.classList.add('text-on-surface-variant');
-          }
-        });
-        activeFilterLabel.innerText = '全部版本';
-        applyFilterAndSearch();
-      });
-    }
-
     // 平滑返回顶部
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
     if (scrollTopBtn) {
       scrollTopBtn.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
