@@ -1,687 +1,888 @@
-<!doctype html>
-<html lang="zh-CN" data-theme="light">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!DOCTYPE html><html lang="zh-CN" class="scroll-smooth" style=""><head></head><body class="selection:bg-brand-100 selection:text-brand-800">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>迹点点 TraceDot · 旅行纪念票根工作室</title>
-  <meta name="description" content="迹点点 TraceDot：把火车票、登机牌、城市交通与演出门票整理成一张属于你的旅途地图。纯前端、单文件、数据不出浏览器。" />
+  <meta name="description" content="迹点点 TraceDot：把火车票、登机牌、城市交通与演出门票整理成一张属于你的旅途地图。纯前端、单文件、数据不出浏览器。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Noto+Sans+SC:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            trace: '#0C6B58',
-            traceDeep: '#075344',
-            mist: '#F4F8F7',
-            ink: '#122520',
-            muted: '#658078'
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              300: '#6ee7b7',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            },
+            coral: {
+              500: '#ff6243',
+              600: '#ea580c',
+            },
+            softBg: '#F3F5F9',
+            cardBg: '#FFFFFF',
+            slateText: '#1E293B',
+            mutedText: '#64748B',
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
           },
           boxShadow: {
-            trace: '0 24px 80px rgba(10, 92, 72, .15)',
-            float: '0 18px 55px rgba(14, 79, 63, .12)'
+            'soft': '0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 20px 25px -5px rgba(0, 0, 0, 0.02)',
+            'soft-lg': '0 20px 40px -15px rgba(16, 185, 129, 0.08), 0 15px 35px -5px rgba(0, 0, 0, 0.05)',
+            'pill': '0 4px 14px 0 rgba(16, 185, 129, 0.35)',
+            'coral-pill': '0 6px 20px 0 rgba(255, 98, 67, 0.4)',
+            'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.03)',
+          },
+          borderRadius: {
+            '4xl': '2rem',
+            '5xl': '2.5rem',
           }
         }
       }
     }
   </script>
   <style>
-    :root {
-      --trace: #0C6B58;
-      --trace-deep: #075344;
-      --trace-dark: #063d35;
-      --mist: #F4F8F7;
-      --paper: #ffffff;
-      --ink: #122520;
-      --muted: #658078;
-      --line: rgba(18, 37, 32, .10);
-      --soft-line: rgba(12, 107, 88, .14);
-      --radius-card: 24px;
-      /* 全站四级字号：1 主标题、2 卡片标题、3 正文小标题、4 辅助信息 */
-      --type-1: clamp(28px, 3.1vw, 46px);
-      --type-2: clamp(20px, 2vw, 28px);
-      --type-3: clamp(15px, 1.25vw, 19px);
-      --type-4: 12px;
-      --ease: cubic-bezier(.22,.61,.36,1);
-    }
-
-    [data-theme="dark"] {
-      --mist: #0b1815;
-      --paper: #122520;
-      --ink: #edf6f2;
-      --muted: #9cb7ad;
-      --line: rgba(237,246,242,.12);
-      --soft-line: rgba(158,225,204,.20);
-    }
-
-    * { box-sizing: border-box; }
-    /* 可复用的四级文字缩放类，页面标题与卡片标题统一使用同一套刻度 */
-    .type-1 { font-size: var(--type-1); }
-    .type-2 { font-size: var(--type-2); }
-    .type-3 { font-size: var(--type-3); }
-    .type-4 { font-size: var(--type-4); }
-    html { scroll-behavior: smooth; }
     body {
-      margin: 0;
-      color: var(--ink);
-      background: var(--mist);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background-color: #F4F6FA;
+      color: #1E293B;
+      font-family: 'Plus Jakarta Sans', 'Noto Sans SC', sans-serif;
       -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
     }
-    a { color: inherit; text-decoration: none; }
-    button, a { -webkit-tap-highlight-color: transparent; }
-    :focus-visible { outline: 3px solid rgba(27, 156, 126, .36); outline-offset: 4px; }
-
-    .page-grid {
-      background-image: linear-gradient(rgba(12,107,88,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(12,107,88,.035) 1px, transparent 1px);
-      background-size: 84px 84px;
+    .pill-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.03), 0 6px 12px -2px rgba(0, 0, 0, 0.02);
+      border-radius: 2rem;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    .glass {
-      background: color-mix(in srgb, var(--paper) 72%, transparent);
-      border: 1px solid color-mix(in srgb, var(--paper) 80%, var(--trace) 20%);
-      backdrop-filter: blur(18px) saturate(140%);
-      -webkit-backdrop-filter: blur(18px) saturate(140%);
+    .pill-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 35px -10px rgba(16, 185, 129, 0.08), 0 10px 20px -5px rgba(0, 0, 0, 0.04);
+      border-color: rgba(52, 211, 153, 0.4);
     }
-
-    .nav-shell {
-      position: fixed;
-      inset: 14px 0 auto;
-      z-index: 50;
-      pointer-events: none;
+    .soft-pill-btn {
+      transition: all 0.25s ease;
     }
-    .nav-inner {
-      max-width: 1320px;
-      margin: 0 auto;
-      padding: 0 24px;
-      pointer-events: auto;
+    .soft-pill-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px -4px rgba(16, 185, 129, 0.35);
     }
-    .nav-bar {
-      min-height: 62px;
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      padding: 9px 11px 9px 16px;
-      border-radius: 20px;
-      transition: box-shadow .3s ease, background .3s ease, border-color .3s ease;
+    .soft-pill-btn:active {
+      transform: translateY(0);
     }
-    .nav-bar.scrolled { box-shadow: 0 12px 40px rgba(4, 65, 51, .12); }
-    .brand { display: inline-flex; align-items: center; gap: 10px; flex-shrink: 0; }
-    .brand-mark {
-      width: 36px; height: 36px; display: grid; place-items: center; border-radius: 12px;
-      background: linear-gradient(145deg, #25a27e, #0C6B58);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 8px 18px rgba(12,107,88,.22);
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
     }
-    .brand-name { font-weight: 800; letter-spacing: -.06em; font-size: 17px; }
-    .brand-version { color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .12em; margin-left: -4px; }
-    .nav-links { display: flex; align-items: center; justify-content: center; gap: clamp(14px, 2.2vw, 30px); flex: 1; color: var(--muted); font-size: 12px; }
-    .nav-links a { transition: color .2s ease; white-space: nowrap; }
-    .nav-links a:hover { color: var(--trace); }
-    .nav-actions { display: flex; align-items: center; gap: 8px; }
-    .icon-btn, .menu-btn {
-      width: 37px; height: 37px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 12px;
-      color: var(--muted); background: color-mix(in srgb, var(--paper) 70%, transparent); cursor: pointer; transition: transform .25s ease, color .25s ease, background .25s ease;
+    /* 自定义微妙动态脉冲波纹 */
+    @keyframes floatSoft {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
     }
-    .icon-btn:hover, .menu-btn:hover { color: var(--trace); transform: translateY(-2px); background: var(--paper); }
-    .menu-btn { display: none; }
-    .primary-btn, .secondary-btn {
-      min-height: 43px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 0 17px; border-radius: 999px; font-size: 12px; font-weight: 750; transition: transform .25s var(--ease), box-shadow .25s var(--ease), background .25s ease;
-    }
-    .primary-btn { color: white; background: var(--trace); box-shadow: 0 12px 25px rgba(12,107,88,.22); }
-    .primary-btn:hover { transform: translateY(-3px); box-shadow: 0 18px 32px rgba(12,107,88,.30); background: #0a5e4e; }
-    .secondary-btn { color: var(--trace); background: var(--paper); border: 1px solid var(--soft-line); }
-    .secondary-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(12,107,88,.12); }
-
-    .hero {
-      position: relative;
-      min-height: 920px;
-      padding: 154px 0 104px;
-      overflow: hidden;
-      isolation: isolate;
-    }
-    .hero::before {
-      content: ""; position: absolute; z-index: -2; width: 820px; height: 820px; right: -250px; top: -30px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(164, 226, 208, .60), rgba(164,226,208,0) 68%); filter: blur(4px);
-    }
-    .hero::after {
-      content: ""; position: absolute; z-index: -2; width: 600px; height: 380px; left: -220px; bottom: -140px;
-      background: radial-gradient(ellipse, rgba(185,222,211,.46), transparent 70%);
-    }
-    .hero-grid { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); align-items: center; gap: clamp(35px, 6vw, 100px); }
-    .hero-copy { padding-top: 20px; }
-    .eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--trace); font-size: 12px; letter-spacing: .17em; font-weight: 800; }
-    .eyebrow::before { content: ""; width: 28px; height: 2px; border-radius: 2px; background: var(--trace); }
-    .hero h1 { margin: 24px 0 22px; max-width: 700px; font-size: var(--type-1); line-height: 1.12; letter-spacing: -.06em; font-weight: 850; }
-    .hero h1 .second-line { display: inline-block; white-space: nowrap; }
-    @media (max-width: 420px) { .hero h1 .second-line { white-space: normal; } }
-    .hero h1 em { color: var(--trace); font-style: normal; }
-    .hero-lead { max-width: 490px; color: var(--muted); font-size: 16px; line-height: 1.8; }
-    .pills { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 25px; }
-    .pill { display: inline-flex; align-items: center; gap: 7px; padding: 9px 12px; border-radius: 999px; color: var(--trace); background: rgba(205, 238, 226, .72); font-size: 11px; font-weight: 750; }
-    .pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
-    .hero-actions { display: flex; align-items: center; gap: 11px; flex-wrap: wrap; margin-top: 32px; }
-    .hero-note { margin-top: 15px; color: var(--muted); font-size: 11px; }
-    .stats { display: grid; grid-template-columns: repeat(3, 1fr); max-width: 550px; margin-top: 43px; border-top: 1px solid var(--line); padding-top: 18px; }
-    .stat { padding-right: 18px; border-right: 1px solid var(--line); }
-    .stat + .stat { padding-left: 18px; }
-    .stat:last-child { border-right: 0; }
-    .stat-number { font-size: 30px; line-height: 1; font-weight: 850; letter-spacing: -.07em; }
-    .stat-label { margin-top: 7px; color: var(--muted); font-size: 11px; }
-
-    .hero-visual { position: relative; min-height: 640px; display: grid; place-items: center; }
-    .hero-orb { position: absolute; width: 92%; max-width: 720px; aspect-ratio: 1.03; border-radius: 48% 52% 44% 56%; background: radial-gradient(circle at 35% 28%, rgba(255,255,255,.85), rgba(186,230,215,.72) 46%, rgba(142,201,181,.40)); filter: blur(.4px); transform: rotate(-5deg); }
-    .archive-window { position: relative; width: min(100%, 690px); overflow: hidden; border-radius: 27px; padding: 16px; background: rgba(255,255,255,.56); border: 1px solid rgba(255,255,255,.82); box-shadow: 0 30px 80px rgba(9, 80, 63, .16); backdrop-filter: blur(16px); }
-    .archive-top { display: flex; align-items: flex-end; justify-content: space-between; min-height: 110px; padding: 21px 25px 23px; color: rgba(255,255,255,.77); background: linear-gradient(135deg, #0b5d4d, #0a705a 58%, #0e7b62); border-radius: 17px 17px 3px 3px; }
-    .archive-kicker { font-size: var(--type-4); letter-spacing: .2em; }
-    .archive-title { margin-top: 10px; color: white; font-size: var(--type-2); font-weight: 820; letter-spacing: -.06em; }
-    .archive-meta { text-align: right; font-size: 10px; line-height: 1.8; }
-    .archive-body { position: relative; padding: 35px 29px 28px; background: rgba(247,252,250,.94); }
-    .trip-head { display: flex; align-items: flex-start; justify-content: space-between; position: relative; z-index: 2; }
-    .trip-kicker { color: #8ca9a0; font-size: 10px; letter-spacing: .16em; }
-    .trip-title { margin-top: 8px; color: #24554a; font-size: 17px; font-weight: 800; letter-spacing: -.04em; }
-    .trip-cities { margin-top: 8px; color: #8ca9a0; font-size: 11px; }
-    .route-map { display: block; width: 100%; height: 235px; margin: -6px auto 0; overflow: visible; }
-    .route-line { stroke: #1e9173; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; fill: none; stroke-dasharray: 860; stroke-dashoffset: 860; animation: draw-route 2.6s .5s var(--ease) forwards; }
-    .route-dash { stroke: #83c7b4; stroke-width: 3; stroke-linecap: round; fill: none; stroke-dasharray: 7 11; opacity: .9; }
-    .route-dot { fill: #f7fcfa; stroke: #1e9173; stroke-width: 4; }
-    .route-pulse { fill: #1e9173; opacity: .25; animation: route-pulse 2s infinite; }
-    .ticket-card { position: absolute; right: 29px; bottom: 46px; width: min(57%, 315px); padding: 15px 17px 14px; border: 1px solid #cfe2db; border-radius: 15px; background: rgba(255,255,255,.95); box-shadow: 0 15px 32px rgba(19, 93, 72, .10); }
-    .ticket-label { color: #85a99d; font-size: 9px; letter-spacing: .18em; }
-    .ticket-route { display: grid; grid-template-columns: 1fr 45px 1fr; align-items: center; gap: 8px; margin-top: 11px; padding-bottom: 11px; border-bottom: 1px dashed #d4e4df; }
-    .ticket-city { color: #1a5549; font-size: 16px; font-weight: 850; letter-spacing: -.06em; }
-    .ticket-city small { display: block; margin-top: 4px; color: #8ca9a0; font-size: 8px; letter-spacing: .08em; font-weight: 650; }
-    .ticket-city:last-child { text-align: right; }
-    .ticket-arrow { color: #1e9173; text-align: center; font-size: 17px; }
-    .ticket-info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-top: 10px; }
-    .ticket-info span { display: block; color: #9bb4ac; font-size: 8px; text-transform: uppercase; }
-    .ticket-info b { display: block; margin-top: 4px; color: #2d6255; font-size: 11px; }
-    .timeline { display: flex; align-items: center; justify-content: space-between; margin: 16px 0 0; padding-top: 14px; border-top: 1px solid #c9e1d9; }
-    .timeline-item { position: relative; color: #7c9d92; font-size: 9px; text-align: center; }
-    .timeline-item::before { content: ""; display: block; width: 10px; height: 10px; margin: 0 auto 7px; border-radius: 50%; background: #209577; box-shadow: 0 0 0 5px rgba(32,149,119,.10); }
-    .scroll-cue { position: absolute; left: 50%; bottom: 30px; display: inline-flex; align-items: center; gap: 8px; transform: translateX(-50%); color: var(--muted); font-size: 10px; letter-spacing: .12em; }
-    .scroll-cue span { animation: bounce 1.6s infinite; }
-
-    .section { position: relative; padding: clamp(92px, 11vw, 150px) 0; }
-    .section-soft { background: color-mix(in srgb, var(--mist) 78%, var(--paper)); }
-    .section-dark { color: #eef7f3; background: #071d18; overflow: hidden; }
-    .section-dark::before { content: ""; position: absolute; width: 780px; height: 520px; right: -220px; top: -260px; border-radius: 50%; background: radial-gradient(circle, rgba(38, 146, 113, .40), transparent 70%); }
-    .section-head { max-width: 760px; }
-    .section-kicker { color: var(--trace); font-size: 11px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
-    .section-dark .section-kicker { color: #79cbb4; }
-    .section h2 { margin: 17px 0 18px; font-size: var(--type-1); line-height: 1.06; letter-spacing: -.075em; font-weight: 850; }
-    .section-lead { max-width: 620px; color: var(--muted); font-size: var(--type-3); line-height: 1.8; }
-    .section-dark .section-lead { color: #9bb7ad; }
-
-    .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 48px; }
-    .metric-card { padding: 26px 22px 25px; border: 1px solid var(--soft-line); border-radius: 18px; background: var(--paper); box-shadow: 0 10px 25px rgba(12,107,88,.05); }
-    .metric-number { color: var(--trace); font-size: clamp(33px, 4vw, 53px); line-height: .92; font-weight: 850; letter-spacing: -.09em; }
-    .metric-label { margin-top: 13px; color: var(--muted); font-size: 12px; }
-
-    .module-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 52px; }
-    .module-card { min-height: 230px; position: relative; padding: 24px; border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--paper); transition: transform .35s var(--ease), border-color .35s ease, box-shadow .35s ease; }
-    .module-card:hover { transform: translateY(-7px); border-color: rgba(12,107,88,.43); box-shadow: 0 24px 45px rgba(12,107,88,.11); }
-    .module-num { color: var(--trace); font: 800 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .12em; }
-    .module-icon { position: absolute; top: 22px; right: 21px; width: 41px; height: 41px; display: grid; place-items: center; border-radius: 14px; color: var(--trace); background: rgba(203,236,224,.65); }
-    .module-card h3 { margin: 43px 0 10px; font-size: var(--type-3); letter-spacing: -.06em; }
-    .module-card p { max-width: 30ch; color: var(--muted); font-size: 13px; line-height: 1.75; }
-    .module-arrow { position: absolute; right: 24px; bottom: 22px; color: var(--trace); font-size: 18px; transition: transform .25s ease; }
-    .module-card:hover .module-arrow { transform: translate(4px, -4px); }
-
-    .bento { display: grid; grid-template-columns: 1.12fr .88fr .88fr; grid-template-rows: repeat(2, minmax(180px, auto)); gap: 15px; margin-top: 50px; }
-    .feature-card { position: relative; overflow: hidden; min-height: 185px; padding: 25px; border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--paper); }
-    .feature-card.large { grid-row: span 2; min-height: 380px; color: #ecf8f2; background: linear-gradient(145deg, #0a5f4e, #0b7a60 62%, #1b9274); border-color: transparent; }
-    .feature-card h3 { margin: 24px 0 9px; font-size: var(--type-3); letter-spacing: -.05em; }
-    .feature-card.large h3 { max-width: 300px; font-size: var(--type-2); }
-    .feature-card p { max-width: 35ch; color: var(--muted); font-size: 12px; line-height: 1.7; }
-    .feature-card.large p { color: rgba(236,248,242,.72); }
-    .feature-index { color: var(--trace); font: 800 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .15em; }
-    .feature-card.large .feature-index { color: rgba(236,248,242,.73); }
-    .feature-decoration { position: absolute; right: -26px; bottom: -56px; width: 210px; height: 210px; border: 1px solid rgba(255,255,255,.20); border-radius: 50%; }
-    .feature-decoration::before, .feature-decoration::after { content: ""; position: absolute; inset: 22px; border: 1px solid rgba(255,255,255,.17); border-radius: 50%; }
-    .feature-decoration::after { inset: 46px; }
-    .feature-mini-line { position: absolute; right: 22px; bottom: 25px; width: 80px; height: 45px; border-bottom: 2px solid rgba(12,107,88,.40); border-radius: 0 0 50% 50%; transform: rotate(-24deg); }
-
-    .tech-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.02fr .98fr; gap: clamp(42px, 8vw, 115px); align-items: start; margin-top: 45px; }
-    .tech-panel { border-top: 1px solid rgba(236,248,242,.18); }
-    .tech-row { display: grid; grid-template-columns: 55px 1fr; gap: 16px; padding: 21px 0; border-bottom: 1px solid rgba(236,248,242,.13); }
-    .tech-num { color: #79cbb4; font: 800 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; padding-top: 5px; }
-    .tech-row h3 { margin: 0 0 7px; font-size: 17px; letter-spacing: -.04em; }
-    .tech-row p { margin: 0; max-width: 50ch; color: #9bb7ad; font-size: 12px; line-height: 1.75; }
-    .privacy-card { padding: 25px; border: 1px solid rgba(121,203,180,.25); border-radius: 22px; background: rgba(19, 73, 60, .72); box-shadow: inset 0 1px 0 rgba(255,255,255,.06); }
-    .privacy-top { display: flex; align-items: center; gap: 12px; }
-    .privacy-badge { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 14px; color: #062e27; background: #87d4bd; }
-    .privacy-card h3 { margin: 0; font-size: var(--type-3); letter-spacing: -.05em; }
-    .privacy-card small { display: block; margin-top: 4px; color: #9bb7ad; font-size: 11px; }
-    .privacy-list { display: grid; gap: 12px; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(236,248,242,.15); }
-    .privacy-item { display: flex; align-items: flex-start; gap: 10px; color: #c5ddd4; font-size: 12px; line-height: 1.6; }
-    .privacy-item b { color: #80d0b9; }
-    .privacy-item::before { content: "✓"; flex: 0 0 auto; color: #7bd4ba; font-weight: 900; }
-    .consent-note { margin-top: 23px; padding: 12px 14px; border-radius: 12px; color: #b8d3c9; background: rgba(4, 34, 28, .46); font-size: 11px; line-height: 1.7; }
-
-    /* 下载区与创作者主页 */
-    .download-band { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: clamp(32px, 5vw, 64px); border-radius: 28px; color: #eef8f3; background: linear-gradient(125deg, #075344, #0c6b58 68%, #147e65); box-shadow: 0 25px 60px rgba(7,83,68,.17); }
-    .download-band::after { content: ""; position: absolute; right: -80px; bottom: -145px; width: 330px; height: 330px; border: 1px solid rgba(255,255,255,.17); border-radius: 50%; pointer-events: none; }
-    .download-band > * { position: relative; z-index: 1; }
-    .download-band .section-kicker { color: #a5e5d1; }
-    .download-band h2 { margin: 13px 0; font-size: var(--type-2); line-height: 1.15; letter-spacing: -.06em; }
-    .download-band p { margin: 0; color: #c8e7dc; font-size: 13px; line-height: 1.7; }
-    .download-actions { display: flex; flex-wrap: wrap; gap: 10px; flex-shrink: 0; }
-    .download-actions .primary-btn { color: var(--trace-deep); background: #fff; box-shadow: none; }
-    .download-actions .primary-btn:hover { color: var(--trace-deep); background: #e6f6ef; }
-    .download-actions .secondary-btn { color: #fff; background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.38); }
-    .download-actions .secondary-btn:hover { background: rgba(255,255,255,.16); }
-
-    .desktop-band { margin-top: 18px; padding: clamp(24px, 4vw, 36px); border: 1px solid var(--soft-line); border-radius: 28px; background: var(--paper); box-shadow: 0 18px 48px rgba(12,107,88,.07); }
-    .desktop-head { max-width: 720px; }
-    .desktop-head h3 { margin: 10px 0 6px; font-size: var(--type-3); font-weight: 800; letter-spacing: -.05em; }
-    .desktop-head p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
-    .desktop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-top: 22px; }
-    .desktop-card { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 18px 20px; border: 1px solid var(--soft-line); border-radius: 18px; background: #fff; text-decoration: none; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
-    .desktop-card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(12,107,88,.12); border-color: var(--trace); }
-    .desktop-card.is-recommended { border-color: var(--trace); box-shadow: 0 0 0 3px rgba(12,107,88,.1); }
-    .dc-name { color: var(--ink); font-size: 15px; font-weight: 700; letter-spacing: -.02em; }
-    .dc-meta { color: var(--muted); font-size: 12px; }
-    .dc-tag { position: absolute; top: -9px; right: 14px; padding: 2px 10px; border-radius: 999px; background: var(--trace); color: #fff; font-size: 11px; font-weight: 700; }
-    .dc-more { justify-content: center; align-items: center; background: transparent; border-style: dashed; }
-    .dc-more .dc-name { color: var(--trace-deep); }
-
-    .creator-card { display: grid; grid-template-columns: 68px minmax(0,1fr); gap: 24px; align-items: start; max-width: 850px; margin: 45px auto 0; padding: clamp(24px, 4vw, 40px); border: 1px solid var(--soft-line); border-radius: 26px; background: var(--paper); box-shadow: 0 18px 48px rgba(12,107,88,.07); }
-    .creator-avatar { width: 68px; height: 68px; display: grid; place-items: center; overflow: hidden; border-radius: 21px; background: linear-gradient(145deg, #24a17e, #075344); box-shadow: 0 10px 25px rgba(12,107,88,.22); }
-    .creator-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
-    .creator-name { font-size: var(--type-3); font-weight: 800; letter-spacing: -.05em; }
-    .creator-role { margin-top: 3px; color: var(--trace); font-size: 12px; font-weight: 700; }
-    .creator-bio { margin: 15px 0 20px; color: var(--muted); font-size: 13px; line-height: 1.7; }
-    .creator-socials { display: flex; flex-wrap: wrap; gap: 10px; }
-    .creator-socials { grid-column: 2; }
-    .creator-socials a { min-height: 44px; display: inline-flex; align-items: center; padding: 0 15px; border: 1px solid var(--soft-line); border-radius: 999px; color: var(--trace); background: color-mix(in srgb, var(--paper) 70%, var(--mist)); font-size: 12px; font-weight: 700; transition: transform .25s var(--ease), border-color .25s ease, background .25s ease; }
-    .creator-socials a:hover { transform: translateY(-3px); border-color: var(--trace); background: var(--paper); }
-
-    .footer { padding: 65px 0 32px; color: #9bb7ad; background: #061510; }
-    .footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 45px; align-items: start; }
-    .footer-brand { color: #edf7f2; }
-    .footer-description { max-width: 350px; margin-top: 14px; font-size: 12px; line-height: 1.8; }
-    .footer-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 14px 24px; font-size: 12px; }
-    .footer-links a { transition: color .2s ease; }
-    .footer-links a:hover { color: #edf7f2; }
-    .disclaimer { margin-top: 43px; padding: 17px 18px; border: 1px solid rgba(248, 207, 131, .23); border-radius: 15px; color: #d9c998; background: rgba(90, 68, 24, .20); font-size: 11px; line-height: 1.7; }
-    .credits { margin-top: 26px; padding-top: 20px; border-top: 1px solid rgba(236,248,242,.12); font-size: 11px; line-height: 1.8; }
-    .credits a { color: #83d1b8; }
-    .copyright { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 27px; padding-top: 18px; border-top: 1px solid rgba(236,248,242,.12); font-size: 10px; }
-
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .72s var(--ease), transform .72s var(--ease); }
-    .reveal.in { opacity: 1; transform: none; }
-    .delay-1 { transition-delay: .08s; }
-    .delay-2 { transition-delay: .16s; }
-    .delay-3 { transition-delay: .24s; }
-    @keyframes draw-route { to { stroke-dashoffset: 0; } }
-    @keyframes route-pulse { 0%,100% { transform: scale(.85); opacity: .18; transform-origin: center; } 50% { transform: scale(1.7); opacity: .42; transform-origin: center; } }
-    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
-
-    @media (max-width: 1020px) {
-      .nav-links { display: none; }
-      .menu-btn { display: grid; }
-      .nav-actions { margin-left: auto; }
-      .nav-bar { flex-wrap: wrap; }
-      .nav-bar.menu-open { border-radius: 20px 20px 13px 13px; }
-      .mobile-panel { flex-basis: 100%; }
-      .nav-bar.menu-open .mobile-panel { display: grid; }
-      .hero { min-height: auto; padding-top: 137px; }
-      .hero-grid, .tech-grid { grid-template-columns: 1fr; }
-      .hero-copy { padding-top: 0; }
-      .hero-visual { min-height: 580px; margin-top: 10px; }
-      .module-grid { grid-template-columns: repeat(2, 1fr); }
-      .bento { grid-template-columns: 1fr 1fr; }
-      .feature-card.large { grid-column: span 2; grid-row: auto; min-height: 280px; }
-      .footer-grid { grid-template-columns: 1fr; }
-      .footer-links { justify-content: flex-start; }
-      .download-band { align-items: flex-start; flex-direction: column; }
-    }
-    @media (max-width: 640px) {
-      .nav-shell { inset: 9px 0 auto; }
-      .nav-inner { padding: 0 14px; }
-      .nav-bar { padding-left: 12px; }
-      .brand-version { display: none; }
-      .mobile-panel { grid-template-columns: 1fr 1fr; }
-      .hero { padding: 113px 0 82px; }
-      .hero h1 { font-size: clamp(27px, 7.2vw, 34px); }
-      .hero-lead { font-size: 15px; }
-      .hero-visual { min-height: 430px; margin-inline: -9px; }
-      .archive-window { padding: 9px; border-radius: 21px; }
-      .archive-top { min-height: 92px; padding: 16px 16px 18px; }
-      .archive-title { font-size: var(--type-2); }
-      .archive-body { padding: 22px 13px 20px; }
-      .trip-title { font-size: 14px; }
-      .trip-cities { font-size: 9px; }
-      .route-map { height: 172px; margin-top: 8px; }
-      .ticket-card { right: 12px; bottom: 34px; width: 68%; padding: 11px 12px; }
-      .ticket-city { font-size: 12px; }
-      .ticket-city small { font-size: 6px; }
-      .ticket-info b { font-size: 9px; }
-      .timeline-item { font-size: 7px; }
-      .stats { margin-top: 33px; }
-      .stat-number { font-size: 24px; }
-      .stat-label { font-size: 9px; }
-      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
-      .metric-card { padding: 20px 15px; }
-      .module-grid { grid-template-columns: 1fr; }
-      .module-card { min-height: 205px; }
-      .bento { grid-template-columns: 1fr; }
-      .feature-card.large { grid-column: auto; min-height: 300px; }
-      .tech-row { grid-template-columns: 42px 1fr; }
-      .copyright { align-items: flex-start; flex-direction: column; }
-      .scroll-cue { bottom: 16px; }
-      .download-band { gap: 24px; }
-      .download-actions { width: 100%; }
-      .download-actions a { flex: 1 1 135px; }
-      .creator-card { grid-template-columns: 1fr; gap: 16px; }
-      .creator-socials a { flex: 1 1 125px; justify-content: center; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-      .reveal { opacity: 1 !important; transform: none !important; }
-    }
-
-    .mobile-panel { display: none; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 11px 0 2px; }
-    .mobile-panel a { padding: 10px 8px; border-radius: 10px; color: var(--muted); background: color-mix(in srgb, var(--paper) 75%, transparent); text-align: center; font-size: 11px; }
-    @media (max-width: 640px) {
-      .mobile-panel { grid-template-columns: 1fr 1fr; }
-      .creator-socials { grid-column: 1; }
+    .animate-float {
+      animation: floatSoft 5s ease-in-out infinite;
     }
   </style>
-</head>
-<body class="page-grid">
-  <!-- 悬浮毛玻璃导航 -->
-  <header class="nav-shell">
-    <div class="nav-inner">
-      <div class="nav-bar glass" id="navBar">
-        <a class="brand" href="#home" aria-label="迹点点首页">
-          <span class="brand-mark" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <circle cx="16.4" cy="7.1" r="3.15" fill="white" />
-              <circle cx="13.1" cy="10.4" r="1.05" fill="white" />
-              <circle cx="11.3" cy="12.2" r="1.15" fill="white" />
-              <circle cx="9.3" cy="14.3" r="1" fill="white" />
-              <circle cx="7.2" cy="16.6" r="3.15" fill="white" />
-            </svg>
-          </span>
-          <span class="brand-name">迹点点</span>
-          <span class="brand-version">V4.1.5</span>
+
+
+
+  <!-- 顶部悬浮胶囊导航条 -->
+  <div class="fixed top-5 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+    <header class="pointer-events-auto flex items-center justify-between gap-6 px-4 sm:px-6 py-2.5 rounded-full glass-nav shadow-soft max-w-5xl w-full border border-white/60">
+      
+      <!-- 品牌 Logo：保留原始形态，融入全新翠绿微质感胶囊 -->
+      <a href="#home" class="flex items-center gap-2.5 group shrink-0"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7rcjiwGQupugW6cdmkDBFdOZpSlQmWeM5wLnmkp1onprRUR2Vp3c9FPH5XVnBqBlqSYCuugD93apBf2zRN3DgC4o5AAVv7_NL9oAG9X1ZCyDG9hBLhbmY2M_AW4qnlppXksDONkhhMBhSd3QCm2uOtgvvC3vp-kV9fuMXrQl67OupVtubSxxEonX9akxmDs2MG1jNYohOSKoCXQs9qHLe5urWLEcet5SWFU1RNrv_Vthqfu718-LHyQxAr_pYUc7LILQ" alt="迹点点 Logo" class="w-8 h-8 rounded-xl object-cover shadow-sm group-hover:scale-105 transition-transform shrink-0"><span class="font-extrabold text-sm sm:text-base text-slate-800 tracking-tight group-hover:text-brand-600 transition-colors">迹点点</span><span class="px-2 py-0.5 text-[10px] font-mono bg-brand-50 text-brand-700 border border-brand-200/80 rounded-full font-semibold">V4.1.5</span></a>
+
+      <!-- 导航链接：柔和圆润悬浮胶囊标签 -->
+      <nav class="hidden md:flex items-center gap-1 bg-slate-100/70 p-1.5 rounded-full border border-slate-200/50">
+        <a href="#home" class="px-4 py-1.5 text-xs font-semibold text-slateText hover:text-brand-600 hover:bg-white rounded-full transition-all">首页</a>
+        <a href="#metrics" class="px-4 py-1.5 text-xs font-medium text-mutedText hover:text-slateText hover:bg-white rounded-full transition-all">数据看板</a>
+        <a href="#modules" class="px-4 py-1.5 text-xs font-medium text-mutedText hover:text-slateText hover:bg-white rounded-full transition-all">功能模块</a>
+        <a href="#features" class="px-4 py-1.5 text-xs font-medium text-mutedText hover:text-slateText hover:bg-white rounded-full transition-all">技术亮点</a>
+        <a href="changelog.html" class="px-4 py-1.5 text-xs font-medium text-mutedText hover:text-slateText hover:bg-white rounded-full transition-all">更新日志</a>
+        <a href="#privacy" class="px-4 py-1.5 text-xs font-medium text-mutedText hover:text-slateText hover:bg-white rounded-full transition-all">隐私说明</a>
+        <a href="#creator" class="px-4 py-1.5 text-xs font-medium text-mutedText hover:text-slateText hover:bg-white rounded-full transition-all">关于作者</a>
+      </nav>
+
+      <!-- 动作按钮 -->
+      <div class="flex items-center gap-2.5">
+        <a href="https://github.com/ajietudou007/TraceDot" target="_blank" rel="noopener" class="hidden sm:flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors" title="GitHub 源码">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path></svg>
         </a>
-        <nav class="nav-links" aria-label="主导航">
-          <a href="#home">首页</a>
-          <a href="#modules">功能模块</a>
-          <a href="#features">技术亮点</a>
-          <a href="changelog.html">更新日志</a>
-          <a href="#download">下载</a>
-          <a href="#privacy">隐私说明</a>
-          <a href="#creator">关于作者</a>
-          <a href="https://github.com/ajietudou007/TraceDot" target="_blank" rel="noopener">GitHub ↗</a>
-        </nav>
-        <div class="nav-actions">
-          <button class="icon-btn" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">
-            <svg id="themeIcon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"/></svg>
-          </button>
-          <button class="menu-btn" id="menuToggle" type="button" aria-label="打开导航" aria-expanded="false">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-          </button>
-        </div>
-        <div class="mobile-panel" id="mobilePanel">
-          <a href="#home">首页</a><a href="#modules">功能模块</a><a href="#features">技术亮点</a><a href="changelog.html">更新日志</a><a href="#download">下载</a><a href="#privacy">隐私说明</a><a href="#creator">关于作者</a>
-        </div>
+        <a href="#download" class="soft-pill-btn flex items-center gap-2 bg-gradient-to-r from-brand-500 to-emerald-600 hover:from-brand-600 hover:to-emerald-700 text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-full shadow-pill">
+          <span class="">下载桌面版</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </a>
       </div>
-    </div>
-  </header>
+    </header>
+  </div>
 
-  <main id="home">
-    <!-- Hero 首屏：左文案 + 右侧旅程档案视觉 -->
-    <section class="hero">
-      <div class="container mx-auto max-w-[1320px] px-6">
-        <div class="hero-grid">
-          <div class="hero-copy">
-            <div class="eyebrow reveal">TRAVEL, REMEMBERED.</div>
-            <h1 class="reveal delay-1">把每一次出发<br><span class="second-line">变成一份 <em>可回看的记忆。</em></span></h1>
-            <p class="hero-lead reveal delay-2">把火车票、登机牌、城市交通与演出门票整理成一张属于你的旅途地图。</p>
-            <div class="pills reveal delay-2"><span class="pill">行程地图</span><span class="pill">票据工坊</span><span class="pill">珍藏时间轴</span></div>
-            <div class="hero-actions reveal delay-3"><a class="primary-btn" href="#download">下载应用 <span aria-hidden="true">↓</span></a><a class="secondary-btn" href="https://jidiandian.top/release/TraceDot-V4.1.5.html" target="_blank" rel="noopener">在线访问 <span aria-hidden="true">↗</span></a></div>
-            <p class="hero-note reveal delay-3">纯前端 · 单文件 · 零运行时依赖 · 数据不出浏览器</p>
-            <div class="stats reveal delay-3">
-              <div class="stat"><div class="stat-number">45</div><div class="stat-label">张票据</div></div>
-              <div class="stat"><div class="stat-number">2,478</div><div class="stat-label">km 旅程</div></div>
-              <div class="stat"><div class="stat-number">¥9,075</div><div class="stat-label">旅途成本</div></div>
+  <main id="home" class="pt-28 pb-12">
+    <!-- Hero 首屏：极致清爽的高端软质多态风格 -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 relative">
+      <!-- 柔和背景环境光晕 -->
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-gradient-to-tr from-emerald-200/40 via-teal-100/30 to-amber-100/30 rounded-full blur-3xl pointer-events-none -z-10"></div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <!-- 左侧文案与主要行动组 -->
+        <div class="lg:col-span-6 flex flex-col items-start space-y-6">
+          <!-- 小胶囊标签 -->
+          <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/90 border border-slate-200/80 shadow-sm text-xs font-medium text-slate-700">
+            <span class="flex h-2 w-2 relative">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
+            </span>
+            <span class="font-mono text-mutedText">TRACEDOT 4.1.5</span>
+            <span class="text-slate-300">|</span>
+            <span class="text-brand-700 font-semibold">纯前端 · 单文件 · 数据零外传</span>
+          </div>
+
+          <!-- 主标题 -->
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+            把每一次出发，<br>
+            化作一张 <span class="bg-gradient-to-r from-brand-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">温润可触</span> 的记忆。
+          </h1>
+
+          <p class="text-base sm:text-lg text-mutedText max-w-xl leading-relaxed">
+            将火车票、登机牌、城市公共交通与演出门票整理汇聚成一张专属的时光旅行地图。纯本地运行，免安装双击即用。
+          </p>
+
+          <!-- 胶囊功能特色微徽章组（参考多态卡片风格） -->
+          <div class="flex flex-wrap gap-2.5 pt-1">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700 shadow-sm">
+              <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
+              <span class="">自绘矢量航迹地图</span>
+            </div>
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700 shadow-sm">
+              <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
+              <span class="">12306 / 登机牌工坊</span>
+            </div>
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700 shadow-sm">
+              <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
+              <span class="">本地离线双重存储</span>
             </div>
           </div>
 
-          <div class="hero-visual reveal delay-2" aria-label="旅程档案预览">
-            <div class="hero-orb" aria-hidden="true"></div>
-            <div class="archive-window">
-              <div class="archive-top">
-                <div><div class="archive-kicker">JOURNEY ARCHIVE</div><div class="archive-title">你的旅途，正在成形</div></div>
-                <div class="archive-meta">2026 · 09 · 26<br>45 段行程 · 42 个地点</div>
-              </div>
-              <div class="archive-body">
-                <div class="trip-head"><div><div class="trip-kicker">TRIP OVERVIEW</div><div class="trip-title">一张地图，串起 45 段旅程</div><div class="trip-cities">北京 · 上海 · 广州 · 成都 · 昆明</div></div><div class="text-[10px] text-[#91b1a6]">ARCHIVE / 04</div></div>
-                <svg class="route-map" viewBox="0 0 650 260" fill="none" aria-hidden="true">
-                  <path class="route-dash" d="M42 163 C130 75 194 77 259 155 S387 255 470 132 S565 47 628 82" />
-                  <path class="route-dash" d="M73 98 C170 182 248 197 334 158 S462 68 606 172" />
-                  <path class="route-line" d="M42 178 C105 119 171 91 250 145 S350 251 449 127 S551 77 628 130" />
-                  <circle class="route-pulse" cx="42" cy="178" r="8" /><circle class="route-pulse" cx="250" cy="145" r="8" /><circle class="route-pulse" cx="449" cy="127" r="8" /><circle class="route-pulse" cx="628" cy="130" r="8" />
-                  <circle class="route-dot" cx="42" cy="178" r="10" /><circle class="route-dot" cx="250" cy="145" r="10" /><circle class="route-dot" cx="449" cy="127" r="10" /><circle class="route-dot" cx="628" cy="130" r="10" />
-                  <g fill="#1e9173"><circle cx="147" cy="115" r="4"/><circle cx="303" cy="177" r="4"/><circle cx="515" cy="102" r="4"/></g>
-                </svg>
-                <div class="ticket-card">
-                  <div class="ticket-label">PAPER TICKET STUDIO</div>
-                  <div class="ticket-route"><div class="ticket-city">昆明南站<small>KUNMINGNAN</small></div><div class="ticket-arrow">→</div><div class="ticket-city">重庆西站<small>CHONGQINGXI</small></div></div>
-                  <div class="ticket-info"><div><span>DATE</span><b>2026/09/16</b></div><div><span>TRAIN</span><b>G2884</b></div><div><span>FARE</span><b>¥381</b></div></div>
+          <!-- 行动按钮组 -->
+          <div class="flex flex-wrap items-center gap-4 pt-4">
+            <a href="#download" class="soft-pill-btn inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-gradient-to-r from-brand-500 to-emerald-600 text-white font-bold text-sm shadow-pill">
+              <span class="">立即下载体验</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            </a>
+            
+            <a href="https://jidiandian.top/release/TraceDot-V4.1.5.html" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200/90 text-slate-800 font-semibold text-sm shadow-sm transition-all hover:border-slate-300">
+              <span class="">浏览器在线打开</span>
+              <span class="text-mutedText">↗</span>
+            </a>
+          </div>
+
+          <div class="pt-2 flex items-center gap-6 text-xs text-mutedText font-mono">
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+              无服务器上传
+            </span>
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+              零商业依赖
+            </span>
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+              开源透明
+            </span>
+          </div>
+        </div>
+
+        <!-- 右侧：参考图质感的多态交互预览卡片群（精美微质感卡片） -->
+        <div class="lg:col-span-6 relative w-full">
+          <!-- 极光背景弥散光辉与透视光弧 (参考图玻璃光影) -->
+          <div class="absolute -inset-4 bg-gradient-to-tr from-brand-500/20 via-emerald-400/15 to-teal-400/20 rounded-3xl blur-2xl pointer-events-none -z-10"></div>
+          <div class="absolute -top-12 -right-8 w-64 h-64 bg-emerald-300/30 rounded-full blur-3xl pointer-events-none -z-10"></div>
+          <div class="absolute -bottom-10 -left-6 w-60 h-60 bg-teal-400/20 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+          <!-- 大卡容器：精致高折射微晶玻璃质感底座 -->
+          <div class="pill-card p-6 sm:p-7 relative overflow-hidden bg-white/90 border border-emerald-200/60 shadow-xl backdrop-blur-xl">
+            <!-- 玻璃背光透光微发光光环 -->
+            <div class="absolute top-0 right-1/4 w-72 h-36 bg-gradient-to-b from-brand-300/25 to-transparent rounded-full blur-2xl pointer-events-none"></div>
+
+            <!-- 头部状态栏 -->
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5 relative z-10">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-brand-500 to-emerald-400 flex items-center justify-center text-white shadow-pill">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
                 </div>
-                <div class="timeline"><div class="timeline-item">出发</div><div class="timeline-item">抵达</div><div class="timeline-item">换乘</div><div class="timeline-item">收藏</div><div class="timeline-item">回看</div></div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h4 class="text-xs font-bold text-slate-800 tracking-wider">TRIP ARCHIVE</h4>
+                    <span class="px-1.5 py-0.2 text-[9px] font-mono bg-emerald-50 text-brand-700 border border-brand-200 rounded font-semibold">V4.1.5</span>
+                  </div>
+                  <p class="text-[10px] text-mutedText font-medium mt-0.5">45 段足迹 · 纯净透亮玻璃档案库</p>
+                </div>
               </div>
+
+              <!-- 活跃胶囊状态 -->
+              <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-brand-600 via-emerald-500 to-teal-500 text-white shadow-pill">
+                <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+                <span class="text-[10px] font-black tracking-wider">LIVE STUDIO</span>
+              </div>
+            </div>
+
+            <!-- 真实票据立体层叠展台：融入参考图精致多层弧形玻璃面板与光路 -->
+            <div class="relative rounded-3xl p-4 sm:p-5 mb-5 overflow-visible shadow-inner border border-emerald-100/80" style="background: radial-gradient(120% 120% at 50% 0%, rgba(209, 250, 229, 0.45) 0%, rgba(240, 253, 244, 0.8) 50%, rgba(255, 255, 255, 0.95) 100%);">
+              
+              <!-- 顶层透视光弧 (参考图中的顶部发光轨道弧度) -->
+              <div class="absolute inset-x-8 top-3 h-12 pointer-events-none opacity-40">
+                <svg viewBox="0 0 400 60" class="w-full h-full stroke-brand-500 fill-none" stroke-width="1.5">
+                  <path d="M 20,50 Q 200,-10 380,50" stroke-dasharray="4 4"></path>
+                  <circle cx="200" cy="20" r="4" class="fill-brand-500"></circle>
+                  <circle cx="200" cy="20" r="9" stroke="currentColor" class="text-brand-400"></circle>
+                </svg>
+              </div>
+
+              <div class="relative min-h-[320px] flex items-center justify-center py-2">
+                
+                <!-- 1. 背景层叠透光玻璃弧面卡片群 (参考图多重折射晶莹弧边) -->
+                <div class="absolute -top-1 w-[88%] h-24 rounded-3xl border border-white/80 shadow-sm pointer-events-none transform -rotate-1 scale-95 opacity-50" style="background: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(209, 250, 229, 0.3) 100%); backdrop-filter: blur(8px);"></div>
+                <div class="absolute top-2 w-[92%] h-28 rounded-3xl border border-emerald-200/60 shadow-sm pointer-events-none transform rotate-1 scale-98 opacity-70" style="background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(167, 243, 208, 0.25) 100%); backdrop-filter: blur(10px);"></div>
+
+                <!-- 2. 中层：航空登机牌 (Boarding Pass) - 透光微质感玻璃浮雕 -->
+                <div class="w-full max-w-[400px] rounded-2xl bg-white/90 text-slate-800 shadow-md border border-slate-200/90 overflow-hidden transform -rotate-2 -translate-y-3 transition-transform duration-300 hover:rotate-0 hover:z-20 backdrop-blur-md">
+                  <!-- 登机牌顶部航司翠绿极光色带 -->
+                  <div class="h-2 bg-gradient-to-r from-brand-600 via-teal-500 to-emerald-400"></div>
+                  
+                  <div class="p-3 sm:p-3.5 bg-gradient-to-b from-emerald-50/40 via-white/80 to-white">
+                    <!-- 顶部信息行 -->
+                    <div class="flex items-center justify-between pb-2 border-b border-dashed border-slate-200 text-[10px]">
+                      <div class="flex items-center gap-2">
+                        <span class="font-black tracking-widest text-brand-700 font-mono">CHINA AIR</span>
+                        <span class="px-1.5 py-0.5 rounded bg-brand-50 text-brand-800 font-mono font-bold text-[9px] border border-brand-200">MU5108</span>
+                      </div>
+                      <div class="text-right font-mono text-[9px] text-mutedText">
+                        ELECTRONIC BOARDING PASS
+                      </div>
+                    </div>
+
+                    <!-- 航线大字代码与城市 -->
+                    <div class="flex items-center justify-between py-2.5">
+                      <div class="text-left">
+                        <div class="text-2xl font-black tracking-tight text-slate-800 font-mono">PEK</div>
+                        <div class="text-[10px] font-medium text-slate-500">北京首都 T2</div>
+                      </div>
+                      <div class="flex flex-col items-center px-2">
+                        <span class="text-[9px] font-mono font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded-full border border-brand-200">3h 15m</span>
+                        <div class="flex items-center gap-1 text-emerald-400 mt-1">
+                          <span class="w-4 h-[1px] bg-emerald-300"></span>
+                          <svg class="w-3.5 h-3.5 text-brand-600 rotate-90 transform" fill="currentColor" viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"></path></svg>
+                          <span class="w-4 h-[1px] bg-emerald-300"></span>
+                        </div>
+                      </div>
+                      <div class="text-right">
+                        <div class="text-2xl font-black tracking-tight text-slate-800 font-mono">CTU</div>
+                        <div class="text-[10px] font-medium text-slate-500">成都双流 T2</div>
+                      </div>
+                    </div>
+
+                    <!-- 登机口/时间/座位 -->
+                    <div class="grid grid-cols-4 gap-2 pt-2 border-t border-slate-100 text-center font-mono">
+                      <div class="bg-slate-50/80 p-1.5 rounded-lg border border-slate-100">
+                        <div class="text-[8px] text-mutedText">GATE</div>
+                        <div class="text-xs font-bold text-slate-800">24</div>
+                      </div>
+                      <div class="bg-slate-50/80 p-1.5 rounded-lg border border-slate-100">
+                        <div class="text-[8px] text-mutedText">BOARDING</div>
+                        <div class="text-xs font-bold text-amber-600">08:30</div>
+                      </div>
+                      <div class="bg-slate-50/80 p-1.5 rounded-lg border border-slate-100">
+                        <div class="text-[8px] text-mutedText">SEAT</div>
+                        <div class="text-xs font-bold text-brand-700">14A</div>
+                      </div>
+                      <div class="bg-slate-50/80 p-1.5 rounded-lg border border-slate-100 flex flex-col justify-center items-center">
+                        <div class="text-[8px] text-mutedText">CLASS</div>
+                        <div class="text-xs font-bold text-slate-800">Y</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 3. 前层核心：12306 经典浅青绿玻璃质感高铁票 (高透光/高光反射边/未来感弧面玻璃) -->
+                <div class="absolute w-full max-w-[400px] rounded-3xl p-4 sm:p-5 shadow-2xl border border-white/90 overflow-hidden transform rotate-2 translate-y-7 z-10 transition-transform duration-300 hover:scale-[1.02] hover:rotate-1" style="background: linear-gradient(135deg, rgba(240, 253, 244, 0.94) 0%, rgba(220, 252, 231, 0.88) 45%, rgba(204, 251, 241, 0.92) 100%); backdrop-filter: blur(16px); box-shadow: 0 20px 40px -12px rgba(5, 150, 105, 0.18), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);">
+                  
+                  <!-- 车票高光反射条与防伪细网格 (模拟图2高折射率玻璃反光) -->
+                  <div class="absolute -top-12 -left-12 w-48 h-48 bg-gradient-to-br from-white/80 via-white/20 to-transparent rounded-full blur-xl pointer-events-none"></div>
+                  <div class="absolute inset-0 opacity-15 pointer-events-none" style="background-image: radial-gradient(#059669 1px, transparent 1px); background-size: 8px 8px;"></div>
+
+                  <!-- 顶部车票号与安全码 -->
+                  <div class="relative flex items-center justify-between pb-2 border-b border-dashed border-teal-300/80 text-[10px] font-mono">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-black text-rose-600 tracking-wider text-[11px]">G082341</span>
+                      <span class="text-teal-900 font-bold hidden sm:inline text-[9px] bg-teal-100/70 px-1.5 py-0.2 rounded border border-teal-200">12306 客票</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-teal-800 text-[10px]">
+                      <span class="font-semibold">中国铁路高速</span>
+                      <span class="text-[9px] opacity-75">CRH</span>
+                    </div>
+                  </div>
+
+                  <!-- 发到站与车次核心大字 -->
+                  <div class="relative flex items-center justify-between py-3">
+                    <div class="text-left">
+                      <div class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">昆明南</div>
+                      <div class="text-[10px] text-teal-800 font-mono font-medium mt-0.5">Kunmingnan</div>
+                    </div>
+
+                    <!-- 车次与开行符号 -->
+                    <div class="flex flex-col items-center px-2">
+                      <span class="text-xs font-black font-mono text-teal-950 bg-white/90 px-2.5 py-0.5 rounded-full border border-teal-300 shadow-sm">G2884</span>
+                      <div class="flex items-center gap-1 text-teal-600 my-0.5">
+                        <span class="text-[10px] font-mono">―――▶</span>
+                      </div>
+                      <span class="text-[9px] text-teal-700 font-mono">4小时36分</span>
+                    </div>
+
+                    <div class="text-right">
+                      <div class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">重庆西</div>
+                      <div class="text-[10px] text-teal-800 font-mono font-medium mt-0.5">Chongqingxi</div>
+                    </div>
+                  </div>
+
+                  <!-- 发车时间与车厢席位 -->
+                  <div class="relative flex items-center justify-between py-1.5 bg-white/80 px-3 rounded-xl border border-teal-200/70 font-mono text-xs shadow-sm">
+                    <div class="flex items-center gap-1.5 text-slate-800">
+                      <span class="font-bold">2026年09月16日</span>
+                      <span class="font-black text-teal-900">10:24开</span>
+                    </div>
+                    <div class="text-right font-black text-slate-900">
+                      <span class="">02车11F号</span>
+                      <span class="text-[10px] font-medium text-teal-800 ml-1">二等座</span>
+                    </div>
+                  </div>
+
+                  <!-- 底部票价、乘车人遮罩与二维防伪码 -->
+                  <div class="relative flex items-end justify-between pt-2.5 mt-1 text-[10px] font-mono text-teal-950">
+                    <div>
+                      <div class="text-sm font-black text-rose-600">￥381.0<span class="text-[10px] font-normal ml-0.5 text-teal-900">元</span></div>
+                      <div class="text-[9px] text-teal-800 mt-0.5">530102********1234 李*</div>
+                      <div class="text-[8px] text-teal-700">限乘当日当次车 · 仅供报销凭证</div>
+                    </div>
+                    
+                    <!-- 拟真车票二维码与检票口 -->
+                    <div class="flex items-center gap-2">
+                      <div class="text-right text-[9px] text-teal-800 leading-tight hidden sm:block">
+                        <div class="">检票: 12B</div>
+                        <div class="text-[8px] opacity-75">自动检票通道</div>
+                      </div>
+                      <div class="w-9 h-9 rounded bg-white p-1 border border-teal-300 shadow-sm flex items-center justify-center shrink-0">
+                        <svg class="w-full h-full text-slate-800" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm13-2h3v3h-3v-3zm0 5h3v3h-3v-3zm-3-5h2v2h-2v-2zm0 4h2v4h-2v-4zm5-2h2v5h-2v-5z"></path>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- 统计指标胶囊行（45张珍藏、2,478km、100%本地存储） -->
+            <div class="grid grid-cols-3 gap-3 relative z-10">
+              <div class="bg-slate-50/90 rounded-2xl p-3 text-center border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all">
+                <div class="text-lg font-extrabold text-slate-800 font-mono">45</div>
+                <div class="text-[10px] text-mutedText font-medium">张珍藏票据</div>
+              </div>
+              <div class="bg-emerald-50/60 rounded-2xl p-3 text-center border border-emerald-100 hover:bg-white hover:border-brand-300 hover:shadow-sm transition-all">
+                <div class="text-lg font-extrabold text-brand-600 font-mono">2,478<span class="text-xs">km</span></div>
+                <div class="text-[10px] text-brand-800 font-medium">累计旅程</div>
+              </div>
+              <div class="bg-slate-50/90 rounded-2xl p-3 text-center border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all">
+                <div class="text-lg font-extrabold text-slate-800 font-mono">100<span class="text-xs">%</span></div>
+                <div class="text-[10px] text-mutedText font-medium">纯本地存储</div>
+              </div>
+            </div>
+
+            <!-- 底部快捷状态条 -->
+            <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between px-2 relative z-10">
+              <div class="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
+                <span class="w-5 h-5 rounded-full bg-emerald-100 text-brand-600 flex items-center justify-center text-[10px] font-bold">✓</span>
+                <span class="">离线双保险引擎激活</span>
+              </div>
+              <span class="text-[11px] font-mono text-brand-700 bg-brand-50 border border-brand-200 px-2 py-0.5 rounded-full">IndexedDB OK</span>
+            </div>
+          </div>
+
+          <!-- 悬浮微卡点缀 (参考图玻璃微卡) -->
+          <div class="hidden sm:flex absolute -bottom-5 -left-5 bg-white/95 p-3.5 rounded-2xl shadow-soft border border-emerald-200/80 items-center gap-3 animate-float backdrop-blur-md z-20">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-500 to-emerald-400 text-white flex items-center justify-center font-bold text-xs shadow-sm">
+              AI
+            </div>
+            <div>
+              <div class="text-xs font-bold text-slate-800">视觉 OCR 大模型</div>
+              <div class="text-[10px] text-mutedText">自动解析照片票面</div>
             </div>
           </div>
         </div>
       </div>
-      <div class="scroll-cue"><span>↓</span> 向下探索</div>
     </section>
 
-    <!-- 数据看板 -->
-    <section class="section section-soft" id="metrics">
-      <div class="container mx-auto max-w-[1320px] px-6">
-        <div class="section-head"><div class="section-kicker reveal">THE NUMBERS</div><h2 class="reveal delay-1">一份轻巧的工具，<br>装下整段旅程。</h2><p class="section-lead reveal delay-2">从生成第一张票，到打开一整本珍藏册，迹点点把复杂的整理工作留在浏览器里完成。</p></div>
-        <div class="metrics-grid">
-          <div class="metric-card reveal"><div class="metric-number" data-counter="0">0</div><div class="metric-label">运行时依赖</div></div>
-          <div class="metric-card reveal delay-1"><div class="metric-number" data-counter="9">0</div><div class="metric-label">种票面支持</div></div>
-          <div class="metric-card reveal delay-2"><div class="metric-number" data-counter="7">0</div><div class="metric-label">大功能模块</div></div>
-          <div class="metric-card reveal delay-3"><div class="metric-number" data-counter="100" data-suffix="%">0</div><div class="metric-label">数据本地化</div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 七大核心模块 -->
-    <section class="section" id="modules">
-      <div class="container mx-auto max-w-[1320px] px-6">
-        <div class="text-center mx-auto max-w-[720px]"><div class="section-kicker reveal">THE WORKSPACE</div><h2 class="reveal delay-1">七大模块，<br>一张旅途底图。</h2><p class="section-lead mx-auto reveal delay-2">从一张纸质票根开始，把每一个抵达都放回属于它的位置。</p></div>
-        <div class="module-grid">
-          <article class="module-card reveal"><div class="module-num">01 / MAP</div><div class="module-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6.5 8 4l8 3 5-2.5v13L16 20l-8-3-5 2.5v-13Z"/><path d="M8 4v13M16 7v13"/></svg></div><h3>行程地图</h3><p>自动绘制中国底图，铁路实线弧、航班虚线航路，到访城市逐一点亮；编辑行程即可即时预览真实票面。</p><div class="module-arrow">↗</div></article>
-                    <article class="module-card reveal delay-1"><div class="module-num">02 / TRAVEL</div><div class="module-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 4.9-4.9 2 2-4.9 4.9-2Z"/></svg></div><h3>我的旅游计划</h3><p>对话式 AI 行程规划：实时分步查询真实景点、酒店、美食与天气，按天生成时间轴方案与行李清单，支持多轮自然语言调整。</p></article>
-          <article class="module-card reveal delay-2"><div class="module-num">03 / TRAIN</div><div class="module-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="3" width="14" height="15" rx="4"/><path d="M8 21h8M8 18l-2 3M16 18l2 3M8 13h8M8 8h.01M16 8h.01"/></svg></div><h3>火车票工坊</h3><p>12306 风格票根编辑器，六款底图，支持 PDF / OCR 导入与高清导出。</p><div class="module-arrow">↗</div></article>
-          <article class="module-card reveal delay-2"><div class="module-num">04 / FLIGHT</div><div class="module-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m3 12 18-6-6 18-3-8-9-4Z"/><path d="m12 16 6-6"/></svg></div><h3>登机牌工坊</h3><p>全球机场与航司数据库联想，扫描件 AI 识别回填，生成你的飞行记录。</p><div class="module-arrow">↗</div></article>
-          <article class="module-card reveal"><div class="module-num">05 / TRANSIT</div><div class="module-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 17h10M5 14h14M6 7h12a2 2 0 0 1 2 2v8H4V9a2 2 0 0 1 2-2Z"/><path d="M8 4h8M8 20h.01M16 20h.01"/></svg></div><h3>交通票工坊</h3><p>公交、地铁、出租车与长途客运，按固定像素还原每一种城市票样。</p><div class="module-arrow">↗</div></article>
-          <article class="module-card reveal delay-1"><div class="module-num">06 / VENUE</div><div class="module-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V9l8-5 8 5v11"/><path d="M8 20v-6h8v6M3 20h18"/></svg></div><h3>影演票工坊</h3><p>电影票、景区门票、演唱会票，海报自动匹配，也可自定义取景与配色。</p><div class="module-arrow">↗</div></article>
-          <article class="module-card reveal delay-2"><div class="module-num">07 / ARCHIVE</div><div class="module-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16v14H4zM8 3h8v3H8zM8 10h8M8 14h5"/></svg></div><h3>珍藏册</h3><p>把所有票据串成行程时间轴，按票种或城市筛选，一键导入、导出与备份。</p><div class="module-arrow">↗</div></article>
-        </div>
-      </div>
-    </section>
-
-    <!-- 功能亮点 Bento -->
-    <section class="section section-soft" id="features">
-      <div class="container mx-auto max-w-[1320px] px-6">
-        <div class="section-head"><div class="section-kicker reveal">WHY TRACEDOT</div><h2 class="reveal delay-1">把细节做得像真的，<br>把使用做得很轻。</h2><p class="section-lead reveal delay-2">九种票面、地图、OCR、海报匹配和本地存储，都是为了让你更快回到那一次出发。</p></div>
-        <div class="bento">
-          <article class="feature-card large reveal"><div class="feature-index">01 / ONE STUDIO</div><h3>九种票面，一站式制作。</h3><p>明暗双主题、移动端自适应，所有票面以真实票样为参照设计。旅行从一张票开始，也可以在一张票里被重新打开。</p><div class="feature-decoration" aria-hidden="true"></div></article>
-          <article class="feature-card reveal delay-1"><div class="feature-index">02 / MAP</div><h3>行程地图自动绘制</h3><p>站名、机场、城市与景区多级地点解析，失败时自动回退到城市级单点标记。</p><div class="feature-mini-line" aria-hidden="true"></div></article>
-          <article class="feature-card reveal delay-2"><div class="feature-index">03 / AI</div><h3>AI 能力开箱即用</h3><p>视觉大模型转录票面文字，OMDb 自动匹配电影海报，少一点手填。</p><div class="feature-mini-line" aria-hidden="true" style="transform:rotate(12deg)"></div></article>
-          <article class="feature-card reveal delay-1"><div class="feature-index">04 / OCR</div><h3>本地 OCR 多引擎</h3><p>PP-OCRv6、Tesseract.js 与联网备选引擎，按你的需求选择识别方式。</p><div class="feature-mini-line" aria-hidden="true" style="width:60px"></div></article>
-          <article class="feature-card reveal delay-2"><div class="feature-index">05 / LOCAL</div><h3>数据本地双保险</h3><p>localStorage + IndexedDB 镜像，断网可用，数据始终留在自己的设备。</p><div class="feature-mini-line" aria-hidden="true" style="transform:rotate(-8deg)"></div></article>
-        </div>
-      </div>
-    </section>
-
-    <!-- 技术架构与隐私说明 -->
-    <section class="section section-dark" id="privacy">
-      <div class="container mx-auto max-w-[1320px] px-6">
-        <div class="section-head relative z-10"><div class="section-kicker reveal">BUILT QUIETLY</div><h2 class="reveal delay-1">你的数据，<br>只属于你的浏览器。</h2><p class="section-lead reveal delay-2">迹点点把复杂的事情放在前端完成：无账号、无追踪、无后端档案。你决定什么时候联网，数据就留在哪里。</p></div>
-        <div class="tech-grid">
-          <div class="tech-panel">
-            <div class="tech-row reveal"><div class="tech-num">01</div><div><h3>原生 HTML / CSS / JavaScript</h3><p>无框架、无构建步骤、无运行时依赖。单文件多模块结构，双击即可打开。</p></div></div>
-            <div class="tech-row reveal delay-1"><div class="tech-num">02</div><div><h3>postMessage 总线通信</h3><p>外壳与七个功能模块通过独立消息标记通信，共享资源去重存储。</p></div></div>
-            <div class="tech-row reveal delay-2"><div class="tech-num">03</div><div><h3>导出管线与自绘地图</h3><p>html2canvas 1.4.1 负责高清票面导出，铁路和航班路线由 SVG 贝塞尔曲线绘制。</p></div></div>
+    <!-- 场景 02 · 核心数据指标看板（极简多态白卡） -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="metrics">
+      <div class="pill-card p-8 sm:p-12 bg-white/90">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-5 space-y-3">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold font-mono">
+              THE ESSENTIALS
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              一份极其轻巧的工具，<br>装下整段远方旅程。
+            </h2>
+            <p class="text-sm text-mutedText leading-relaxed">
+              从生成第一张复古火车票，到翻开整本珍藏册。迹点点把过去繁重复杂的整理与绘图操作，全部化作轻柔流畅的指尖体验。
+            </p>
           </div>
-          <aside class="privacy-card reveal delay-2">
-            <div class="privacy-top"><div class="privacy-badge"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 5 6v5c0 4.6 2.9 8.2 7 10 4.1-1.8 7-5.4 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg></div><div><h3>数据不出浏览器</h3><small>PRIVATE BY DEFAULT</small></div></div>
-            <div class="privacy-list"><div class="privacy-item">票据、表单与导出图片默认只保存在本机。</div><div class="privacy-item"><b>localStorage + IndexedDB</b> 双保险，断网也可用。</div><div class="privacy-item">清除数据只影响用户内容，设置与密钥保留。</div></div>
-            <div class="consent-note">只有两类操作会在你明确确认后联网：OCR 联网引擎上传票面照片，以及影演票工坊向 OMDb 请求电影海报。</div>
-          </aside>
-        </div>
-      </div>
-    </section>
 
-    <!-- 下载入口：官网目录下可直接下载 release/TraceDot-V4.1.5.html -->
-    <section class="section" id="download">
-      <div class="container mx-auto max-w-[1320px] px-6">
-        <div class="download-band reveal">
-          <div><div class="section-kicker">GET TRACEDOT</div><h2>下载后，双击就能开始。</h2><p>TraceDot V4.1.5 · 单文件 HTML · 约 13 MB · 无需安装</p></div>
-          <div class="download-actions"><a class="primary-btn" href="../release/TraceDot-V4.1.5.html" download="TraceDot-V4.1.5.html">下载网页版 <span aria-hidden="true">↓</span></a><a class="secondary-btn" href="https://jidiandian.top/release/TraceDot-V4.1.5.html" target="_blank" rel="noopener">在线体验 <span aria-hidden="true">↗</span></a></div>
-        </div>
-        <!-- 桌面版：Mac 双架构 + Windows，来自 GitHub Release v4.1.5 -->
-        <div class="desktop-band reveal delay-1">
-          <div class="desktop-head"><span class="section-kicker">DESKTOP APP</span><h3>桌面版 V4.1.5</h3><p>原生窗口应用，内置自动更新渠道。Mac 首次打开请右键选择「打开」；Windows 如遇 SmartScreen 提示请选择「仍要运行」。</p></div>
-          <div class="desktop-grid">
-            <a class="desktop-card" id="dl-mac-arm" href="https://github.com/ajietudou007/TraceDot/releases/download/v4.1.5/TraceDot-4.1.5-arm64.dmg" download><span class="dc-name">macOS · Apple 芯片</span><span class="dc-meta">V4.1.5 · .dmg · 107 MB</span><span class="dc-tag" hidden>你的设备</span></a>
-<a class="desktop-card" id="dl-mac-intel" href="https://github.com/ajietudou007/TraceDot/releases/download/v4.1.5/TraceDot-4.1.5-x64.dmg" download><span class="dc-name">macOS · Intel 芯片</span><span class="dc-meta">V4.1.5 · .dmg · 107 MB</span><span class="dc-tag" hidden>你的设备</span></a>
-<a class="desktop-card" id="dl-win" href="https://github.com/ajietudou007/TraceDot/releases/download/v4.1.5/TraceDot-Setup-4.1.5-x64.exe" download><span class="dc-name">Windows</span><span class="dc-meta">V4.1.5 · .exe · 82 MB</span><span class="dc-tag" hidden>你的设备</span></a>
-            <a class="desktop-card dc-more" href="https://github.com/ajietudou007/TraceDot/releases/tag/v4.1.5" target="_blank" rel="noopener"><span class="dc-name">全部版本与历史</span><span class="dc-meta">GitHub Releases ↗</span></a>
+          <!-- 四枚数据卡片（参考图圆角四格风格） -->
+          <div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-4">
+            
+            <div class="bg-slate-50/90 hover:bg-white p-5 rounded-3xl border border-slate-100 hover:border-brand-200 transition-all text-center group">
+              <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mx-auto mb-3 text-brand-600 group-hover:scale-110 transition-transform">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              </div>
+              <div class="text-3xl font-black text-slate-800 font-mono group-hover:text-brand-600 transition-colors">0</div>
+              <div class="text-xs text-mutedText font-medium mt-1">运行时依赖</div>
+            </div>
+
+            <div class="bg-slate-50/90 hover:bg-white p-5 rounded-3xl border border-slate-100 hover:border-brand-200 transition-all text-center group">
+              <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mx-auto mb-3 text-brand-600 group-hover:scale-110 transition-transform">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
+              </div>
+              <div class="text-3xl font-black text-slate-800 font-mono group-hover:text-brand-600 transition-colors">9</div>
+              <div class="text-xs text-mutedText font-medium mt-1">种票面支持</div>
+            </div>
+
+            <div class="bg-slate-50/90 hover:bg-white p-5 rounded-3xl border border-slate-100 hover:border-brand-200 transition-all text-center group">
+              <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mx-auto mb-3 text-brand-600 group-hover:scale-110 transition-transform">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+              </div>
+              <div class="text-3xl font-black text-slate-800 font-mono group-hover:text-brand-600 transition-colors">7</div>
+              <div class="text-xs text-mutedText font-medium mt-1">大功能模块</div>
+            </div>
+
+            <div class="bg-slate-50/90 hover:bg-white p-5 rounded-3xl border border-slate-100 hover:border-brand-200 transition-all text-center group">
+              <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mx-auto mb-3 text-brand-600 group-hover:scale-110 transition-transform">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+              </div>
+              <div class="text-3xl font-black text-slate-800 font-mono group-hover:text-brand-600 transition-colors">100<span class="text-sm font-sans">%</span></div>
+              <div class="text-xs text-mutedText font-medium mt-1">数据本地化</div>
+            </div>
+
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 创作者主页：恢复旧版官网中的个人介绍与社交入口 -->
-    <section class="section section-soft" id="creator">
-      <div class="container mx-auto max-w-[1320px] px-6">
-        <div class="text-center mx-auto max-w-[720px]"><div class="section-kicker reveal">ABOUT THE CREATOR</div><h2 class="reveal delay-1">一个人，也是一支团队。</h2><p class="section-lead mx-auto reveal delay-2">迹点点由阿杰同学全程独立开发与维护，从产品设计、前端实现到内置数据工程，把一抽屉票根变成一张会讲故事的地图。</p></div>
-        <div class="creator-card reveal delay-2">
-          <div class="creator-avatar"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAOsA6wDASIAAhEBAxEB/8QAHAABAQABBQEAAAAAAAAAAAAAAAEHAgMEBQYI/8QAYBAAAgEDAgMFBAQHDAQIDAUFAAECAwQRBSEGEjEHE0FRYSJxgZEUMkKhFSNSYrHB0RYXJDNygpKUorLC0lNV4fA0NUNjc5OksyU2RUZWdYOEo9Pj8SZEZHTDCBg3ZWb/xAAZAQEBAQEBAQAAAAAAAAAAAAAAAQIDBAX/xAAnEQEAAgIBBAICAgMBAAAAAAAAAQIDESEEEjFBE1EUIjJhQlJxgf/aAAwDAQACEQMRAD8AzMAAIPAACkACBSFCgAAAAAAAAAAE8AAAACAAAAAKAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAAgAPAAAPAAAPAAAAAACgAAAAAAAgAAAAAAAKAAIAAACkCgAAAAIAAAAAoAABSFAAAAAQAAAAAAAAAAAKAABCgAAAIAQCgAgFIUoAAAAAAAAAAAQoAgAAAAIAECqCFAAAIAAAAAAAAAAAAAoAAgCkCgBQIAAAACAAAAAAAAoAAABQIAAAAAAAIAAAAAAACgAAAAAAAAAAAAAAAAKABCkAAAAAAAAIAAKABQIUAAAAAIUAQpAAAwQAAUAAABQBAUgApABQAAAAEIUgFAARQAFQpCgAAAAAAAAAAAIUAQAAACgQFAAhQAAAAhQBACgQAoEBSAAAEUABQAAQFAEBQBAUAQFAEBQAAAAAACFAEBQBAUgAAoEKABAAQAUFAAAQFAEBQAAAAAAAAAIUgAAoEBQBCgAQFAAAAAAAAAEKAAAAAAAAAAAAAAAAABAUgAAAUAAQAACgACFAEKAAAAAAAAAAAAAhQBAUgFAAAAAAAAAAAAAAAAAAEBQBCgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAUgApCgAAAAAAAAAAAAAAhSAAAAKQAAABQQoEBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAhQBAABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAoAAAAAAAAAAAAAAAAAAAAAAAAAAAQoAAAAACAUAAAAAICgQAACkAAAAAAAKQoEKAAAAAAAAAAAAAAAAAAAIAAAApABQAAAAAAgFAAAAAAAAAAAAACFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIUAAAAAAAAAAAAAAAAAAAAAAAAAAABAUAAAAAAAhQBAAAKQACkAAAoEBQBCgAQoAEKQoAAAAQAUEKAAAAAAAAAAAAhQBAUgAAACkKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABCgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQoAAAAAAAAAAAAQoIBQQoEKQoAhQBAAAKQoAAAAAAIUAQAACgAAAAAAEKAAAAAAAAAAAAAAAAAA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" alt="阿杰同学头像" /></div>
-          <div><div class="creator-name">阿杰同学</div><div class="creator-role">迹点点 · 全程独立开发</div><p class="creator-bio">如果你也攒了一抽屉的票根，欢迎把它们变成一张会讲故事的地图。</p></div>
-          <nav class="creator-socials" aria-label="创作者个人主页"><a href="https://github.com/ajietudou007" target="_blank" rel="noopener">GitHub 主页 ↗</a><a href="https://v.douyin.com/sMRNgbplBkQ/" target="_blank" rel="noopener">抖音 ↗</a><a href="https://b23.tv/nBL4aXt" target="_blank" rel="noopener">哔哩哔哩 ↗</a><a href="https://xhslink.cn/o/9780LQiSR6U" target="_blank" rel="noopener">小红书 ↗</a></nav>
+    <!-- 场景 03 · 七大功能工坊（现代圆角卡片陈列） -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="modules">
+      <div class="text-center max-w-2xl mx-auto mb-14 space-y-3">
+        <span class="px-3.5 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold font-mono tracking-wider">
+          THE WORKSPACE
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          七大功能模块，收录你的每一次抵达
+        </h2>
+        <p class="text-sm sm:text-base text-mutedText">
+          从一张泛黄的火车软纸票，到跨越重洋的登机牌与散落各地的城市地铁票。
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- 01 行程地图 -->
+        <div class="pill-card p-6 flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center font-mono font-bold text-lg group-hover:bg-brand-500 group-hover:text-white transition-all shadow-sm">
+                01
+              </div>
+              <span class="text-xs font-mono font-semibold text-mutedText">MAP &amp; ROUTES</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 mb-2">行程地图</h3>
+            <p class="text-xs text-mutedText leading-relaxed">
+              自动绘制全境底图，铁路实线弧线、航班虚线航路，到访城市逐一点亮；编辑行程即可即时联动预览真实票面。
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-brand-700">
+            <span class="">全国站名 &amp; 机场坐标</span>
+            <span class="">→</span>
+          </div>
+        </div>
+
+        <!-- 02 我的旅游计划 -->
+        <div class="pill-card p-6 flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center font-mono font-bold text-lg group-hover:bg-amber-500 group-hover:text-white transition-all shadow-sm">
+                02
+              </div>
+              <span class="text-xs font-mono font-semibold text-mutedText">AI PLANNER</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 mb-2">我的旅游计划</h3>
+            <p class="text-xs text-mutedText leading-relaxed">
+              对话式 AI 行程规划：实时分步查询真实景点、酒店、美食与天气，按天生成时间轴方案与行李清单，支持多轮自然语言调整。
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-amber-600">
+            <span class="">高德 API + 智能推演</span>
+            <span class="">→</span>
+          </div>
+        </div>
+
+        <!-- 03 火车票工坊 -->
+        <div class="pill-card p-6 flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center font-mono font-bold text-lg group-hover:bg-brand-500 group-hover:text-white transition-all shadow-sm">
+                03
+              </div>
+              <span class="text-xs font-mono font-semibold text-mutedText">TRAIN TICKET</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 mb-2">火车票工坊</h3>
+            <p class="text-xs text-mutedText leading-relaxed">
+              12306 经典与现代双风格编辑器，八款底图（蓝磁/红磁/蓝雕等），支持电子客票发票与行程单 PDF / OCR 导入与高清导出。
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-brand-700">
+            <span class="">8 款版画与经典底纸</span>
+            <span class="">→</span>
+          </div>
+        </div>
+
+        <!-- 04 登机牌工坊 -->
+        <div class="pill-card p-6 flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center font-mono font-bold text-lg group-hover:bg-sky-500 group-hover:text-white transition-all shadow-sm">
+                04
+              </div>
+              <span class="text-xs font-mono font-semibold text-mutedText">BOARDING PASS</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 mb-2">登机牌工坊</h3>
+            <p class="text-xs text-mutedText leading-relaxed">
+              内置全球 8500+ 机场与航司二字码联想数据库，纸质扫描件 AI 视觉转录与自动回填，生成你的飞行航程卡。
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-sky-600">
+            <span class="">OurAirports 数据库</span>
+            <span class="">→</span>
+          </div>
+        </div>
+
+        <!-- 05 交通票工坊 -->
+        <div class="pill-card p-6 flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-mono font-bold text-lg group-hover:bg-indigo-500 group-hover:text-white transition-all shadow-sm">
+                05
+              </div>
+              <span class="text-xs font-mono font-semibold text-mutedText">TRANSIT TICKETS</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 mb-2">交通票工坊</h3>
+            <p class="text-xs text-mutedText leading-relaxed">
+              公交、地铁（全国 48 城地铁库全收录）、出租车发票与长途公路客运，按固定像素规范精准还原城市交通记忆。
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-indigo-600">
+            <span class="">48 城市 8000+ 站点</span>
+            <span class="">→</span>
+          </div>
+        </div>
+
+        <!-- 06 影演票工坊 -->
+        <div class="pill-card p-6 flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center font-mono font-bold text-lg group-hover:bg-rose-500 group-hover:text-white transition-all shadow-sm">
+                06
+              </div>
+              <span class="text-xs font-mono font-semibold text-mutedText">VENUE &amp; CINEMA</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 mb-2">影演票工坊</h3>
+            <p class="text-xs text-mutedText leading-relaxed">
+              电影票、景区门票、演唱会入场券。支持 OMDb 电影海报自动联动，景区全国 5400+ 4A/5A 联想库，支持自定义取景与裁剪。
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-rose-600">
+            <span class="">海报智能匹配与取景</span>
+            <span class="">→</span>
+          </div>
+        </div>
+
+        <!-- 07 珍藏册（跨列大卡） -->
+        <div class="pill-card p-6 md:col-span-2 lg:col-span-3 flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-white via-white to-emerald-50/40">
+          <div class="flex items-center gap-5">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-600 to-emerald-400 text-white flex items-center justify-center font-mono font-bold text-xl shadow-pill shrink-0">
+              07
+            </div>
+            <div>
+              <span class="text-xs font-mono font-semibold text-brand-600">CHRONICLE TIMELINE</span>
+              <h3 class="text-xl font-bold text-slate-800">珍藏册 · 行程编年史时间轴</h3>
+              <p class="text-xs text-mutedText mt-1 max-w-2xl">
+                把所有票据按行程正序串接为精美编年史时间轴，按票种与城市智能筛选，一键导出高清原图、备份与归档。
+              </p>
+            </div>
+          </div>
+          <div class="shrink-0">
+            <a href="https://jidiandian.top/release/TraceDot-V4.1.5.html" target="_blank" rel="noopener" class="soft-pill-btn inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold shadow-md hover:bg-slate-800">
+              <span class="">进入珍藏册</span>
+              <span class="">↗</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 场景 04 · 技术亮点与隐私保护（双列圆角卡片） -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="features">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+        
+        <!-- 左侧：九种票面规范与离线架构 -->
+        <div class="pill-card p-8 flex flex-col justify-between" id="privacy">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold font-mono mb-4">
+              ARCHITECTURE &amp; PRIVACY
+            </div>
+            <h3 class="text-2xl font-extrabold text-slate-900 tracking-tight mb-4">
+              你的数据，只属于你的浏览器
+            </h3>
+            <p class="text-sm text-mutedText leading-relaxed mb-6">
+              迹点点所有数据逻辑均在前端运行：无后台用户数据库、无账户绑定、无追踪。断网环境下所有制票与时间轴整理功能均可离线运行。
+            </p>
+
+            <div class="space-y-4">
+              <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                <div class="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center text-brand-600 shrink-0 font-bold text-xs">
+                  01
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-slate-800">原生单文件，零构建负担</h4>
+                  <p class="text-xs text-mutedText mt-0.5">原生 HTML / CSS / JS，无需安装环境，双击即可直接在任何现代浏览器中运行。</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                <div class="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center text-brand-600 shrink-0 font-bold text-xs">
+                  02
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-slate-800">localStorage + IndexedDB 镜像</h4>
+                  <p class="text-xs text-mutedText mt-0.5">本地双保险备份，即便清除单个键也不会轻易丢失行程记录，支持 JSON 导入导出与快照。</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                <div class="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center text-brand-600 shrink-0 font-bold text-xs">
+                  03
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-slate-800">本地多引擎 OCR 与 AI 转录</h4>
+                  <p class="text-xs text-mutedText mt-0.5">内置 PP-OCRv6 与 Tesseract.js 本地离线引擎，亦可按需使用多模态大模型一键提取纸质票面。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-100 text-[11px] text-mutedText font-mono">
+            * 仅在联网查询海报或选择云端 AI 时经由用户授权发起安全请求
+          </div>
+        </div>
+
+        <!-- 右侧：下载桌面端应用与版本直达 -->
+        <div class="pill-card p-8 flex flex-col justify-between bg-gradient-to-br from-white via-white to-slate-50" id="download">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold font-mono">
+                DESKTOP APPS
+              </span>
+              <span class="text-xs font-mono font-bold text-slate-400">V4.1.5 STABLE</span>
+            </div>
+
+            <h3 class="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">
+              下载原生客户端，随时随地开启
+            </h3>
+            <p class="text-sm text-mutedText mb-6">
+              原生轻量打包，支持 Mac 与 Windows，自带自动更新与离线资源包。
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+              
+              <a href="https://github.com/ajietudou007/TraceDot/releases/download/v4.1.5/TraceDot-4.1.5-arm64.dmg" download="" class="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">macOS (Apple 芯片)</span>
+                    <span class="w-2 h-2 rounded-full bg-brand-500"></span>
+                  </div>
+                  <p class="text-[11px] text-mutedText mt-1 font-mono">.dmg · 107 MB</p>
+                </div>
+                <div class="mt-3 text-xs font-bold text-brand-600 flex items-center gap-1">
+                  <span class="">立即下载</span>
+                  <span class="">↓</span>
+                </div>
+              </a>
+
+              <a href="https://github.com/ajietudou007/TraceDot/releases/download/v4.1.5/TraceDot-4.1.5-x64.dmg" download="" class="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">macOS (Intel 芯片)</span>
+                  </div>
+                  <p class="text-[11px] text-mutedText mt-1 font-mono">.dmg · 107 MB</p>
+                </div>
+                <div class="mt-3 text-xs font-bold text-brand-600 flex items-center gap-1">
+                  <span class="">立即下载</span>
+                  <span class="">↓</span>
+                </div>
+              </a>
+
+              <a href="https://github.com/ajietudou007/TraceDot/releases/download/v4.1.5/TraceDot-Setup-4.1.5-x64.exe" download="" class="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">Windows (x64)</span>
+                    <span class="w-2 h-2 rounded-full bg-brand-500"></span>
+                  </div>
+                  <p class="text-[11px] text-mutedText mt-1 font-mono">.exe · 82 MB</p>
+                </div>
+                <div class="mt-3 text-xs font-bold text-brand-600 flex items-center gap-1">
+                  <span class="">立即下载</span>
+                  <span class="">↓</span>
+                </div>
+              </a>
+
+              <a href="https://github.com/ajietudou007/TraceDot/releases/tag/v4.1.5" target="_blank" rel="noopener" class="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
+                <div>
+                  <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">全版本历史发布</span>
+                  <p class="text-[11px] text-mutedText mt-1 font-mono">GitHub Releases ↗</p>
+                </div>
+                <div class="mt-3 text-xs font-bold text-brand-600 flex items-center gap-1">
+                  <span class="">查看更新</span>
+                  <span class="">→</span>
+                </div>
+              </a>
+
+            </div>
+          </div>
+
+          <!-- 单文件网页版下载入口 -->
+          <div class="p-4 rounded-2xl bg-brand-50/70 border border-brand-200/60 flex items-center justify-between">
+            <div>
+              <div class="text-xs font-bold text-brand-900">需要单文件免安装 HTML？</div>
+              <div class="text-[11px] text-brand-700">约 13 MB · 包含所有离线数据库与字体库</div>
+            </div>
+            <a href="https://jidiandian.top/release/TraceDot-V4.1.5.html" download="TraceDot-V4.1.5.html" class="soft-pill-btn px-4 py-2 rounded-full bg-brand-600 text-white text-xs font-bold shadow-sm hover:bg-brand-700">
+              获取 HTML
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 场景 05 · 关于作者阿杰同学与开源理念 -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="creator">
+      <div class="pill-card p-8 sm:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <div class="lg:col-span-8 space-y-4">
+            <span class="px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold font-mono">
+              ABOUT THE CREATOR
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              一个人，也是一支充满温度的团队。
+            </h2>
+            <p class="text-sm text-mutedText leading-relaxed">
+              迹点点由<strong>阿杰同学</strong>全程独立构思、设计、前端开发与维护。从最早在 GitHub 上开源的 12306 火车票编辑器，一步步扩展为涵盖全国高铁、民航、城市轨道交通与演出门票的一体化旅行工坊。
+            </p>
+
+            <div class="flex flex-wrap gap-2.5 pt-2">
+              <a href="https://github.com/ajietudou007" target="_blank" rel="noopener" class="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 transition-colors">GitHub 主页 ↗</a>
+              <a href="https://b23.tv/nBL4aXt" target="_blank" rel="noopener" class="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 transition-colors">哔哩哔哩 ↗</a>
+              <a href="https://v.douyin.com/sMRNgbplBkQ/" target="_blank" rel="noopener" class="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 transition-colors">抖音 ↗</a>
+              <a href="https://xhslink.cn/o/9780LQiSR6U" target="_blank" rel="noopener" class="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 transition-colors">小红书 ↗</a>
+            </div>
+          </div>
+
+          <div class="lg:col-span-4 flex justify-center">
+            <div class="p-6 rounded-3xl bg-slate-50 border border-slate-100 text-center w-full max-w-xs">
+              <!-- 头像微质感容器 -->
+              <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-brand-500 via-emerald-400 to-teal-400 p-1 mx-auto mb-4 shadow-soft">
+                <img src="assets/avatar.png" alt="阿杰同学头像" class="w-full h-full rounded-full object-cover bg-white">
+              </div>
+              <h3 class="text-base font-bold text-slate-900">阿杰同学</h3>
+              <p class="text-xs text-brand-600 font-medium mt-0.5">迹点点 · 全程独立开发</p>
+              <p class="text-xs text-mutedText mt-3 leading-relaxed">
+                “如果你也攒了一抽屉的旧票根，愿它们在这里变成一张会讲故事的时光地图。”
+              </p>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
+
   </main>
 
-  <!-- 页脚：版权、免责声明、致谢 -->
-  <footer class="footer" id="footer">
-    <div class="container mx-auto max-w-[1320px] px-6">
-      <div class="footer-grid">
-        <div><a class="brand footer-brand" href="#home"><span class="brand-mark"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="16.4" cy="7.1" r="3.15" fill="white"/><circle cx="13.1" cy="10.4" r="1.05" fill="white"/><circle cx="11.3" cy="12.2" r="1.15" fill="white"/><circle cx="9.3" cy="14.3" r="1" fill="white"/><circle cx="7.2" cy="16.6" r="3.15" fill="white"/></svg></span><span class="brand-name">迹点点</span></a><p class="footer-description">一款集成式旅行纪念票根工作室。把每一次出发，变成一份可回看的记忆。</p></div>
-        <nav class="footer-links" aria-label="页脚链接"><a href="https://jidiandian.top" target="_blank" rel="noopener">官网</a><a href="#download">下载应用</a><a href="https://jidiandian.top/release/TraceDot-V4.1.5.html" target="_blank" rel="noopener">在线应用</a><a href="changelog.html">更新日志</a><a href="https://github.com/ajietudou007/TraceDot" target="_blank" rel="noopener">GitHub ↗</a><a href="#creator">创作者主页</a><a href="#privacy">隐私说明</a></nav>
+  <!-- 底部页脚：清爽极简圆润收尾 -->
+  <footer class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200/80 py-8">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+      
+      <div class="flex items-center gap-3">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDV-a8g57btnoEUy_cfjLnLfWZKON_AP4Cdo6S0MJT6h3QUUM0u-eYLtvkc5ZPgesDqztx_TPcG3UTgNGmBOo6KGd_s1Rn4s1bj28jOCN2O0QSUBmwSXfnQejQ9SNtQoamplKUhsmChGdP7LElUpxleYlxg0ea0k1LA03THPcuxrCq14coR12v55cV8jFieG365-8bkdwhqSRojsbkCiOQ7D1ACeGsDNhNTcB34xpjr5OZwEI4FOl1xEpGHU9y7PIM6PjA" alt="迹点点 Logo" class="w-8 h-8 rounded-xl object-cover shadow-sm shrink-0">
+        <div>
+          <span class="font-extrabold text-sm text-slate-800">迹点点 TraceDot</span>
+          <span class="text-xs text-mutedText block">旅行纪念票根工作室</span>
+        </div>
       </div>
-      <div class="disclaimer"><strong>免责声明：</strong>本项目仅供个人纪念与娱乐创作使用，与中国国家铁路集团（12306）、各航空公司、文旅机构均无任何隶属或合作关系。严禁将生成的票面用于报销、退票、逃票、诈骗或其他违法违规用途。</div>
-      <div class="credits">致谢：<a href="https://github.com/ajietudou007/12306-train-ticket-editor" target="_blank" rel="noopener">12306 火车票票根编辑器</a> · <a href="https://mozilla.github.io/pdf.js/" target="_blank" rel="noopener">pdf.js</a> · <a href="https://html2canvas.hertzen.com/" target="_blank" rel="noopener">html2canvas</a> · PaddleOCR · Tesseract.js</div>
-      <div class="copyright"><span>© 2026 迹点点 TraceDot · MIT License</span><span>点点足迹，票记远方。</span></div>
+
+      <nav class="flex flex-wrap items-center gap-5 text-xs font-medium text-mutedText">
+        <a href="#home" class="hover:text-brand-600 transition-colors">官网首页</a>
+        <a href="#download" class="hover:text-brand-600 transition-colors">下载应用</a>
+        <a href="https://jidiandian.top/release/TraceDot-V4.1.5.html" target="_blank" rel="noopener" class="hover:text-brand-600 transition-colors">在线应用</a>
+        <a href="changelog.html" class="hover:text-brand-600 transition-colors">更新日志</a>
+        <a href="https://github.com/ajietudou007/TraceDot" target="_blank" rel="noopener" class="hover:text-brand-600 transition-colors">GitHub ↗</a>
+        <a href="#privacy" class="hover:text-brand-600 transition-colors">隐私声明</a>
+      </nav>
+
+    </div>
+
+    <!-- 免责声明小标签卡 -->
+    <div class="mt-8 p-4 rounded-2xl bg-white border border-slate-200/60 text-[11px] text-mutedText leading-relaxed">
+      <span class="font-semibold text-slate-700">免责声明：</span>本项目仅供个人纪念、手账与娱乐创作使用，与中国国家铁路集团（12306）、各航空公司及文旅机构均无隶属或合作关系。严禁将生成的票面用于报销、退票、逃票、诈骗或其他违法用途。
+    </div>
+
+    <div class="mt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-mutedText pt-4 border-t border-slate-100">
+      <span class="">© 2026 迹点点 TraceDot · MIT License</span>
+      <span class="font-mono text-brand-600 font-medium">点点足迹，票记远方。</span>
     </div>
   </footer>
 
-  <script>
-    // 导航栏滚动态与移动端菜单
-    const navBar = document.getElementById('navBar');
-    const menuToggle = document.getElementById('menuToggle');
-    const mobilePanel = document.getElementById('mobilePanel');
-    window.addEventListener('scroll', () => navBar.classList.toggle('scrolled', window.scrollY > 24), { passive: true });
-    menuToggle.addEventListener('click', () => {
-      const opened = navBar.classList.toggle('menu-open');
-      menuToggle.setAttribute('aria-expanded', String(opened));
-    });
-    mobilePanel.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
-      navBar.classList.remove('menu-open'); menuToggle.setAttribute('aria-expanded', 'false');
-    }));
 
-    // 明暗主题切换：保存到本地，页面刷新后保持
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    const savedTheme = localStorage.getItem('tracedot-theme');
-    if (savedTheme) document.documentElement.dataset.theme = savedTheme;
-    function syncThemeIcon() {
-      const dark = document.documentElement.dataset.theme === 'dark';
-      themeIcon.innerHTML = dark
-        ? '<path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"/>'
-        : '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"/>';
-    }
-    syncThemeIcon();
-    themeToggle.addEventListener('click', () => {
-      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-      document.documentElement.dataset.theme = next;
-      localStorage.setItem('tracedot-theme', next);
-      syncThemeIcon();
-    });
 
-    // IntersectionObserver：滚动到可视区时淡入上浮
-    const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) { entry.target.classList.add('in'); obs.unobserve(entry.target); }
-      });
-    }, { threshold: .14 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // 数字递增动画
-    const counters = document.querySelectorAll('[data-counter]');
-    const counterObserver = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        const target = Number(el.dataset.counter);
-        const suffix = el.dataset.suffix || '';
-        const duration = 1100;
-        const start = performance.now();
-        const tick = now => {
-          const progress = Math.min((now - start) / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3);
-          el.textContent = `${Math.round(target * eased)}${suffix}`;
-          if (progress < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-        obs.unobserve(el);
-      });
-    }, { threshold: .7 });
-    counters.forEach(el => counterObserver.observe(el));
 
-    // 桌面版：按访问者设备高亮推荐对应安装包
-    (function () {
-      const ua = navigator.userAgent;
-      let target = null;
-      if (/Win(dows)?/i.test(ua)) target = 'dl-win';
-      else if (/Mac OS X/.test(ua) && navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
-        // 仅在可查询架构的浏览器（Chromium 系）上推荐，避免误标
-        navigator.userAgentData.getHighEntropyValues(['architecture']).then(h => {
-          highlight(h && h.architecture === 'x86' ? 'dl-mac-intel' : 'dl-mac-arm');
-        }).catch(() => {});
-      }
-      function highlight(id) {
-        document.querySelectorAll('.desktop-card').forEach(c => {
-          c.classList.remove('is-recommended');
-          const t = c.querySelector('.dc-tag');
-          if (t) t.hidden = true;
-        });
-        const el = document.getElementById(id);
-        if (el) {
-          el.classList.add('is-recommended');
-          const t = el.querySelector('.dc-tag');
-          if (t) t.hidden = false;
-        }
-      }
-      if (target) highlight(target);
-    })();
-  </script>
-</body>
-</html>
+
+
+
+
+
+
+</body></html>
