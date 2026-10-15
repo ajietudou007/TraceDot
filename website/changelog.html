@@ -343,6 +343,357 @@
 <!-- 经典贯穿时间轴线 (TraceDot 几何节点轴) -->
 <div class="hidden sm:block absolute left-8 top-6 bottom-10 w-0.5 bg-gradient-to-b from-primary-container via-surface-variant to-outline-variant"></div>
 <div class="space-y-10" id="changelogCardsList">
+<!-- ===================== 阶段四: V4.1.8 快照对账修复 ===================== -->
+<div class="changelog-entry relative sm:pl-20 group" data-stage="stage-4" data-version="v4.1.8">
+<!-- 左侧发光圆环节点 (TraceDot Brand Motif) -->
+<div class="hidden sm:flex absolute left-4.5 top-8 -translate-x-1/2 w-7 h-7 rounded-full bg-surface-container-lowest shadow-md items-center justify-center">
+<div class="w-3.5 h-3.5 rounded-full bg-primary-container ring-4 ring-primary-container/20 animate-pulse"></div>
+</div>
+<!-- 主卡片 -->
+<div class="rounded-3xl bg-surface-container-lowest p-6 sm:p-8 shadow-xl transition-all hover:shadow-2xl relative overflow-hidden">
+<!-- 顶部版本状态带 -->
+<div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-surface-container">
+<div class="flex items-center gap-3">
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">V4.1.8</span>
+<span class="px-3 py-1 rounded-full bg-primary-container text-on-primary font-label-caps text-label-caps uppercase">最新稳定版</span>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps">快照对账 · 字段修复</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
+<time class="font-label-code text-label-code text-on-surface-variant">2026-10-15</time>
+</div>
+</div>
+<!-- 核心改动标签卡 -->
+<div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- 快照对账 overlayFields -->
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-primary mb-2">
+<span class="material-symbols-outlined text-[18px]">compare_arrows</span>
+<span class="font-headline-sm text-headline-sm">快照对账修复</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        工坊导入时冻结的 tk.data / pv.sample 只作「底层字段来源」，记录当前字段（珍藏册详情 / 行程地图编辑器中的最新保存）非空即覆盖；记录字段为空则保留快照旧值，快照也没有该键时显置空，避免离屏工坊表单默认值泄漏进预览。
+                      </p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">overlayFields</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Archive Preview</span>
+</div>
+</div>
+<!-- 火车记录字段源切换 -->
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-secondary mb-2">
+<span class="material-symbols-outlined text-[18px]">train</span>
+<span class="font-headline-sm text-headline-sm">记录字段源切换</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        火车记录改为优先使用记录自带的工坊字段快照 tk（它一定对应该记录本身），pv 降级为缺少 tk 时的底层字段来源并与记录当前字段对账后使用，不再整体优先返回——陈旧快照会让预览停在改动前。
+                      </p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">tk / pv</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Snapshot</span>
+</div>
+</div>
+</div>
+<!-- 详细条目列表 -->
+<div class="mt-6 space-y-3">
+<div class="font-label-caps text-label-caps text-outline uppercase tracking-wider">详细修补条目 (Bug Fixes &amp; Refinements)</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>「图文不对号」修复：</strong>票号 / 身份证号 / 乘车人姓名等字段在详情编辑保存后不再被旧快照覆盖，卡片文字与预览图文保持同步；空表单值（如默认车次 K1020）不再泄漏进预览。
+                    </span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>多工坊接入对账：</strong>登机牌 / 交通票 / 影演票记录同样接入 overlayFields 快照对账；登机牌新增 airline 原样透传，工坊支持中文名 / 英文名 / 二字码 / 自定义航司，归一化白名单同步收录。
+                    </span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>全链版本号同步：</strong>官网、桌面单文件应用全线统一升级至 V4.1.8 正式生产标号；桌面端应用同步升级（Electron 打包，Mac arm64 / x64 dmg + zip）。
+                    </span>
+</div>
+</div>
+</div>
+</div>
+<!-- ===================== 阶段四: V4.1.7 手机端设计重画 V5 ===================== -->
+<div class="changelog-entry relative sm:pl-20 group" data-stage="stage-4" data-version="v4.1.7">
+<!-- 左侧发光圆环节点 (TraceDot Brand Motif) -->
+<div class="hidden sm:flex absolute left-4.5 top-8 -translate-x-1/2 w-7 h-7 rounded-full bg-surface-container-lowest shadow-md items-center justify-center">
+<div class="w-3.5 h-3.5 rounded-full bg-primary-container ring-4 ring-primary-container/20 animate-pulse"></div>
+</div>
+<!-- 主卡片 -->
+<div class="rounded-3xl bg-surface-container-lowest p-6 sm:p-8 shadow-xl transition-all hover:shadow-2xl relative overflow-hidden">
+<!-- 顶部版本状态带 -->
+<div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-surface-container">
+<div class="flex items-center gap-3">
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">V4.1.7</span>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps">设计重画 · 弹窗交互</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
+<time class="font-label-code text-label-code text-on-surface-variant">2026-10-14</time>
+</div>
+</div>
+<!-- 核心改动标签卡 -->
+<div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- 手机端设计重画 V5 -->
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-primary mb-2">
+<span class="material-symbols-outlined text-[18px]">design_services</span>
+<span class="font-headline-sm text-headline-sm">手机端设计重画（V5）</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        模块注入层整体重写：新一套设计令牌、卡片纯白细描边单层柔影、表单与按钮 48px 高、芯片胶囊形；行程地图图层芯片 + 底部居中控制岛、珍藏册时间轴压缩留白、旅游计划输入胶囊。
+                      </p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">JDD_V5_CSS</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Mobile V5</span>
+</div>
+</div>
+<!-- 弹窗与工坊交互优化 -->
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-secondary mb-2">
+<span class="material-symbols-outlined text-[18px]">open_in_full</span>
+<span class="font-headline-sm text-headline-sm">弹窗与工坊交互优化</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        行程编辑器弹窗手机端整屏化（内部分区滚动）；详情弹窗票面预览与详情面板分区滚动；四个票务工坊悬浮返回钮移至标题行让位；票种 chips 特异性裁决恢复胶囊 + 玻璃面 + 选中反白。
+                      </p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">Dialog UX</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Workshop</span>
+</div>
+</div>
+</div>
+<!-- 详细条目列表 -->
+<div class="mt-6 space-y-3">
+<div class="font-label-caps text-label-caps text-outline uppercase tracking-wider">详细修补条目 (Bug Fixes &amp; Refinements)</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>底栏选中态修复：</strong>侧栏选中 / 悬停底色改为仅桌面侧栏生效，手机端底栏选中态恢复为深绿实心方块（此前注入层底色曾压过它导致浅绿药丸底）。
+                    </span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>编辑器弹窗整屏化：</strong>修复弹窗上线框 851px 超过 iframe 视口 774px 导致的裁切；面板内部独立滚动、操作条常驻底部。
+                    </span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>工坊操作条优化：</strong>底部吸附操作条改不透明玻璃 + 单行三键；四个票务工坊返回钮停在标题行，标题行左侧留 64px 让位。
+                    </span>
+</div>
+</div>
+</div>
+</div>
+<!-- ===================== 阶段四: V4.1.6 手机端 UI 修复 ===================== -->
+<div class="changelog-entry relative sm:pl-20 group" data-stage="stage-4" data-version="v4.1.6">
+<!-- 左侧发光圆环节点 (TraceDot Brand Motif) -->
+<div class="hidden sm:flex absolute left-4.5 top-8 -translate-x-1/2 w-7 h-7 rounded-full bg-surface-container-lowest shadow-md items-center justify-center">
+<div class="w-3.5 h-3.5 rounded-full bg-primary-container ring-4 ring-primary-container/20 animate-pulse"></div>
+</div>
+<!-- 主卡片 -->
+<div class="rounded-3xl bg-surface-container-lowest p-6 sm:p-8 shadow-xl transition-all hover:shadow-2xl relative overflow-hidden">
+<!-- 顶部版本状态带 -->
+<div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-surface-container">
+<div class="flex items-center gap-3">
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">V4.1.6</span>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps">手机端 UI 修复</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
+<time class="font-label-code text-label-code text-on-surface-variant">2026-10-13</time>
+</div>
+</div>
+<!-- 核心改动标签卡 -->
+<div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- 底栏让位 -->
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-primary mb-2">
+<span class="material-symbols-outlined text-[18px]">vertical_align_bottom</span>
+<span class="font-headline-sm text-headline-sm">手机端底栏让位</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        工坊模块整体上移，底部预留悬浮令牌条高度 + 安全区，修复手机端底栏遮挡地图控制按钮与旅游计划输入栏的问题。
+                      </p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">Safe Area</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Mobile Layout</span>
+</div>
+</div>
+<!-- 选中态与控制岛修复 -->
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-secondary mb-2">
+<span class="material-symbols-outlined text-[18px]">radio_button_checked</span>
+<span class="font-headline-sm text-headline-sm">选中态与控制岛修复</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        底栏选中态 ::before 补 display:block，修复选中高亮方块偶发不显示；地图控制岛改 flex-wrap:nowrap，防止控件换行被挤压错位。
+                      </p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">Tab Bar</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Map Ctrl</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ===================== 阶段四: V4.1.4 珍藏册缩略图链路 ===================== -->
+<div class="changelog-entry relative sm:pl-20 group" data-stage="stage-4" data-version="v4.1.4">
+<!-- 左侧发光圆环节点 (TraceDot Brand Motif) -->
+<div class="hidden sm:flex absolute left-4.5 top-8 -translate-x-1/2 w-7 h-7 rounded-full bg-surface-container-lowest shadow-md items-center justify-center">
+<div class="w-3.5 h-3.5 rounded-full bg-primary-container ring-4 ring-primary-container/20 animate-pulse"></div>
+</div>
+<!-- 主卡片 -->
+<div class="rounded-3xl bg-surface-container-lowest p-6 sm:p-8 shadow-xl transition-all hover:shadow-2xl relative overflow-hidden">
+<!-- 顶部版本状态带 -->
+<div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-surface-container">
+<div class="flex items-center gap-3">
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">V4.1.4</span>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps">缩略图链路修复</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
+<time class="font-label-code text-label-code text-on-surface-variant">2026-10-13</time>
+</div>
+</div>
+<!-- 核心改动标签卡 -->
+<div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- 规格化失败隔离 -->
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-primary mb-2">
+<span class="material-symbols-outlined text-[18px]">bug_report</span>
+<span class="font-headline-sm text-headline-sm">规格化失败隔离</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        单条记录规格化（spec）抛异常时立即回执空结果并释放队列，交由珍藏册按失败计数自动重试（上限 3 次）；此前一条记录失败会导致其后所有记录都不生成缩略图。
+                      </p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">spec()</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Queue</span>
+</div>
+</div>
+<!-- 快照继承规则 -->
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-secondary mb-2">
+<span class="material-symbols-outlined text-[18px">inventory_2</span>
+<span class="font-headline-sm text-headline-sm">快照继承规则</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        保存时按记录 ID 匹配，仅当新记录缺 tk 时才从旧记录补齐工坊快照，随后删除陈旧渲染快照 pv 由外壳重绘——修复「点了图片进去改了，外面还是旧的」。
+                      </p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">tk / pv</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Snapshot</span>
+</div>
+</div>
+</div>
+<!-- 详细条目列表 -->
+<div class="mt-6 space-y-3">
+<div class="font-label-caps text-label-caps text-outline uppercase tracking-wider">详细修补条目 (Bug Fixes &amp; Refinements)</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>顶栏层级修复：</strong>外壳顶栏 z-index 由 1 提升至 50，修复被内容层遮挡的问题。
+                    </span>
+</div>
+</div>
+</div>
+</div>
+<!-- ===================== 阶段四: V4.1.3 设计系统级重构 ===================== -->
+<div class="changelog-entry relative sm:pl-20 group" data-stage="stage-4" data-version="v4.1.3">
+<!-- 左侧发光圆环节点 (TraceDot Brand Motif) -->
+<div class="hidden sm:flex absolute left-4.5 top-8 -translate-x-1/2 w-7 h-7 rounded-full bg-surface-container-lowest shadow-md items-center justify-center">
+<div class="w-3.5 h-3.5 rounded-full bg-primary-container ring-4 ring-primary-container/20 animate-pulse"></div>
+</div>
+<!-- 主卡片 -->
+<div class="rounded-3xl bg-surface-container-lowest p-6 sm:p-8 shadow-xl transition-all hover:shadow-2xl relative overflow-hidden">
+<!-- 顶部版本状态带 -->
+<div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-surface-container">
+<div class="flex items-center gap-3">
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">V4.1.3</span>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps">设计系统级重构</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
+<time class="font-label-code text-label-code text-on-surface-variant">2026-10-07</time>
+</div>
+</div>
+<!-- 核心改动标签卡 -->
+<div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- 令牌层与悬浮底栏 -->
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-primary mb-2">
+<span class="material-symbols-outlined text-[18px]">palette</span>
+<span class="font-headline-sm text-headline-sm">令牌层与悬浮底栏</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        新增完整设计令牌（--ds-*：画布 / 玻璃面 / 描边 / 墨色 / 深绿渐变 / 圆角 / 阴影）；隐藏品牌顶栏大标题直达；底栏改为悬浮令牌条（圆角 22、玻璃面 + 内高光），选中态为深绿实心方块。
+                      </p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">Design Tokens</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Floating Bar</span>
+</div>
+</div>
+<!-- 页面与裁决层 -->
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-secondary mb-2">
+<span class="material-symbols-outlined text-[18px]">dashboard_customize</span>
+<span class="font-headline-sm text-headline-sm">页面改版与裁决层</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        「添加票面」改大标题 + 竖向令牌卡、「我的」改用户卡 + 分组列表；新增 JDD_OVERRIDE 设计还原裁决层（特异度 0,4,1）压过模块主题层；版本更新红点镜像到「我的」tab。
+                      </p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">JDD_OVERRIDE</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Pages</span>
+</div>
+</div>
+</div>
+<!-- 详细条目列表 -->
+<div class="mt-6 space-y-3">
+<div class="font-label-caps text-label-caps text-outline uppercase tracking-wider">详细修补条目 (Bug Fixes &amp; Refinements)</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>时间轴与输入优化：</strong>统计卡改单卡四格（324×79 设计稿）；筛选行标签与两个下拉同高同胶囊；AI 输入区改胶囊输入框 + 深绿圆形发送钮；工坊悬浮返回钮改绿色系并上移避让安全区。
+                    </span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>满铺画布脚本：</strong>新增 jdd-fix413-boot（html/body 归零外内边距、去奶油色边框、.page 满铺 padding 13px）。
+                    </span>
+</div>
+</div>
+</div>
+</div>
 <!-- ===================== 阶段四: V4.1.5 最新高亮版 ===================== -->
 <div class="changelog-entry relative sm:pl-20 group" data-stage="stage-4" data-version="v4.1.5">
 <!-- 左侧发光圆环节点 (TraceDot Brand Motif) -->
