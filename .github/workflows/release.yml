@@ -1,15 +1,17 @@
-name: build-windows
+name: build-desktop
 
 on:
   push:
     tags:
-      - "v4.*"
+      - "v*"
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
   build-win:
+    name: Windows 安装包
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -30,8 +32,58 @@ jobs:
         run: npm run prep && npx electron-builder --win --publish never
         working-directory: desktop
 
-      - name: Upload to GitHub Release
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: TraceDot-win
+          path: |
+            desktop/dist_electron/TraceDot-Setup-*.exe
+            desktop/dist_electron/latest.yml
+
+      - name: Attach to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: desktop/dist_electron/TraceDot-Setup-*.exe
+          files: |
+            desktop/dist_electron/TraceDot-Setup-*.exe
+            desktop/dist_electron/latest.yml
+          fail_on_unmatched_files: false
+
+  build-mac:
+    name: macOS 安装包
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: desktop
+
+      - name: Build macOS dmg + zip
+        run: npm run prep && npx electron-builder --mac --publish never
+        working-directory: desktop
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: TraceDot-mac
+          path: |
+            desktop/dist_electron/*.dmg
+            desktop/dist_electron/*.zip
+            desktop/dist_electron/latest-mac.yml
+
+      - name: Attach to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            desktop/dist_electron/*.dmg
+            desktop/dist_electron/*.zip
+            desktop/dist_electron/latest-mac.yml
           fail_on_unmatched_files: false

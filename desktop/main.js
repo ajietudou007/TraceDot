@@ -2,6 +2,7 @@ const { app, BrowserWindow, shell, Menu, dialog } = require('electron');
 const path = require('path');
 
 const RELEASES_URL = 'https://github.com/ajietudou007/TraceDot/releases';
+const APP_VERSION = '5.0.47';
 let win = null;
 
 function createWindow() {
@@ -10,7 +11,7 @@ function createWindow() {
     height: 900,
     minWidth: 960,
     minHeight: 640,
-    title: '迹点点 TraceDot',
+    title: '迹点点 TraceDot V' + APP_VERSION,
     backgroundColor: '#fbfbfd',
     autoHideMenuBar: true,
     webPreferences: {

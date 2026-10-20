@@ -53,9 +53,12 @@
     }
   </script>
   <style>
+    html { overflow-x: hidden; }
     body {
       background-color: #F4F6FA;
       color: #1E293B;
+      /* 窄屏下装饰性光晕（700/760px 固定宽）会把文档撑宽，这里收口横向溢出 */
+      overflow-x: hidden;
       font-family: 'Plus Jakarta Sans', 'Noto Sans SC', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
@@ -104,7 +107,7 @@
     <header class="pointer-events-auto flex items-center justify-between gap-6 px-4 sm:px-6 py-2.5 rounded-full glass-nav shadow-soft max-w-5xl w-full border border-white/60">
       
       <!-- 品牌 Logo：保留原始形态，融入全新翠绿微质感胶囊 -->
-      <a href="#home" class="flex items-center gap-2.5 group shrink-0"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7rcjiwGQupugW6cdmkDBFdOZpSlQmWeM5wLnmkp1onprRUR2Vp3c9FPH5XVnBqBlqSYCuugD93apBf2zRN3DgC4o5AAVv7_NL9oAG9X1ZCyDG9hBLhbmY2M_AW4qnlppXksDONkhhMBhSd3QCm2uOtgvvC3vp-kV9fuMXrQl67OupVtubSxxEonX9akxmDs2MG1jNYohOSKoCXQs9qHLe5urWLEcet5SWFU1RNrv_Vthqfu718-LHyQxAr_pYUc7LILQ" alt="迹点点 Logo" class="w-8 h-8 rounded-xl object-cover shadow-sm group-hover:scale-105 transition-transform shrink-0"><span class="font-extrabold text-sm sm:text-base text-slate-800 tracking-tight group-hover:text-brand-600 transition-colors">迹点点</span><span class="px-2 py-0.5 text-[10px] font-mono bg-brand-50 text-brand-700 border border-brand-200/80 rounded-full font-semibold">V4.1.8</span></a>
+      <a href="#home" class="flex items-center gap-2.5 group shrink-0"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7rcjiwGQupugW6cdmkDBFdOZpSlQmWeM5wLnmkp1onprRUR2Vp3c9FPH5XVnBqBlqSYCuugD93apBf2zRN3DgC4o5AAVv7_NL9oAG9X1ZCyDG9hBLhbmY2M_AW4qnlppXksDONkhhMBhSd3QCm2uOtgvvC3vp-kV9fuMXrQl67OupVtubSxxEonX9akxmDs2MG1jNYohOSKoCXQs9qHLe5urWLEcet5SWFU1RNrv_Vthqfu718-LHyQxAr_pYUc7LILQ" alt="迹点点 Logo" class="w-8 h-8 rounded-xl object-cover shadow-sm group-hover:scale-105 transition-transform shrink-0"><span class="font-extrabold text-sm sm:text-base text-slate-800 tracking-tight group-hover:text-brand-600 transition-colors">迹点点</span><span class="px-2 py-0.5 text-[10px] font-mono bg-brand-50 text-brand-700 border border-brand-200/80 rounded-full font-semibold">V5.0.47</span></a>
 
       <!-- 导航链接：柔和圆润悬浮胶囊标签 -->
       <nav class="hidden md:flex items-center gap-1 bg-slate-100/70 p-1.5 rounded-full border border-slate-200/50">
@@ -145,7 +148,7 @@
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
               <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
             </span>
-            <span class="font-mono text-mutedText">TRACEDOT 4.1.8</span>
+            <span class="font-mono text-mutedText">TRACEDOT 5.0.47</span>
             <span class="text-slate-300">|</span>
             <span class="text-brand-700 font-semibold">纯前端 · 单文件 · 数据零外传</span>
           </div>
@@ -157,7 +160,7 @@
           </h1>
 
           <p class="text-base sm:text-lg text-mutedText max-w-xl leading-relaxed">
-            将火车票、登机牌、城市公共交通与演出门票整理汇聚成一张专属的时光旅行地图。纯本地运行，免安装双击即用。
+            将火车票、登机牌、城市公共交通、演出门票与船票整理汇聚成一张专属的时光旅行地图，并在年底生成一份属于你的年度报告。纯本地运行，免安装双击即用。
           </p>
 
           <!-- 胶囊功能特色微徽章组（参考多态卡片风格） -->
@@ -168,7 +171,11 @@
             </div>
             <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700 shadow-sm">
               <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
-              <span class="">12306 / 登机牌工坊</span>
+              <span class="">12306 / 登机牌 / 交通 / 影演</span>
+            </div>
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-200 text-xs font-medium text-brand-800 shadow-sm">
+              <span class="w-1.5 h-1.5 rounded-full bg-brand-600"></span>
+              <span class="">年度报告（V5 新增）</span>
             </div>
             <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700 shadow-sm">
               <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
@@ -183,7 +190,7 @@
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
             </a>
             
-            <a href="https://jidiandian.top/release/TraceDot-V4.1.8.html" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200/90 text-slate-800 font-semibold text-sm shadow-sm transition-all hover:border-slate-300">
+            <a href="https://jidiandian.top/release/TraceDot-V5.0.47.html" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200/90 text-slate-800 font-semibold text-sm shadow-sm transition-all hover:border-slate-300">
               <span class="">浏览器在线打开</span>
               <span class="text-mutedText">↗</span>
             </a>
@@ -226,9 +233,9 @@
                 <div>
                   <div class="flex items-center gap-2">
                     <h4 class="text-xs font-bold text-slate-800 tracking-wider">TRIP ARCHIVE</h4>
-                    <span class="px-1.5 py-0.2 text-[9px] font-mono bg-emerald-50 text-brand-700 border border-brand-200 rounded font-semibold">V4.1.8</span>
+                    <span class="px-1.5 py-0.2 text-[9px] font-mono bg-emerald-50 text-brand-700 border border-brand-200 rounded font-semibold">V5.0.47</span>
                   </div>
-                  <p class="text-[10px] text-mutedText font-medium mt-0.5">45 段足迹 · 纯净透亮玻璃档案库</p>
+                  <p class="text-[10px] text-mutedText font-medium mt-0.5">45 段足迹 · 液态玻璃档案库</p>
                 </div>
               </div>
 
@@ -435,6 +442,102 @@
       </div>
     </section>
 
+    <!-- 场景 02 · V5 全新能力（版本速览） -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-14" id="whatsnew">
+      <div class="pill-card p-8 sm:p-10">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-8">
+          <div class="space-y-2">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold font-mono">
+              V5.0.47 · WHAT'S NEW
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              第五个大版本：把「看起来像」补齐成「真的是」
+            </h2>
+            <p class="text-sm text-mutedText max-w-2xl leading-relaxed">
+              票面上的码可以真被扫出来，数据不再悄悄丢失，年底还能回头看一整年的足迹。V5 阶段共端上 46 次迭代，每一条都写进了更新日志。
+            </p>
+          </div>
+          <a href="changelog.html" class="soft-pill-btn inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold shadow-md hover:bg-slate-800 shrink-0">
+            <span>查看完整更新日志</span>
+            <span>↗</span>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+          <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all group">
+            <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 text-brand-600 group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            </div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-sm font-bold text-slate-800">年度报告</h3>
+              <span class="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-brand-500 text-white rounded">第 8 视图</span>
+            </div>
+            <p class="text-xs text-mutedText mt-1 leading-relaxed">
+              年度大数字、12 格月度热力、单程榜单与准点率一次看完；按月的「这一年」时间轴合并在报告里，不再往导航里塞第 9 个标签。
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all group">
+            <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 text-brand-600 group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m-8-8h16M6 4v16M9 4v16M12 4v16M15 4v16M18 4v16"></path></svg>
+            </div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-sm font-bold text-slate-800">票面码制做真</h3>
+              <span class="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-slate-200 text-slate-700 rounded">PDF417 / Code128</span>
+            </div>
+            <p class="text-xs text-mutedText mt-1 leading-relaxed">
+              登机牌条纹改用真票面码制 PDF417 + BCBP；火车票二维码不再统统指向 12306 首页，而是这张票自己的车次、日期、区间与票号；交通票与影演票启用 bwip 真条码渲染。
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all group">
+            <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 text-brand-600 group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+            </div>
+            <h3 class="text-sm font-bold text-slate-800">粘贴即录入</h3>
+            <p class="text-xs text-mutedText mt-1 leading-relaxed">
+              把 12306 短信或订单邮件正文整段贴进火车票工坊即可自动填票面，支持无年份日期、「-/至/→」多种区间写法与订单号识别。
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all group">
+            <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 text-brand-600 group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7c0-1.66 3.58-3 8-3s8 1.34 8 3-3.58 3-8 3-8-1.34-8-3zm0 0v10c0 1.66 3.58 3 8 3s8-1.34 8-3V7"></path></svg>
+            </div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-sm font-bold text-slate-800">数据不再悄悄丢</h3>
+              <span class="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-slate-200 text-slate-700 rounded">IndexedDB</span>
+            </div>
+            <p class="text-xs text-mutedText mt-1 leading-relaxed">
+              账本迁入 IndexedDB 主存 + localStorage 镜像并引入写入时间戳仲裁，不再撞 5MB 墙；每次导入前自动留快照，菜单里一键回滚，且回滚本身还能撤销。
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all group">
+            <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 text-brand-600 group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+            </div>
+            <h3 class="text-sm font-bold text-slate-800">老备份导得进来</h3>
+            <p class="text-xs text-mutedText mt-1 leading-relaxed">
+              通用备份解析器认得 V4 与手机端导出的旧结构，老用户不再被一句「格式不支持」挡在门外；旧票面草稿自动迁移到新表单。
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all group">
+            <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 text-brand-600 group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+            <h3 class="text-sm font-bold text-slate-800">安全评审与加固</h3>
+            <p class="text-xs text-mutedText mt-1 leading-relaxed">
+              修掉一处可被恶意备份触发的存储型 XSS，补上导入体积与条数上限、CSP 三条低风险指令，并在使用联网识别引擎时明确提示照片将上传。
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
     <!-- 场景 02 · 核心数据指标看板（极简多态白卡） -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="metrics">
       <div class="pill-card p-8 sm:p-12 bg-white/90">
@@ -447,7 +550,7 @@
               一份极其轻巧的工具，<br>装下整段远方旅程。
             </h2>
             <p class="text-sm text-mutedText leading-relaxed">
-              从生成第一张复古火车票，到翻开整本珍藏册。迹点点把过去繁重复杂的整理与绘图操作，全部化作轻柔流畅的指尖体验。
+              从生成第一张复古火车票，到翻开整本珍藏册、再到年底回看一整年的年度报告。八个模块都收在一个文件里，过去繁重复杂的整理与绘图操作，全部化作轻柔流畅的指尖体验。
             </p>
           </div>
 
@@ -466,7 +569,7 @@
               <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mx-auto mb-3 text-brand-600 group-hover:scale-110 transition-transform">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
               </div>
-              <div class="text-3xl font-black text-slate-800 font-mono group-hover:text-brand-600 transition-colors">9</div>
+              <div class="text-3xl font-black text-slate-800 font-mono group-hover:text-brand-600 transition-colors">10</div>
               <div class="text-xs text-mutedText font-medium mt-1">种票面支持</div>
             </div>
 
@@ -474,7 +577,7 @@
               <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mx-auto mb-3 text-brand-600 group-hover:scale-110 transition-transform">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
               </div>
-              <div class="text-3xl font-black text-slate-800 font-mono group-hover:text-brand-600 transition-colors">7</div>
+              <div class="text-3xl font-black text-slate-800 font-mono group-hover:text-brand-600 transition-colors">8</div>
               <div class="text-xs text-mutedText font-medium mt-1">大功能模块</div>
             </div>
 
@@ -495,13 +598,13 @@
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="modules">
       <div class="text-center max-w-2xl mx-auto mb-14 space-y-3">
         <span class="px-3.5 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold font-mono tracking-wider">
-          THE WORKSPACE
+          THE WORKSPACE · 8 MODULES
         </span>
         <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-          七大功能模块，收录你的每一次抵达
+          八大功能模块，收录你的每一次抵达
         </h2>
         <p class="text-sm sm:text-base text-mutedText">
-          从一张泛黄的火车软纸票，到跨越重洋的登机牌与散落各地的城市地铁票。
+          从一张泛黄的火车软纸票，到跨越重洋的登机牌、散落各地的城市地铁票，再到年末那份只讲你自己的年度回顾。
         </p>
       </div>
 
@@ -518,11 +621,11 @@
             </div>
             <h3 class="text-lg font-bold text-slate-800 mb-2">行程地图</h3>
             <p class="text-xs text-mutedText leading-relaxed">
-              自动绘制全境底图，铁路实线弧线、航班虚线航路，到访城市逐一点亮；编辑行程即可即时联动预览真实票面。
+              自动绘制全境底图，铁路实线弧线、航班虚线航路，到访城市逐一点亮；筛选即刻联动地图，直辖市按省域整片点亮。V5 起线路自带流动虚线与流光，票种落点按「一城一点」合并，不再被城市点盖住。
             </p>
           </div>
           <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-brand-700">
-            <span class="">全国站名 &amp; 机场坐标</span>
+            <span class="">全国站名 &amp; 机场坐标 · 筛选联动</span>
             <span class="">→</span>
           </div>
         </div>
@@ -538,11 +641,11 @@
             </div>
             <h3 class="text-lg font-bold text-slate-800 mb-2">我的旅游计划</h3>
             <p class="text-xs text-mutedText leading-relaxed">
-              对话式 AI 行程规划：实时分步查询真实景点、酒店、美食与天气，按天生成时间轴方案与行李清单，支持多轮自然语言调整。
+              对话式 AI 行程规划：实时分步查询真实景点、酒店、美食与天气，按天生成时间轴方案与行李清单，支持多轮自然语言调整。V5 起行程最长放宽到 15 天，并新增「按天行程 / 时间轴」双视图。
             </p>
           </div>
           <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-amber-600">
-            <span class="">高德 API + 智能推演</span>
+            <span class="">高德 API + 智能推演 · 最长 15 天</span>
             <span class="">→</span>
           </div>
         </div>
@@ -558,11 +661,11 @@
             </div>
             <h3 class="text-lg font-bold text-slate-800 mb-2">火车票工坊</h3>
             <p class="text-xs text-mutedText leading-relaxed">
-              12306 经典与现代双风格编辑器，八款底图（蓝磁/红磁/蓝雕等），支持电子客票发票与行程单 PDF / OCR 导入与高清导出。
+              12306 经典与现代双风格编辑器，八款底图（蓝磁/红磁/蓝雕等），支持电子客票发票与行程单 PDF / OCR 导入与高清导出；V5 新增粘贴短信正文即录入，票面二维码改成指向这张票自己。
             </p>
           </div>
           <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-brand-700">
-            <span class="">8 款版画与经典底纸</span>
+            <span class="">8 款版画底纸 · 粘贴即录入</span>
             <span class="">→</span>
           </div>
         </div>
@@ -578,11 +681,11 @@
             </div>
             <h3 class="text-lg font-bold text-slate-800 mb-2">登机牌工坊</h3>
             <p class="text-xs text-mutedText leading-relaxed">
-              内置全球 8500+ 机场与航司二字码联想数据库，纸质扫描件 AI 视觉转录与自动回填，生成你的飞行航程卡。
+              内置全球 8500+ 机场与航司二字码联想数据库，纸质扫描件 AI 视觉转录与自动回填，生成你的飞行航程卡；V5 起票面条码改用真票面码制 PDF417 + BCBP，可被扫码枪读出来。
             </p>
           </div>
           <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-sky-600">
-            <span class="">OurAirports 数据库</span>
+            <span class="">OurAirports 数据库 · PDF417</span>
             <span class="">→</span>
           </div>
         </div>
@@ -598,11 +701,11 @@
             </div>
             <h3 class="text-lg font-bold text-slate-800 mb-2">交通票工坊</h3>
             <p class="text-xs text-mutedText leading-relaxed">
-              公交、地铁（全国 48 城地铁库全收录）、出租车发票与长途公路客运，按固定像素规范精准还原城市交通记忆。
+              公交、地铁（全国 48 城地铁库全收录）、出租车发票、长途公路客运与 V5 新增的船票，按固定像素规范精准还原城市交通记忆；表单字段跟着票种走，条码改用 bwip 真 Code128。
             </p>
           </div>
           <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-indigo-600">
-            <span class="">48 城市 8000+ 站点</span>
+            <span class="">48 城地铁 · 8000+ 站点 · 含船票</span>
             <span class="">→</span>
           </div>
         </div>
@@ -618,17 +721,17 @@
             </div>
             <h3 class="text-lg font-bold text-slate-800 mb-2">影演票工坊</h3>
             <p class="text-xs text-mutedText leading-relaxed">
-              电影票、景区门票、演唱会入场券。支持 OMDb 电影海报自动联动，景区全国 5400+ 4A/5A 联想库，支持自定义取景与裁剪。
+              电影票、景区门票、演唱会入场券。支持 OMDb 电影海报自动联动，景区全国 5400+ 4A/5A 联想库，支持自定义取景与裁剪；V5 叠加了 SVG 纸张颗粒质感，票面条码同样是真 Code128。
             </p>
           </div>
           <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-rose-600">
-            <span class="">海报智能匹配与取景</span>
+            <span class="">海报智能匹配 · 纸张颗粒</span>
             <span class="">→</span>
           </div>
         </div>
 
         <!-- 07 珍藏册（跨列大卡） -->
-        <div class="pill-card p-6 md:col-span-2 lg:col-span-3 flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-white via-white to-emerald-50/40">
+        <div class="pill-card p-6 md:col-span-2 lg:col-span-2 flex flex-col md:flex-row items-center justify-between gap-5 bg-gradient-to-r from-white via-white to-emerald-50/40">
           <div class="flex items-center gap-5">
             <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-600 to-emerald-400 text-white flex items-center justify-center font-mono font-bold text-xl shadow-pill shrink-0">
               07
@@ -636,16 +739,37 @@
             <div>
               <span class="text-xs font-mono font-semibold text-brand-600">CHRONICLE TIMELINE</span>
               <h3 class="text-xl font-bold text-slate-800">珍藏册 · 行程编年史时间轴</h3>
-              <p class="text-xs text-mutedText mt-1 max-w-2xl">
-                把所有票据按行程正序串接为精美编年史时间轴，按票种与城市智能筛选，一键导出高清原图、备份与归档。
+              <p class="text-xs text-mutedText mt-1 max-w-xl">
+                把所有票据按行程正序串接为精美编年史时间轴，按票种与城市智能筛选，一键导出高清原图、备份与归档；V5 起支持导出 CSV / ICS / 备份 JSON，并认得老版本导出的备份格式。
               </p>
             </div>
           </div>
           <div class="shrink-0">
-            <a href="https://jidiandian.top/release/TraceDot-V4.1.8.html" target="_blank" rel="noopener" class="soft-pill-btn inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold shadow-md hover:bg-slate-800">
+            <a href="https://jidiandian.top/release/TraceDot-V5.0.47.html" target="_blank" rel="noopener" class="soft-pill-btn inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold shadow-md hover:bg-slate-800">
               <span class="">进入珍藏册</span>
               <span class="">↗</span>
             </a>
+          </div>
+        </div>
+
+        <!-- 08 年度报告（V5 新增） -->
+        <div class="pill-card p-6 flex flex-col justify-between group relative overflow-hidden">
+          <div class="absolute top-0 right-0 px-3 py-1 rounded-bl-2xl bg-brand-500 text-white text-[10px] font-bold font-mono">V5 NEW</div>
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center font-mono font-bold text-lg group-hover:bg-teal-500 group-hover:text-white transition-all shadow-sm">
+                08
+              </div>
+              <span class="text-xs font-mono font-semibold text-mutedText">YEAR IN REVIEW</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 mb-2">年度报告</h3>
+            <p class="text-xs text-mutedText leading-relaxed">
+              按年份回看自己的一整年：总里程、到访城市、12 格月度热力、最远单程与准点率，以及合并其中的纵向时间轴。
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-teal-600">
+            <span class="">12 格月度热力 · 榜单 · 准点率</span>
+            <span class="">→</span>
           </div>
         </div>
 
@@ -685,8 +809,8 @@
                   02
                 </div>
                 <div>
-                  <h4 class="text-xs font-bold text-slate-800">localStorage + IndexedDB 镜像</h4>
-                  <p class="text-xs text-mutedText mt-0.5">本地双保险备份，即便清除单个键也不会轻易丢失行程记录，支持 JSON 导入导出与快照。</p>
+                  <h4 class="text-xs font-bold text-slate-800">IndexedDB 主存 + localStorage 镜像</h4>
+                  <p class="text-xs text-mutedText mt-0.5">V5 起账本以 IndexedDB 为主存、localStorage 为镜像，并用写入时间戳仲裁新旧；导出前的自动快照与一键回滚让误导入不再是单向操作。</p>
                 </div>
               </div>
 
@@ -696,7 +820,17 @@
                 </div>
                 <div>
                   <h4 class="text-xs font-bold text-slate-800">本地多引擎 OCR 与 AI 转录</h4>
-                  <p class="text-xs text-mutedText mt-0.5">内置 PP-OCRv6 与 Tesseract.js 本地离线引擎，亦可按需使用多模态大模型一键提取纸质票面。</p>
+                  <p class="text-xs text-mutedText mt-0.5">内置 PP-OCRv6 与 Tesseract.js 本地离线引擎，亦可按需使用多模态大模型一键提取纸质票面；V5 起选择联网引擎会明确提示照片将上传。</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                <div class="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center text-brand-600 shrink-0 font-bold text-xs">
+                  04
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-slate-800">V5 安全评审与加固</h4>
+                  <p class="text-xs text-mutedText mt-0.5">修复一处可由恶意备份触发的存储型 XSS，加入导入体积与条数上限、三条低风险 CSP 指令，制票与时间轴整理依旧全程离线。</p>
                 </div>
               </div>
             </div>
@@ -714,60 +848,60 @@
               <span class="px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold font-mono">
                 DESKTOP APPS
               </span>
-              <span class="text-xs font-mono font-bold text-slate-400">V4.1.8 STABLE</span>
+              <span class="text-xs font-mono font-bold text-slate-400">V5.0.47 STABLE</span>
             </div>
 
             <h3 class="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">
               下载原生客户端，随时随地开启
             </h3>
             <p class="text-sm text-mutedText mb-6">
-              原生轻量打包，支持 Mac 与 Windows，自带自动更新与离线资源包。
+              原生轻量打包，支持 Mac 与 Windows，自带自动更新与离线资源包。网页版与桌面版同为 V5.0.47，数据格式完全一致，可随时互相导出导入。
             </p>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-              
-              <a href="https://github.com/ajietudou007/TraceDot/releases/download/v4.1.8/TraceDot-4.1.8-arm64.dmg" download="" class="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+
+              <a href="https://github.com/ajietudou007/TraceDot/releases/latest" target="_blank" rel="noopener" class="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
                 <div>
                   <div class="flex items-center justify-between">
                     <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">macOS (Apple 芯片)</span>
                     <span class="w-2 h-2 rounded-full bg-brand-500"></span>
                   </div>
-                  <p class="text-[11px] text-mutedText mt-1 font-mono">.dmg · 107 MB</p>
+                  <p class="text-[11px] text-mutedText mt-1 font-mono">.dmg · 取 Release 最新资产</p>
                 </div>
                 <div class="mt-3 text-xs font-bold text-brand-600 flex items-center gap-1">
-                  <span class="">立即下载</span>
+                  <span class="">前往下载</span>
                   <span class="">↓</span>
                 </div>
               </a>
 
-              <a href="https://github.com/ajietudou007/TraceDot/releases/download/v4.1.8/TraceDot-4.1.8-x64.dmg" download="" class="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
+              <a href="https://github.com/ajietudou007/TraceDot/releases/latest" target="_blank" rel="noopener" class="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
                 <div>
                   <div class="flex items-center justify-between">
                     <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">macOS (Intel 芯片)</span>
                   </div>
-                  <p class="text-[11px] text-mutedText mt-1 font-mono">.dmg · 107 MB</p>
+                  <p class="text-[11px] text-mutedText mt-1 font-mono">.dmg · 取 Release 最新资产</p>
                 </div>
                 <div class="mt-3 text-xs font-bold text-brand-600 flex items-center gap-1">
-                  <span class="">立即下载</span>
+                  <span class="">前往下载</span>
                   <span class="">↓</span>
                 </div>
               </a>
 
-              <a href="https://github.com/ajietudou007/TraceDot/releases/download/v4.1.8/TraceDot-Setup-4.1.8-x64.exe" download="" class="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
+              <a href="https://github.com/ajietudou007/TraceDot/releases/latest" target="_blank" rel="noopener" class="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
                 <div>
                   <div class="flex items-center justify-between">
                     <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">Windows (x64)</span>
                     <span class="w-2 h-2 rounded-full bg-brand-500"></span>
                   </div>
-                  <p class="text-[11px] text-mutedText mt-1 font-mono">.exe · 82 MB</p>
+                  <p class="text-[11px] text-mutedText mt-1 font-mono">.exe · 取 Release 最新资产</p>
                 </div>
                 <div class="mt-3 text-xs font-bold text-brand-600 flex items-center gap-1">
-                  <span class="">立即下载</span>
+                  <span class="">前往下载</span>
                   <span class="">↓</span>
                 </div>
               </a>
 
-              <a href="https://github.com/ajietudou007/TraceDot/releases/tag/v4.1.8" target="_blank" rel="noopener" class="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
+              <a href="https://github.com/ajietudou007/TraceDot/releases" target="_blank" rel="noopener" class="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
                 <div>
                   <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">全版本历史发布</span>
                   <p class="text-[11px] text-mutedText mt-1 font-mono">GitHub Releases ↗</p>
@@ -779,15 +913,18 @@
               </a>
 
             </div>
+            <p class="text-[11px] text-mutedText mb-6">
+              桌面安装包随 GitHub Release 发布，以上入口统一指向最新 Release，版本更新后无需再来改页面。
+            </p>
           </div>
 
           <!-- 单文件网页版下载入口 -->
           <div class="p-4 rounded-2xl bg-brand-50/70 border border-brand-200/60 flex items-center justify-between">
             <div>
               <div class="text-xs font-bold text-brand-900">需要单文件免安装 HTML？</div>
-              <div class="text-[11px] text-brand-700">约 13 MB · 包含所有离线数据库与字体库</div>
+              <div class="text-[11px] text-brand-700">约 12.1 MB · 包含所有离线数据库与字体库</div>
             </div>
-            <a href="https://jidiandian.top/release/TraceDot-V4.1.8.html" download="TraceDot-V4.1.8.html" class="soft-pill-btn px-4 py-2 rounded-full bg-brand-600 text-white text-xs font-bold shadow-sm hover:bg-brand-700">
+            <a href="release/迹点点_V5.0.47.html" download="迹点点_V5.0.47.html" class="soft-pill-btn px-4 py-2 rounded-full bg-brand-600 text-white text-xs font-bold shadow-sm hover:bg-brand-700">
               获取 HTML
             </a>
           </div>
@@ -856,7 +993,7 @@
       <nav class="flex flex-wrap items-center gap-5 text-xs font-medium text-mutedText">
         <a href="#home" class="hover:text-brand-600 transition-colors">官网首页</a>
         <a href="#download" class="hover:text-brand-600 transition-colors">下载应用</a>
-        <a href="https://jidiandian.top/release/TraceDot-V4.1.8.html" target="_blank" rel="noopener" class="hover:text-brand-600 transition-colors">在线应用</a>
+        <a href="https://jidiandian.top/release/TraceDot-V5.0.47.html" target="_blank" rel="noopener" class="hover:text-brand-600 transition-colors">在线应用</a>
         <a href="changelog.html" class="hover:text-brand-600 transition-colors">更新日志</a>
         <a href="https://github.com/ajietudou007/TraceDot" target="_blank" rel="noopener" class="hover:text-brand-600 transition-colors">GitHub ↗</a>
         <a href="#privacy" class="hover:text-brand-600 transition-colors">隐私声明</a>
