@@ -5,6 +5,11 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "要上传到的 Release 标签（留空则用当前 ref）"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -43,6 +48,8 @@ jobs:
       - name: Attach to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ inputs.tag_name || github.ref_name }}
+          overwrite_files: true
           files: |
             desktop/dist_electron/TraceDot-Setup-*.exe
             desktop/dist_electron/latest.yml
@@ -82,6 +89,8 @@ jobs:
       - name: Attach to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ inputs.tag_name || github.ref_name }}
+          overwrite_files: true
           files: |
             desktop/dist_electron/*.dmg
             desktop/dist_electron/*.zip
