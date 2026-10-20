@@ -143,7 +143,7 @@ V5.0.1 → V5.0.47 共 **46 次迭代**，五个阶段：打底（性能与报�
 - 备用线路：<https://ajietudou007.github.io/TraceDot/website/>
 - 直接进应用：<https://jidiandian.top/release/TraceDot-V5.0.47.html>
 
-### 方式三 · 桌面端（Windows 安装包）
+### 方式三 · 桌面端（Windows / macOS）
 
 从 [Releases](https://github.com/ajietudou007/TraceDot/releases) 下载对应平台的安装包：
 
@@ -224,7 +224,7 @@ TraceDot/
 │   ├── package.json              # 打包配置（electron-builder）
 │   └── build/                    # 打包图标（icon.ico / icon.icns）
 └── .github/workflows/
-    └── release.yml               # 打标签自动构建 Windows 安装包
+    └── release.yml               # 打标签自动构建 Windows 安装包与 macOS dmg / zip
 ```
 
 ---
