@@ -67,3 +67,42 @@
 - **青瓷绿主题**（V3.0.4）：全局唯一主题色，移除其他配色与切换功能
 - **五步分区标题**（V2.4.5）：绿皮车 × 现代时刻表（等宽编号 + 点线 + 英文小标）
 - **统一 UI（album-unified-ui）**：珍藏册与各工坊控制台 / 预览模块的共享样式层（V4.0.0 起跨模块去重）
+
+---
+
+## 六、V5.1.0 致谢（开源库 / 数据库 / 字体）
+
+> 本节为 **V5.1.0** 版本实际使用到的第三方开源项目、开源数据库与字体的完整致谢名单。全版本通用的开源项目、AI 云服务与内置数据集见上文第一至四节。
+
+### 6.1 开源软件库
+
+| 项目 | 版本 | 许可证 | 用途 | 维护者 / 主要贡献者 |
+|------|------|--------|------|---------------------|
+| [pdf.js](https://github.com/mozilla/pdf.js) | 3.11.174 | Apache-2.0 | PDF 解析与渲染（内嵌 PDF 预览 / 打印） | Mozilla 及 PDF.js 贡献者；Snuffleupagus、timvandermeij、calixteman、yurydelendik、brendandahl 等（完整名单 100+，见仓库 contributors） |
+| [Tesseract.js](https://github.com/naptha/tesseract.js) | 5.0.4 | Apache-2.0 | 浏览器端 OCR 文字识别 | jeromewu、bijection、Balearica、antimatter15 等 |
+
+### 6.2 开源数据库
+
+| 数据 | 许可证 | 用途 | 维护者 / 贡献者 |
+|------|--------|------|-----------------|
+| [OpenStreetMap](https://www.openstreetmap.org/copyright) | ODbL 1.0 | 车站坐标主源（STATION_XY，2,870 / 3,267 站，约 87.8%） | © OpenStreetMap contributors（全球志愿者，统一署名） |
+| [China-Railway-Station-Database](https://github.com/undef-i/China-Railway-Station-Database) | CC0-1.0 | 车站坐标补缺（394 / 3,267 站，约 12.1%） | undef-i |
+| [OurAirports](https://ourairports.com/data/) | Unlicense | 机场坐标数据源（JDD_APT_XY，airports.csv） | David Megginson（davidmegginson） |
+
+### 6.3 字体
+
+| 字体 | 许可证 | 用途 | 制作方 |
+|------|--------|------|--------|
+| MiSans（小米兰亭） | 《MiSans 字体知识产权许可协议》 | 全站显示字体（标题 / 正文 / 标签）；本项目内嵌其子集（GB2312 常用全集 + ASCII，Regular 400 / Demibold 600） | 小米主导，联合蒙纳（Monotype）、汉仪（Hanyi）共同制作 |
+| PingFang SC（Apple）、Microsoft YaHei（Microsoft）、sans-serif | 系统字体 | MiSans 未覆盖时的回退，随操作系统分发，无需署名 | — |
+
+### 6.4 许可义务速览（V5.1.0）
+
+| 组件 | 许可 | 本项目义务 |
+|------|------|------------|
+| pdf.js | Apache-2.0 | 保留版权与许可声明 |
+| Tesseract.js | Apache-2.0 | 保留版权与许可声明 |
+| OpenStreetMap | ODbL 1.0 | 署名 © OpenStreetMap contributors；分发含本表的修改版需以 ODbL 共享该数据库部分 |
+| China-Railway-Station-Database | CC0-1.0 | 零义务 |
+| OurAirports | Unlicense | 零义务 |
+| MiSans | MiSans 字体知识产权许可协议 | 注明使用了 MiSans 字体 |
