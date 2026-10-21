@@ -1,0 +1,10 @@
+{
+  "updated": "2026-10-21",
+  "note": "公益加速线路清单。改完这个文件并推送到仓库，全站立即生效，不需要改 index.html，也不需要重新发版。顺序即优先级：页面会按顺序探测，用第一条可用的；全部不可用时自动回落 GitHub 直连。",
+  "proxies": [
+    "https://ghproxy.net/",
+    "https://gh-proxy.com/",
+    "https://ghfast.top/",
+    "https://gh.ddlc.top/"
+  ]
+}

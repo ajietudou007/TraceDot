@@ -6,7 +6,7 @@
 
 **把每一张票根，画成一张属于你的中国地图。**
 
-![Version](https://img.shields.io/badge/version-V5.1.2-059669)
+![Version](https://img.shields.io/badge/version-V5.1.3-059669)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Runtime deps](https://img.shields.io/badge/runtime_dependencies-0-success)
 ![Modules](https://img.shields.io/badge/模块-8-orange)
@@ -19,7 +19,7 @@
 [🌐 官方网站](https://jidiandian.top) ·
 [📖 更新日志](CHANGELOG.md) ·
 [🖼 模块总览图](docs/screenshots/overview-16x9.png) ·
-[⬇ 下载应用](release/TraceDot-V5.1.2.html)
+[⬇ 下载应用](release/TraceDot-V5.1.3.html)
 
 </div>
 
@@ -114,7 +114,7 @@
 
 ## ✨ V5 带来了什么
 
-V5.0.1 → V5.1.2 共 **50 次迭代**，六个阶段：打底（性能与报错）→ 工坊成形 → 打磨 → 数据与地图 → 收口 → 次版本（数据契约变更 + 激活码门禁 + 六处修复与地图性能）。
+V5.0.1 → V5.1.3 共 **51 次迭代**，六个阶段：打底（性能与报错）→ 工坊成形 → 打磨 → 数据与地图 → 收口 → 次版本（数据契约变更 + 激活码门禁 + 六处修复与地图性能 + 航司 Logo 与地图标反修复）。
 体积从 12.60 MB 收敛到 **12.24 MB**（−2.8%）。
 
 - **🆕 年度报告**：第 8 个模块，年度大数字 + 月度热力 + 之最榜单 + 准点率
@@ -129,6 +129,7 @@ V5.0.1 → V5.1.2 共 **50 次迭代**，六个阶段：打底（性能与报错
 - **🗺 车站库扩容**（V5.1.0）：`STATION_XY` 14 → **3267** 站（12306 现役客运站 99.8%），机场表换 OurAirports；足迹统计带分母（2/369 座城市、1/33 个省份）、线路详情给出历时 / 均速 / 单价、年份图例、A4 打印模板
 - **🔐 激活码门禁**（V5.1.1）：首次打开需输入激活码，通过一次后本机记住、之后直接进入；未通过时应用整体不启动。**网页版与桌面版同一套门禁**，校验在本机完成，不联网、不上传任何信息
 - **🛠 六处问题修复 + 地图性能**（V5.1.2）：AI 设置弹窗关不掉、三个工坊票面与入册信息分两层滚动、香港西九龙站错位、重庆站名、香港城市不点亮、站点拼音，一次修完；地图标签改用 `transform` 缩放、屏幕矩形缓存 120ms、流光动画与 viewBox 写入去抖，拖动与缩放更顺滑
+- **🛠 航司 Logo 与地图标反修复**（V5.1.3）：登机牌所选航司与票面 Logo 不再串票（采样带上 `airline`、预览缓存 `pv1 → pv2` 作废旧图）；行程地图出发 / 到达不再标反（名称与三字码相距超 300 km 以名称为准）、同名车站按「站名 + 空/铁」分开、地名匹配取最长键
 
 完整记录见 [CHANGELOG.md](CHANGELOG.md)。
 
@@ -138,14 +139,14 @@ V5.0.1 → V5.1.2 共 **50 次迭代**，六个阶段：打底（性能与报错
 
 ### 方式一 · 直接打开（推荐）
 
-下载 [`release/TraceDot-V5.1.2.html`](release/TraceDot-V5.1.2.html)，用现代浏览器双击打开即可。
+下载 [`release/TraceDot-V5.1.3.html`](release/TraceDot-V5.1.3.html)，用现代浏览器双击打开即可。
 **零安装、零依赖、断网可用。**
 
 ### 方式二 · 在线使用
 
 - 官网：<https://jidiandian.top>
 - 备用线路：<https://ajietudou007.github.io/TraceDot/website/>
-- 直接进应用：<https://jidiandian.top/release/TraceDot-V5.1.2.html>
+- 直接进应用：<https://jidiandian.top/release/TraceDot-V5.1.3.html>
 
 ### 方式三 · 桌面端（Windows 安装包）
 
@@ -153,9 +154,9 @@ V5.0.1 → V5.1.2 共 **50 次迭代**，六个阶段：打底（性能与报错
 
 | 平台 | 文件 |
 |------|------|
-| Windows（x64） | `TraceDot-Setup-5.1.2-x64.exe`（NSIS，支持自选安装目录与桌面快捷方式） |
-| macOS（Apple Silicon） | `TraceDot-5.1.2-arm64.dmg` |
-| macOS（Intel） | `TraceDot-5.1.2-x64.dmg` |
+| Windows（x64） | `TraceDot-Setup-5.1.3-x64.exe`（NSIS，支持自选安装目录与桌面快捷方式） |
+| macOS（Apple Silicon） | `TraceDot-5.1.3-arm64.dmg` |
+| macOS（Intel） | `TraceDot-5.1.3-x64.dmg` |
 
 安装后即为独立原生窗口（内嵌同一份单文件应用，支持 `electron-updater` 自动检查更新）。
 **Windows 安装包随 Release 提供；macOS 的 dmg / zip 由 GitHub Actions（macos-latest）自动构建并附在 Release 里。**
@@ -177,14 +178,14 @@ python3 -m http.server 8080
 ```bash
 cd desktop
 npm install              # electron + electron-builder
-npm start                # 本地开发窗口（会把 ../release/TraceDot-V5.1.2.html 拷进 app/index.html）
+npm start                # 本地开发窗口（会把 ../release/TraceDot-V5.1.3.html 拷进 app/index.html）
 npm run dist:win         # 产出 Windows NSIS 安装包 → desktop/dist_electron/
 npm run dist:mac         # 产出 macOS dmg + zip
 ```
 
 | 命令 | 作用 |
 |---|---|
-| `npm run prep` | 把 `../release/TraceDot-V5.1.2.html` 复制为 `desktop/app/index.html` |
+| `npm run prep` | 把 `../release/TraceDot-V5.1.3.html` 复制为 `desktop/app/index.html` |
 | `npm start` | `prep` + `electron .`（开发模式，不触发自动更新） |
 | `npm run dist:win` | `prep` + `electron-builder --win`（NSIS，x64） |
 | `npm run dist:mac` | `prep` + `electron-builder --mac`（dmg + zip，arm64 / x64） |
@@ -223,7 +224,7 @@ TraceDot/
 │   ├── index.html                # 官方网站首页（苹果风格，纯静态单页）
 │   └── changelog.html            # 官方网站 · 更新日志页
 ├── release/
-│   └── TraceDot-V5.1.2.html     # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
+│   └── TraceDot-V5.1.3.html     # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
 ├── docs/
 │   ├── FEATURES.md               # 模块功能详表
 │   └── screenshots/              # 演示截图（含 16:9 头图与八模块总览图）
@@ -279,7 +280,7 @@ TraceDot/
 ## 📋 版本日志
 
 完整修改记录见 [CHANGELOG.md](CHANGELOG.md)——涵盖前身项目「12306 火车票票根编辑器」V4.0 → V6.2.4、
-迹点点 V2.x / V3.0.0 → V4.1.8，以及 **V5.0.1 → V5.1.2 全部 50 次迭代**。
+迹点点 V2.x / V3.0.0 → V4.1.8，以及 **V5.0.1 → V5.1.3 全部 51 次迭代**。
 
 ---
 
