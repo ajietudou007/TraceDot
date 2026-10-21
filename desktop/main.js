@@ -2,7 +2,7 @@ const { app, BrowserWindow, shell, Menu, dialog, screen } = require('electron');
 const path = require('path');
 
 const RELEASES_URL = 'https://github.com/ajietudou007/TraceDot/releases';
-const APP_VERSION = '5.0.48';
+const APP_VERSION = '5.1.1';
 let win = null;
 
 /* ---------- 渲染性能：让老显卡也走硬件光栅化 ----------
@@ -39,8 +39,8 @@ function createWindow() {
 
   win.loadFile(path.join(__dirname, 'app', 'index.html'));
 
-  /* 把屏幕刷新率交给渲染进程：性能判定以它为基准，
-     否则 30Hz 外接屏会被自己的 33ms 帧长误判成「卡顿」而莫名降级。 */
+  /* 把屏幕刷新率交给渲染进程：应用内的帧率/动画时长判定以它为基准，
+     否则 30Hz 外接屏会被自己的 33ms 帧长误判。 */
   try {
     const hz = Number(screen.getPrimaryDisplay().displayFrequency) || 60;
     win.webContents.on('did-finish-load', () => {
@@ -174,25 +174,6 @@ function checkForUpdates(interactive) {
 }
 
 
-/* 性能模式开关：状态由渲染进程持有（localStorage），这里只负责转达一次点击 */
-function togglePerfMode() {
-  if (!win || win.isDestroyed()) return;
-  win.webContents
-    .executeJavaScript(
-      "window.jddPerf ? window.jddPerf.set(window.jddPerf.mode === 'eco' ? 'full' : 'eco') : 'unsupported'"
-    )
-    .then((mode) => {
-      if (mode === 'unsupported') {
-        dialog.showMessageBox(win, {
-          type: 'info',
-          title: '迹点点 TraceDot',
-          message: '当前版本不包含性能模式控制。'
-        });
-      }
-    })
-    .catch((err) => console.warn('toggle perf failed:', err && err.message));
-}
-
 function buildMenu() {
   const isMac = process.platform === 'darwin';
   const template = [
@@ -206,7 +187,6 @@ function buildMenu() {
       label: '帮助',
       submenu: [
         ...(!isMac ? appMenuExtra() : []),
-        { label: '切换性能模式', click: () => togglePerfMode() },
         { type: 'separator' },
         { label: '项目主页', click: () => shell.openExternal('https://github.com/ajietudou007/TraceDot') },
         { label: '官方网站', click: () => shell.openExternal('https://jidiandian.top/website/') },

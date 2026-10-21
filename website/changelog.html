@@ -1,8 +1,8 @@
 <!DOCTYPE html><html class="scroll-smooth" lang="zh-CN" style=""><head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1" name="viewport">
-<title>更新日志 · 迹点点 TraceDot V5.0.48 · 旅行纪念票根工作室</title>
-<meta content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V5.0.48，共五个大阶段；其中 V5 阶段包含 47 次迭代。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。" name="description">
+<title>更新日志 · 迹点点 TraceDot V5.1.1 · 旅行纪念票根工作室</title>
+<meta content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V5.1.1，共五个大阶段；其中 V5 阶段包含 49 次迭代。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。" name="description">
 <link href="https://fonts.googleapis.com" rel="preconnect">
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Noto+Sans+SC:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
@@ -183,7 +183,7 @@
 <div class="flex flex-col">
 <div class="flex items-center gap-2">
 <span class="font-extrabold text-slateText tracking-tight text-base font-sans">迹点点</span>
-<span class="px-2 py-0.5 text-[10px] font-mono font-semibold bg-brand-50 text-brand-700 rounded-full border border-brand-200">V5.0.48</span>
+<span class="px-2 py-0.5 text-[10px] font-mono font-semibold bg-brand-50 text-brand-700 rounded-full border border-brand-200">V5.1.1</span>
 </div>
 <span class="text-[10px] text-mutedText font-medium hidden sm:inline">TraceDot Studio</span>
 </div>
@@ -235,8 +235,8 @@
 </h1>
 <!-- 副标题描述 -->
 <p class="mt-4 font-body-lg text-body-lg text-on-surface-variant max-w-2xl text-center">
-          迹点点的完整版本史：从前身「12306 火车票票根编辑器」一路走到 V5.0.48，共五个阶段；
-          其中第五阶段单独收录了 46 次迭代。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。
+          迹点点的完整版本史：从前身「12306 火车票票根编辑器」一路走到 V5.1.1，共五个阶段；
+          其中第五阶段单独收录了 48 次迭代。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。
         </p>
 <!-- 统计指标浮雕白卡组 (Soft UI) -->
 <div class="w-full mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl">
@@ -262,7 +262,7 @@
 <span class="material-symbols-outlined text-[20px]">verified</span>
 </div>
 <div class="flex items-center gap-1.5">
-<span class="font-label-numeric text-label-numeric text-primary tracking-tight">V5.0.48</span>
+<span class="font-label-numeric text-label-numeric text-primary tracking-tight">V5.1.1</span>
 </div>
 <span class="font-label-caps text-label-caps text-on-surface-variant mt-1 uppercase">当前稳定版本</span>
 </div>
@@ -293,7 +293,162 @@
 <!-- 经典贯穿时间轴线 (TraceDot 几何节点轴) -->
 <div class="hidden sm:block absolute left-8 top-6 bottom-10 w-0.5 bg-gradient-to-b from-primary-container via-surface-variant to-outline-variant"></div>
 <div class="space-y-10" id="changelogCardsList">
-<!-- ===================== 第五阶段: V5.0.48 最新稳定版（性能优化 · 弱显卡适配） ===================== -->
+<!-- ===================== 第五阶段: V5.1.1 最新稳定版（激活码门禁） ===================== -->
+<div class="changelog-entry relative sm:pl-20 group" data-stage="stage-5" data-version="v5.1.1">
+<div class="hidden sm:flex absolute left-4.5 top-8 -translate-x-1/2 w-7 h-7 rounded-full bg-surface-container-lowest shadow-md items-center justify-center">
+<div class="w-3.5 h-3.5 rounded-full bg-primary-container ring-4 ring-primary-container/20 animate-pulse"></div>
+</div>
+<div class="rounded-3xl bg-surface-container-lowest p-6 sm:p-8 shadow-xl transition-all hover:shadow-2xl relative overflow-hidden">
+<div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-surface-container">
+<div class="flex items-center gap-3">
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">V5.1.1</span>
+<span class="px-3 py-1 rounded-full bg-primary-container text-on-primary font-label-caps text-label-caps uppercase">最新稳定版</span>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps">激活码门禁</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
+<time class="font-label-code text-label-code text-on-surface-variant">2026-10-21</time>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-primary mb-2">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+<span class="font-headline-sm text-headline-sm">首次打开需激活码</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                      未授权的分发与传播现在有了一道闸门：首次打开需要输入激活码，<strong>通过一次后本机记住</strong>、之后直接进入；未通过时<strong>应用整体不启动</strong>。校验在本机完成，不联网、不上传任何信息。
+                    </p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">jdd-beta-gate.v1</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">__JDD_BETA_OK__</span>
+</div>
+</div>
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-secondary mb-2">
+<span class="material-symbols-outlined text-[18px">devices</span>
+<span class="font-headline-sm text-headline-sm">网页版与桌面版同一套门禁</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                      门禁不是只加在网页版：<strong>桌面端打包的是同一份文件</strong>，同一套判定、同一种记忆方式。单文件离线可用，同时单机校验意味着不依赖服务端，离线环境也能正常通过。
+                    </p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">Electron 33</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Web + Desktop</span>
+</div>
+</div>
+</div>
+<div class="mt-6 space-y-3">
+<div class="font-label-caps text-label-caps text-outline uppercase tracking-wider">详细修补条目 (Bug Fixes &amp; Refinements)</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>不落明文：</strong>激活码本身不进代码，只存一份 djb2 摘要做比对；记忆写进 localStorage <code class="font-mono text-[12px]">jdd-beta-gate.v1</code>，并提供 <code class="font-mono text-[12px]">window.jddBetaReset()</code> 便于重新验证。
+                    </span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>未通过时不执行任何启动逻辑：</strong>原 V5.1.0 的启动调用（<code class="font-mono text-[12px]">TV.init()</code>、<code class="font-mono text-[12px]">TICKET.init()</code>、<code class="font-mono text-[12px]">years()</code>、<code class="font-mono text-[12px]">render()</code>、<code class="font-mono text-[12px]">select(0, true)</code>）整体包进 <code class="font-mono text-[12px]">if (window.__JDD_BETA_OK__)</code>，锁屏期间不会先渲染再收起。
+                    </span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>桌面端同步到 5.1.1：</strong><code class="font-mono text-[12px]">package.json</code> / <code class="font-mono text-[12px]">main.js</code> 版本号改为 5.1.1，打包源指向 <code class="font-mono text-[12px]">release/TraceDot-V5.1.1.html</code>；主进程去掉 V5.0.48 专属的「切换性能模式」菜单，<strong>保留</strong> <code class="font-mono text-[12px]">ignore-gpu-blocklist</code> / <code class="font-mono text-[12px]">enable-gpu-rasterization</code> 两个 Chromium 开关、<code class="font-mono text-[12px]">ready-to-show</code> 启动、<code class="font-mono text-[12px]">v8CacheOptions: 'code'</code> 与刷新率注入（都是通用优化，V5.1.1 仍受益）。
+                    </span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>V5.0.48 入口关闭：</strong>新版本发布后，V5.0.48 的<strong>下载入口与在线访问入口同时下架</strong>（GitHub Release 资产移除、官网在线应用改指 V5.1.1），避免新旧两条线并行分发。
+                    </span>
+</div>
+</div>
+</div>
+</div>
+<!-- ===================== 第五阶段: V5.1.0 次版本（坐标数据契约变更） ===================== -->
+<div class="changelog-entry relative sm:pl-20 group" data-stage="stage-5" data-version="v5.1.0">
+<div class="hidden sm:flex absolute left-4.5 top-8 -translate-x-1/2 w-7 h-7 rounded-full bg-surface-container-lowest shadow-md items-center justify-center">
+<div class="w-3.5 h-3.5 rounded-full bg-primary-container ring-4 ring-primary-container/20"></div>
+</div>
+<div class="rounded-3xl bg-surface-container-lowest p-6 sm:p-8 shadow-xl transition-all hover:shadow-2xl relative overflow-hidden">
+<div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-surface-container">
+<div class="flex items-center gap-3">
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">V5.1.0</span>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps">次版本 · 数据契约变更</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
+<time class="font-label-code text-label-code text-on-surface-variant">2026-10-21</time>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-primary mb-2">
+<span class="material-symbols-outlined text-[18px]">map</span>
+<span class="font-headline-sm text-headline-sm">车站坐标 14 → 3267</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                      <code class="font-mono text-[12px]">STATION_XY</code> 由 14 个站扩到 <strong>3267 个</strong>（12306 现役客运站 99.8%），45 个主要枢纽全部有坐标（含此前缺的常州、沧州、香港西九龙、成都天府）；<code class="font-mono text-[12px]">JDD_APT_XY</code> 591 → <strong>592</strong>（国内 319 换 OurAirports Unlicense，境外 273 条原样保留）。放大后终于能落到具体车站，而不是只到城市级。
+                    </p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">STATION_XY · 3267</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">ODbL</span>
+</div>
+</div>
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-secondary mb-2">
+<span class="material-symbols-outlined text-[18px">show_chart</span>
+<span class="font-headline-sm text-headline-sm">足迹分母与线路详情</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                      统计条不再只有绝对值：「点亮城市 <strong>2 / 369 座</strong>」「点亮省份 <strong>1 / 33 个</strong>」——分母从底图实算（数市级面，直辖市与特别行政区合并计 1），<strong>不写死在代码里</strong>。行程每行新增「详情」，给出历时 / 均速 / 单价：G1234 北京南→上海虹桥 08:00→12:30、1318 km、¥553 → 历时 4 小时 30 分、均速 293 km/h、单价 42.0 元/百公里。
+                    </p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">369 / 33</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Detail Modal</span>
+</div>
+</div>
+</div>
+<div class="mt-6 space-y-3">
+<div class="font-label-caps text-label-caps text-outline uppercase tracking-wider">详细修补条目 (Bug Fixes &amp; Refinements)</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>年份图例与 A4 打印：</strong>图层开关打开后线路改按出行年份上色，图例列出「年份 → 颜色 → 段数」，12 色固定分配、同一年永远同色；打印走纯 CSS <code class="font-mono text-[12px]">@media print</code>（不引任何库），打印态自动隐去地图与导航，只留报告正文。
+                    </span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>内嵌投影能力装回：</strong>经纬度 ⇄ 画布坐标互转（<code class="font-mono text-[12px]">geoXY</code> / <code class="font-mono text-[12px]">geoLL</code>，二次多项式，挂 <code class="font-mono text-[12px]">window.jddGeoXY</code>）。<strong>没有套残差修正表</strong>——留一法实测不修正平均误差 1.75px，任何修正方式 1.91~2.72px 反而更差；根因是重庆残差模长 20.78px 而中位数仅 1.06px，且「真值」是市区中心、底图「重庆」是整个直辖市重心，语义不同，硬修会把小误差城市的点带偏。
+                    </span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>ODbL 义务落实：</strong>数据源与署名写进代码内注释块与文档 <code class="font-mono text-[12px]">数据源与署名_V5.1.0.md</code>（含「如何确认遵守义务」自检三条）：OSM 节点 2870 站 ODbL 1.0、CC0 补缺 394 站、OurAirports 机场 Unlicense、12306 站名册 3269 站。CC0 库含过期条目（如「济南东」为胶济线老站），只用于补缺，并通过「距 12306 所属城市中心 &gt;120km 则弃用」筛掉 3 个可疑坐标。
+                    </span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-outline text-[18px] mt-0.5">radio_button_unchecked</span>
+<span class="font-body-md text-body-md text-on-surface-variant">
+<strong>版本号为什么是 5.1.0：</strong>本次改了坐标数据契约（车站表换源扩容、机场表换源），按既定规则属「数据契约变更」，升次版本而非补丁号。基线为 V5.0.47，V5.0.x 全部 47 个版本 HTML + 31 份过程文档已归档至 <code class="font-mono text-[12px]">归档_V5.0/</code>。
+                    </span>
+</div>
+</div>
+</div>
+</div>
+<!-- ===================== 第五阶段: V5.0.48 性能优化 · 弱显卡适配 ===================== -->
 <div class="changelog-entry relative sm:pl-20 group" data-stage="stage-5" data-version="v5.0.48">
 <div class="hidden sm:flex absolute left-4.5 top-8 -translate-x-1/2 w-7 h-7 rounded-full bg-surface-container-lowest shadow-md items-center justify-center">
 <div class="w-3.5 h-3.5 rounded-full bg-primary-container ring-4 ring-primary-container/20 animate-pulse"></div>
@@ -302,7 +457,6 @@
 <div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-surface-container">
 <div class="flex items-center gap-3">
 <span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">V5.0.48</span>
-<span class="px-3 py-1 rounded-full bg-primary-container text-on-primary font-label-caps text-label-caps uppercase">最新稳定版</span>
 <span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps">性能优化 · 弱显卡适配</span>
 </div>
 <div class="flex items-center gap-2">
@@ -1027,13 +1181,13 @@
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>体积：</strong>12,595,590 → 12,123,892 字节（−471,698，−3.7%）。中间一度掉到 11.68 MB，后面工坊与地图能力上线又长回来。
+<strong>体积：</strong>12,595,590 → 12,228,351 字节（−367,239，−2.9%）。中间一度掉到 11.68 MB，后面工坊与地图能力上线又长回来。
                     </span>
 </div>
 </div>
 </div>
 </div>
-<!-- ===================== 第五阶段: V5.0.1 → V5.0.48 迭代总索引 ===================== -->
+<!-- ===================== 第五阶段: V5.0.1 → V5.1.1 迭代总索引 ===================== -->
 <div class="changelog-entry relative sm:pl-20 group" data-stage="stage-5" data-version="v5.0.1">
 <div class="hidden sm:flex absolute left-4.5 top-8 -translate-x-1/2 w-7 h-7 rounded-full bg-surface-container-lowest shadow-md items-center justify-center">
 <div class="w-3.5 h-3.5 rounded-full bg-secondary-container"></div>
@@ -1041,22 +1195,23 @@
 <div class="rounded-3xl bg-surface-container-lowest p-6 sm:p-8 shadow-xl transition-all hover:shadow-2xl relative overflow-hidden">
 <div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-surface-container">
 <div class="flex items-center gap-3">
-<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">V5.0.1 → V5.0.48</span>
-<span class="px-2.5 py-0.5 rounded-full bg-secondary-container text-on-primary font-label-caps text-label-caps">47 次迭代总索引</span>
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">V5.0.1 → V5.1.1</span>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-container text-on-primary font-label-caps text-label-caps">49 次迭代总索引</span>
 </div>
 <time class="font-label-code text-label-code text-on-surface-variant">2026-10-16 ~ 10-21</time>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant mt-4 leading-relaxed">
-                V5.0.1 是未改动的原件基线（保留作回退），因此本阶段实为 <strong>47 次更新</strong>。同一件事反复改过的（比如票面白边改了四版）在上方卡片里只写最终结论；这里给出逐版本一句话索引，方便回溯「某一版到底动了什么」。
+                V5.0.1 是未改动的原件基线（保留作回退），因此本阶段实为 <strong>49 次更新</strong>。同一件事反复改过的（比如票面白边改了四版）在上方卡片里只写最终结论；这里给出逐版本一句话索引，方便回溯「某一版到底动了什么」。
               </p>
 <div class="mt-5 rounded-2xl bg-surface-container-low p-4">
-<div class="font-label-caps text-label-caps text-outline uppercase tracking-wider mb-3">五个打磨阶段</div>
+<div class="font-label-caps text-label-caps text-outline uppercase tracking-wider mb-3">六个打磨阶段</div>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 font-body-sm text-body-sm text-on-surface-variant">
 <div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">① 打底</span><span class=""><strong class="text-on-surface">5.0.2 – 5.0.8</strong>　先解决「慢」和「报错」</span></div>
 <div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">② 工坊成形</span><span class=""><strong class="text-on-surface">5.0.9 – 5.0.21</strong>　真条码、数据导出、年度报告、粘贴即录入</span></div>
 <div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">③ 打磨</span><span class=""><strong class="text-on-surface">5.0.22 – 5.0.30</strong>　操作行重排、图标重画、存储迁 IndexedDB</span></div>
 <div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">④ 数据与地图</span><span class=""><strong class="text-on-surface">5.0.31 – 5.0.39</strong>　老备份兼容、快照回滚、账本冷热分层、地图精度</span></div>
 <div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">⑤ 收口</span><span class=""><strong class="text-on-surface">5.0.40 – 5.0.48</strong>　按反馈回改、动效、安全修复、液态玻璃</span></div>
+<div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">⑥ 次版本</span><span class=""><strong class="text-on-surface">5.1.0 – 5.1.1</strong>　坐标数据契约变更、车站库扩容、激活码门禁</span></div>
 </div>
 </div>
 <div class="mt-5">
@@ -1109,6 +1264,8 @@
 <div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.46</span><span class="">右上导航改液态玻璃</span></div>
 <div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.47</span><span class="">液态玻璃第二遍（更透、绿珠玻璃化）</span></div>
 <div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.48</span><span class="">性能：自适应性能模式、交互期停地图滤镜、桌面端 GPU 兜底</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.1.0</span><span class="">次版本：车站坐标 14 → 3267、足迹分母、线路详情、年份图例、A4 打印</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.1.1</span><span class="">激活码门禁（网页 / 桌面同一套）、桌面端版本号同步、V5.0.48 入口关闭</span></div>
 </div>
 </div>
 <div class="mt-5 p-4 rounded-2xl bg-surface-container/50">
@@ -1119,7 +1276,7 @@
 <div class="flex gap-2"><span class="text-outline">·</span><span class="">完整 CSP：只上了三条低风险指令，<code class="font-mono text-[11px]">script-src</code> 需逐视图回归</span></div>
 <div class="flex gap-2"><span class="text-outline">·</span><span class="">内置 API Key：按决定保留，建议在服务商侧设消费上限 + 轮换</span></div>
 <div class="flex gap-2"><span class="text-outline">·</span><span class="">本地数据加密：按决定保留明文（同浏览器任意本地页可读）</span></div>
-<div class="flex gap-2"><span class="text-outline">·</span><span class="">车站 / 机场表：<code class="font-mono text-[11px]">STATION_XY</code> 只有 14 个站，放大后多数落到城市级</span></div>
+<div class="flex gap-2"><span class="text-outline">·</span><span class="">车站 / 机场表：已于 V5.1.0 扩容（<code class="font-mono text-[11px]">STATION_XY</code> 14 → 3267、<code class="font-mono text-[11px]">JDD_APT_XY</code> 591 → 592）；剩 3 个 OSM 限流批次待重跑 <code class="font-mono text-[11px]">fetch-osm-stations.js</code> 补</span></div>
 </div>
 </div>
 </div>
@@ -1891,7 +2048,7 @@
 <nav class="flex flex-wrap items-center gap-5 text-xs font-medium text-mutedText">
 <a class="hover:text-brand-600 transition-colors" href="index.html">官网首页</a>
 <a class="hover:text-brand-600 transition-colors" href="index.html#download">下载应用</a>
-<a class="hover:text-brand-600 transition-colors" href="https://jidiandian.top/release/TraceDot-V5.0.48.html" rel="noopener" target="_blank">在线应用</a>
+<a class="hover:text-brand-600 transition-colors" href="https://jidiandian.top/release/TraceDot-V5.1.1.html" rel="noopener" target="_blank">在线应用</a>
 <a class="hover:text-brand-600 transition-colors" href="changelog.html">更新日志</a>
 <a class="hover:text-brand-600 transition-colors" href="https://github.com/ajietudou007/TraceDot" rel="noopener" target="_blank">GitHub ↗</a>
 <a class="hover:text-brand-600 transition-colors" href="index.html#privacy">隐私声明</a>
