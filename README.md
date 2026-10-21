@@ -299,4 +299,22 @@ TraceDot/
 - [12306 火车票票根编辑器](https://github.com/ajietudou007/12306-train-ticket-editor) —— 迹点点的前身与火车票工坊内核
 - [pdf.js](https://github.com/mozilla/pdf.js) · [html2canvas](https://html2canvas.hertzen.com) · [bwip-js](https://github.com/metafloor/bwip-js) · [qrcode-generator](http://www.d-project.com/) · [LZ-String](https://github.com/pieroxy/lz-string) · [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) · [Tesseract.js](https://github.com/naptha/tesseract.js) · [Electron](https://www.electronjs.org/)
 
+### V5.1.0 完整致谢
+
+**开源软件库**（Apache-2.0）
+
+- [pdf.js](https://github.com/mozilla/pdf.js) 3.11.174 —— PDF 解析与渲染 · 贡献者：Snuffleupagus、timvandermeij、calixteman、yurydelendik、brendandahl 等
+- [Tesseract.js](https://github.com/naptha/tesseract.js) 5.0.4 —— 浏览器端 OCR · 贡献者：jeromewu、bijection、Balearica、antimatter15 等
+
+**开源数据库**
+
+- © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors（ODbL 1.0）—— 车站坐标主源（2,870 / 3,267 站）
+- [China-Railway-Station-Database](https://github.com/undef-i/China-Railway-Station-Database)（CC0-1.0）—— 车站坐标补缺（394 / 3,267 站）· undef-i
+- [OurAirports](https://ourairports.com/data/)（Unlicense）—— 机场坐标数据源 · David Megginson
+
+**字体**
+
+- [MiSans（小米兰亭）](https://hyperos.mi.com/font/)（《MiSans 字体知识产权许可协议》）—— 全站显示字体，内嵌子集（GB2312 + ASCII，400 / 600）· 小米主导，联合蒙纳（Monotype）、汉仪（Hanyi）制作
+- 系统回退字体：PingFang SC（Apple）、Microsoft YaHei（Microsoft）· 无需署名
+
 完整名单见 [CREDITS.md](CREDITS.md)。
