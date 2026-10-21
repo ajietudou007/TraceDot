@@ -10,6 +10,14 @@ on:
         description: "要上传到的 Release 标签（留空则用当前 ref）"
         required: false
         default: ""
+      target:
+        description: "只重出部分平台的包（避免覆盖已发布的另一平台产物）"
+        type: choice
+        options:
+          - both
+          - win
+          - mac
+        default: both
 
 permissions:
   contents: write
@@ -17,6 +25,7 @@ permissions:
 jobs:
   build-win:
     name: Windows 安装包
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.target == 'both' || inputs.target == 'win' }}
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -57,6 +66,7 @@ jobs:
 
   build-mac:
     name: macOS 安装包
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.target == 'both' || inputs.target == 'mac' }}
     runs-on: macos-latest
     steps:
       - name: Checkout
