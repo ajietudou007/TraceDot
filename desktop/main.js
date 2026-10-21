@@ -1,9 +1,16 @@
-const { app, BrowserWindow, shell, Menu, dialog } = require('electron');
+const { app, BrowserWindow, shell, Menu, dialog, screen } = require('electron');
 const path = require('path');
 
 const RELEASES_URL = 'https://github.com/ajietudou007/TraceDot/releases';
-const APP_VERSION = '5.0.47';
+const APP_VERSION = '5.0.48';
 let win = null;
+
+/* ---------- 渲染性能：让老显卡也走硬件光栅化 ----------
+   ignore-gpu-blocklist：Chromium 会按驱动版本把一批 Intel 核显列入黑名单，
+   命中后整窗退回软件合成，滚动与毛玻璃会卡到无法使用；这里强制忽略黑名单。
+   enable-gpu-rasterization：2D 光栅化走 GPU，弱核显上收益明显。 */
+app.commandLine.appendSwitch('ignore-gpu-blocklist');
+app.commandLine.appendSwitch('enable-gpu-rasterization');
 
 function createWindow() {
   win = new BrowserWindow({
@@ -14,15 +21,34 @@ function createWindow() {
     title: '迹点点 TraceDot V' + APP_VERSION,
     backgroundColor: '#fbfbfd',
     autoHideMenuBar: true,
+    /* 先隐藏、首帧就绪再显示：避免白底闪一下再重绘整窗（老机器上这一步很明显） */
+    show: false,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true,
-      spellcheck: false
+      spellcheck: false,
+      /* 12 MB 单文件里有大段内联脚本，缓存编译结果，二次启动更快 */
+      v8CacheOptions: 'code'
     }
   });
 
+  win.once('ready-to-show', () => {
+    if (win && !win.isDestroyed()) win.show();
+  });
+
   win.loadFile(path.join(__dirname, 'app', 'index.html'));
+
+  /* 把屏幕刷新率交给渲染进程：性能判定以它为基准，
+     否则 30Hz 外接屏会被自己的 33ms 帧长误判成「卡顿」而莫名降级。 */
+  try {
+    const hz = Number(screen.getPrimaryDisplay().displayFrequency) || 60;
+    win.webContents.on('did-finish-load', () => {
+      win.webContents.executeJavaScript('window.__JDD_HZ__=' + hz).catch(() => {});
+    });
+  } catch (e) {
+    console.warn('display frequency probe failed:', e && e.message);
+  }
 
   // 外部链接用系统浏览器打开，不在应用内导航
   win.webContents.setWindowOpenHandler(({ url }) => {
@@ -147,6 +173,26 @@ function checkForUpdates(interactive) {
   });
 }
 
+
+/* 性能模式开关：状态由渲染进程持有（localStorage），这里只负责转达一次点击 */
+function togglePerfMode() {
+  if (!win || win.isDestroyed()) return;
+  win.webContents
+    .executeJavaScript(
+      "window.jddPerf ? window.jddPerf.set(window.jddPerf.mode === 'eco' ? 'full' : 'eco') : 'unsupported'"
+    )
+    .then((mode) => {
+      if (mode === 'unsupported') {
+        dialog.showMessageBox(win, {
+          type: 'info',
+          title: '迹点点 TraceDot',
+          message: '当前版本不包含性能模式控制。'
+        });
+      }
+    })
+    .catch((err) => console.warn('toggle perf failed:', err && err.message));
+}
+
 function buildMenu() {
   const isMac = process.platform === 'darwin';
   const template = [
@@ -160,6 +206,8 @@ function buildMenu() {
       label: '帮助',
       submenu: [
         ...(!isMac ? appMenuExtra() : []),
+        { label: '切换性能模式', click: () => togglePerfMode() },
+        { type: 'separator' },
         { label: '项目主页', click: () => shell.openExternal('https://github.com/ajietudou007/TraceDot') },
         { label: '官方网站', click: () => shell.openExternal('https://jidiandian.top/website/') },
         { role: 'toggleDevTools' }
