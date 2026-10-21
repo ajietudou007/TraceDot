@@ -6,7 +6,7 @@
 
 **把每一张票根，画成一张属于你的中国地图。**
 
-![Version](https://img.shields.io/badge/version-V5.1.1-059669)
+![Version](https://img.shields.io/badge/version-V5.1.2-059669)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Runtime deps](https://img.shields.io/badge/runtime_dependencies-0-success)
 ![Modules](https://img.shields.io/badge/模块-8-orange)
@@ -19,7 +19,7 @@
 [🌐 官方网站](https://jidiandian.top) ·
 [📖 更新日志](CHANGELOG.md) ·
 [🖼 模块总览图](docs/screenshots/overview-16x9.png) ·
-[⬇ 下载应用](release/TraceDot-V5.1.1.html)
+[⬇ 下载应用](release/TraceDot-V5.1.2.html)
 
 </div>
 
@@ -114,8 +114,8 @@
 
 ## ✨ V5 带来了什么
 
-V5.0.1 → V5.1.1 共 **49 次迭代**，六个阶段：打底（性能与报错）→ 工坊成形 → 打磨 → 数据与地图 → 收口 → 次版本（数据契约变更 + 激活码门禁）。
-体积从 12.60 MB 收敛到 **12.23 MB**（−2.9%）。
+V5.0.1 → V5.1.2 共 **50 次迭代**，六个阶段：打底（性能与报错）→ 工坊成形 → 打磨 → 数据与地图 → 收口 → 次版本（数据契约变更 + 激活码门禁 + 六处修复与地图性能）。
+体积从 12.60 MB 收敛到 **12.24 MB**（−2.8%）。
 
 - **🆕 年度报告**：第 8 个模块，年度大数字 + 月度热力 + 之最榜单 + 准点率
 - **🔒 数据不再丢**：账本从 localStorage 迁到 **IndexedDB**（内存缓存 + IDB 主存 + 镜像三层），写入带时间戳仲裁，导入前自动快照、**一键回滚且回滚本身可撤销**
@@ -128,6 +128,7 @@ V5.0.1 → V5.1.1 共 **49 次迭代**，六个阶段：打底（性能与报错
 - **⚡ 弱显卡不再卡**（V5.0.48）：自适应性能模式按实测帧时间对比屏幕刷新率自动降级，只关大面积毛玻璃与装饰动画；桌面端同时打开 GPU 光栅化、忽略显卡黑名单，Intel 核显机器不再退回软件合成
 - **🗺 车站库扩容**（V5.1.0）：`STATION_XY` 14 → **3267** 站（12306 现役客运站 99.8%），机场表换 OurAirports；足迹统计带分母（2/369 座城市、1/33 个省份）、线路详情给出历时 / 均速 / 单价、年份图例、A4 打印模板
 - **🔐 激活码门禁**（V5.1.1）：首次打开需输入激活码，通过一次后本机记住、之后直接进入；未通过时应用整体不启动。**网页版与桌面版同一套门禁**，校验在本机完成，不联网、不上传任何信息
+- **🛠 六处问题修复 + 地图性能**（V5.1.2）：AI 设置弹窗关不掉、三个工坊票面与入册信息分两层滚动、香港西九龙站错位、重庆站名、香港城市不点亮、站点拼音，一次修完；地图标签改用 `transform` 缩放、屏幕矩形缓存 120ms、流光动画与 viewBox 写入去抖，拖动与缩放更顺滑
 
 完整记录见 [CHANGELOG.md](CHANGELOG.md)。
 
@@ -137,14 +138,14 @@ V5.0.1 → V5.1.1 共 **49 次迭代**，六个阶段：打底（性能与报错
 
 ### 方式一 · 直接打开（推荐）
 
-下载 [`release/TraceDot-V5.1.1.html`](release/TraceDot-V5.1.1.html)，用现代浏览器双击打开即可。
+下载 [`release/TraceDot-V5.1.2.html`](release/TraceDot-V5.1.2.html)，用现代浏览器双击打开即可。
 **零安装、零依赖、断网可用。**
 
 ### 方式二 · 在线使用
 
 - 官网：<https://jidiandian.top>
 - 备用线路：<https://ajietudou007.github.io/TraceDot/website/>
-- 直接进应用：<https://jidiandian.top/release/TraceDot-V5.1.1.html>
+- 直接进应用：<https://jidiandian.top/release/TraceDot-V5.1.2.html>
 
 ### 方式三 · 桌面端（Windows 安装包）
 
@@ -152,9 +153,9 @@ V5.0.1 → V5.1.1 共 **49 次迭代**，六个阶段：打底（性能与报错
 
 | 平台 | 文件 |
 |------|------|
-| Windows（x64） | `TraceDot-Setup-5.1.1-x64.exe`（NSIS，支持自选安装目录与桌面快捷方式） |
-| macOS（Apple Silicon） | `TraceDot-5.1.1-arm64.dmg` |
-| macOS（Intel） | `TraceDot-5.1.1-x64.dmg` |
+| Windows（x64） | `TraceDot-Setup-5.1.2-x64.exe`（NSIS，支持自选安装目录与桌面快捷方式） |
+| macOS（Apple Silicon） | `TraceDot-5.1.2-arm64.dmg` |
+| macOS（Intel） | `TraceDot-5.1.2-x64.dmg` |
 
 安装后即为独立原生窗口（内嵌同一份单文件应用，支持 `electron-updater` 自动检查更新）。
 **Windows 安装包随 Release 提供；macOS 的 dmg / zip 由 GitHub Actions（macos-latest）自动构建并附在 Release 里。**
@@ -176,14 +177,14 @@ python3 -m http.server 8080
 ```bash
 cd desktop
 npm install              # electron + electron-builder
-npm start                # 本地开发窗口（会把 ../release/TraceDot-V5.1.1.html 拷进 app/index.html）
+npm start                # 本地开发窗口（会把 ../release/TraceDot-V5.1.2.html 拷进 app/index.html）
 npm run dist:win         # 产出 Windows NSIS 安装包 → desktop/dist_electron/
 npm run dist:mac         # 产出 macOS dmg + zip
 ```
 
 | 命令 | 作用 |
 |---|---|
-| `npm run prep` | 把 `../release/TraceDot-V5.1.1.html` 复制为 `desktop/app/index.html` |
+| `npm run prep` | 把 `../release/TraceDot-V5.1.2.html` 复制为 `desktop/app/index.html` |
 | `npm start` | `prep` + `electron .`（开发模式，不触发自动更新） |
 | `npm run dist:win` | `prep` + `electron-builder --win`（NSIS，x64） |
 | `npm run dist:mac` | `prep` + `electron-builder --mac`（dmg + zip，arm64 / x64） |
@@ -200,7 +201,11 @@ npm run dist:mac         # 产出 macOS dmg + zip
 | `build-win` | `windows-latest` | `electron-builder --win` | `TraceDot-Setup-<ver>-x64.exe`、`latest.yml` |
 | `build-mac` | `macos-latest` | `electron-builder --mac` | `*.dmg`（arm64 / x64）、`*.zip`、`latest-mac.yml` |
 
-**升级版本时改三处**：`desktop/package.json` 的 `version`、`prep` 脚本里的文件名、以及 `release/` 中的应用文件。
+**升级版本时改四处**（按顺序）：
+1. `CHANGELOG.md` 顶部先加一条 `## [Vx.y.z] - YYYY-MM-DD` —— 应用内左上角的「有新版本」提示就是从这份日志里取最大的 `Vx.y.z` 与本地 `APP_VER` 比较，标题格式不对或没写，官网就不会提示；
+2. 应用文件里的 `APP_VER`（文件末尾「新版本检测」脚本）与 `<title>` 的版本号；
+3. `desktop/package.json` 的 `version` 与 `prep` 脚本里的文件名；
+4. `release/` 中的应用文件。
 
 ---
 
@@ -209,7 +214,7 @@ npm run dist:mac         # 产出 macOS dmg + zip
 ```text
 TraceDot/
 ├── README.md                     # 本文件
-├── CHANGELOG.md                  # 全量版本日志（前身项目 V4.0 → 迹点点 V5.1.1）
+├── CHANGELOG.md                  # 全量版本日志（前身项目 V4.0 → 迹点点 V5.1.2）
 ├── CREDITS.md                    # 开源项目 / 数据源 / 云服务 / 工具链致谢
 ├── LICENSE                       # MIT（含第三方组件许可声明）
 ├── CNAME                         # jidiandian.top
@@ -218,7 +223,7 @@ TraceDot/
 │   ├── index.html                # 官方网站首页（苹果风格，纯静态单页）
 │   └── changelog.html            # 官方网站 · 更新日志页
 ├── release/
-│   └── TraceDot-V5.1.1.html     # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
+│   └── TraceDot-V5.1.2.html     # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
 ├── docs/
 │   ├── FEATURES.md               # 模块功能详表
 │   └── screenshots/              # 演示截图（含 16:9 头图与八模块总览图）
@@ -274,7 +279,7 @@ TraceDot/
 ## 📋 版本日志
 
 完整修改记录见 [CHANGELOG.md](CHANGELOG.md)——涵盖前身项目「12306 火车票票根编辑器」V4.0 → V6.2.4、
-迹点点 V2.x / V3.0.0 → V4.1.8，以及 **V5.0.1 → V5.1.1 全部 49 次迭代**。
+迹点点 V2.x / V3.0.0 → V4.1.8，以及 **V5.0.1 → V5.1.2 全部 50 次迭代**。
 
 ---
 

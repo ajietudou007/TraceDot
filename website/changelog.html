@@ -1,8 +1,8 @@
 <!DOCTYPE html><html class="scroll-smooth" lang="zh-CN" style=""><head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1" name="viewport">
-<title>更新日志 · 迹点点 TraceDot V5.1.1 · 旅行纪念票根工作室</title>
-<meta content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V5.1.1，共五个大阶段；其中 V5 阶段包含 49 次迭代。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。" name="description">
+<title>更新日志 · 迹点点 TraceDot V5.1.2 · 旅行纪念票根工作室</title>
+<meta content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V5.1.2，共五个大阶段；其中 V5 阶段包含 50 次迭代。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。" name="description">
 <link href="https://fonts.googleapis.com" rel="preconnect">
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Noto+Sans+SC:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
@@ -183,7 +183,7 @@
 <div class="flex flex-col">
 <div class="flex items-center gap-2">
 <span class="font-extrabold text-slateText tracking-tight text-base font-sans">迹点点</span>
-<span class="px-2 py-0.5 text-[10px] font-mono font-semibold bg-brand-50 text-brand-700 rounded-full border border-brand-200">V5.1.1</span>
+<span class="px-2 py-0.5 text-[10px] font-mono font-semibold bg-brand-50 text-brand-700 rounded-full border border-brand-200">V5.1.2</span>
 </div>
 <span class="text-[10px] text-mutedText font-medium hidden sm:inline">TraceDot Studio</span>
 </div>
@@ -235,8 +235,8 @@
 </h1>
 <!-- 副标题描述 -->
 <p class="mt-4 font-body-lg text-body-lg text-on-surface-variant max-w-2xl text-center">
-          迹点点的完整版本史：从前身「12306 火车票票根编辑器」一路走到 V5.1.1，共五个阶段；
-          其中第五阶段单独收录了 48 次迭代。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。
+          迹点点的完整版本史：从前身「12306 火车票票根编辑器」一路走到 V5.1.2，共五个阶段；
+          其中第五阶段单独收录了 50 次迭代。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。
         </p>
 <!-- 统计指标浮雕白卡组 (Soft UI) -->
 <div class="w-full mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl">
@@ -262,7 +262,7 @@
 <span class="material-symbols-outlined text-[20px]">verified</span>
 </div>
 <div class="flex items-center gap-1.5">
-<span class="font-label-numeric text-label-numeric text-primary tracking-tight">V5.1.1</span>
+<span class="font-label-numeric text-label-numeric text-primary tracking-tight">V5.1.2</span>
 </div>
 <span class="font-label-caps text-label-caps text-on-surface-variant mt-1 uppercase">当前稳定版本</span>
 </div>
@@ -293,7 +293,91 @@
 <!-- 经典贯穿时间轴线 (TraceDot 几何节点轴) -->
 <div class="hidden sm:block absolute left-8 top-6 bottom-10 w-0.5 bg-gradient-to-b from-primary-container via-surface-variant to-outline-variant"></div>
 <div class="space-y-10" id="changelogCardsList">
-<!-- ===================== 第五阶段: V5.1.1 最新稳定版（激活码门禁） ===================== -->
+<!-- ===================== 第五阶段: V5.1.2 最新稳定版（六处修复 + 地图性能） ===================== -->
+<div class="changelog-entry relative sm:pl-20 group" data-stage="stage-5" data-version="v5.1.2">
+<div class="hidden sm:flex absolute left-4.5 top-8 -translate-x-1/2 w-7 h-7 rounded-full bg-surface-container-lowest shadow-md items-center justify-center">
+<div class="w-3.5 h-3.5 rounded-full bg-primary-container ring-4 ring-primary-container/20 animate-pulse"></div>
+</div>
+<div class="rounded-3xl bg-surface-container-lowest p-6 sm:p-8 shadow-xl transition-all hover:shadow-2xl relative overflow-hidden">
+<div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-surface-container">
+<div class="flex items-center gap-3">
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">V5.1.2</span>
+<span class="px-3 py-1 rounded-full bg-primary-container text-on-primary font-label-caps text-label-caps uppercase">最新稳定版</span>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps">问题修复</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
+<time class="font-label-code text-label-code text-on-surface-variant">2026-10-21</time>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-primary mb-2">
+<span class="material-symbols-outlined text-[18px]">build</span>
+<span class="font-headline-sm text-headline-sm">六处问题一次修完</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                      AI 设置弹窗的四个关闭监听原本挂在 <code class="font-mono text-[12px]">TV.init()</code> 末尾，初始化抛错时永远绑不上；三个工坊的预览票面 sticky 吸顶，与「入册信息」分两层滚动；香港西九龙站坐标误写成山东半岛；火车票工坊站点表仍是「重庆南」；跨城行程终点沿用起点城市导致香港不点亮；站名拼音把「重庆东」拼成 Chongqing。
+                    </p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">bindModal()</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Xianggangxijiulong</span>
+</div>
+</div>
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-secondary mb-2">
+<span class="material-symbols-outlined text-[18px]">speed</span>
+<span class="font-headline-sm text-headline-sm">地图拖动 / 缩放更顺滑</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                      标签不再逐帧改 <code class="font-mono text-[12px]">font-size</code> + <code class="font-mono text-[12px]">x/y</code>（会让每个文本重新排版取字形），改为 <code class="font-mono text-[12px]">transform</code> 围绕所属点缩放；屏幕矩形缓存 120ms；线路流光只在缩放变化 ≥3% 时更新；视角无变化时整帧跳过。<strong>外观与交互结果不变</strong>。
+                    </p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">transform</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">120ms cache</span>
+</div>
+</div>
+</div>
+<div class="mt-6 space-y-3">
+<div class="font-label-caps text-label-caps text-outline uppercase tracking-wider">详细修补条目 (Bug Fixes &amp; Refinements)</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>弹窗关不掉：</strong>改为幂等的 <code class="font-mono text-[12px]">bindModal()</code>，初始化开头与设置面板打开前各兜一次；历史数据强制归一为数组，单条坏记录不再中断整个 <code class="font-mono text-[12px]">init()</code>。
+                    </span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>票面与入册信息一起滚动：</strong>撤掉登机牌 / 交通票 / 影演票三个工坊的吸顶，票面与入册信息成为一个整体，向上滑动时一起上移。
+                    </span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>地图数据修正：</strong>香港西九龙按真实经纬度重算为 <code class="font-mono text-[12px]">[907.8,767.2]</code>，与深圳北、深圳相邻；城市归属改为「先看地名、再信记录的 city」，并补香港中心坐标与省色。
+                    </span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>二维码叠图：</strong>每次重绘分配画布代次、一帧只允许贴一张码，新重绘先 <code class="font-mono text-[12px]">clearTimeout</code> 掉上一帧定时器，透明底旧码不再从新码空隙里露出来。
+                    </span>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">
+<strong>桌面端同步到 5.1.2：</strong><code class="font-mono text-[12px]">package.json</code> / <code class="font-mono text-[12px]">package-lock.json</code> / <code class="font-mono text-[12px]">main.js</code> 版本号改为 5.1.2，打包源指向 <code class="font-mono text-[12px]">release/TraceDot-V5.1.2.html</code>。
+                    </span>
+</div>
+</div>
+</div>
+</div>
+<!-- ===================== 第五阶段: V5.1.1（激活码门禁） ===================== -->
 <div class="changelog-entry relative sm:pl-20 group" data-stage="stage-5" data-version="v5.1.1">
 <div class="hidden sm:flex absolute left-4.5 top-8 -translate-x-1/2 w-7 h-7 rounded-full bg-surface-container-lowest shadow-md items-center justify-center">
 <div class="w-3.5 h-3.5 rounded-full bg-primary-container ring-4 ring-primary-container/20 animate-pulse"></div>
@@ -302,7 +386,6 @@
 <div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-surface-container">
 <div class="flex items-center gap-3">
 <span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">V5.1.1</span>
-<span class="px-3 py-1 rounded-full bg-primary-container text-on-primary font-label-caps text-label-caps uppercase">最新稳定版</span>
 <span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps">激活码门禁</span>
 </div>
 <div class="flex items-center gap-2">
@@ -1187,7 +1270,7 @@
 </div>
 </div>
 </div>
-<!-- ===================== 第五阶段: V5.0.1 → V5.1.1 迭代总索引 ===================== -->
+<!-- ===================== 第五阶段: V5.0.1 → V5.1.2 迭代总索引 ===================== -->
 <div class="changelog-entry relative sm:pl-20 group" data-stage="stage-5" data-version="v5.0.1">
 <div class="hidden sm:flex absolute left-4.5 top-8 -translate-x-1/2 w-7 h-7 rounded-full bg-surface-container-lowest shadow-md items-center justify-center">
 <div class="w-3.5 h-3.5 rounded-full bg-secondary-container"></div>
@@ -1195,13 +1278,13 @@
 <div class="rounded-3xl bg-surface-container-lowest p-6 sm:p-8 shadow-xl transition-all hover:shadow-2xl relative overflow-hidden">
 <div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-surface-container">
 <div class="flex items-center gap-3">
-<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">V5.0.1 → V5.1.1</span>
-<span class="px-2.5 py-0.5 rounded-full bg-secondary-container text-on-primary font-label-caps text-label-caps">49 次迭代总索引</span>
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">V5.0.1 → V5.1.2</span>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-container text-on-primary font-label-caps text-label-caps">50 次迭代总索引</span>
 </div>
 <time class="font-label-code text-label-code text-on-surface-variant">2026-10-16 ~ 10-21</time>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant mt-4 leading-relaxed">
-                V5.0.1 是未改动的原件基线（保留作回退），因此本阶段实为 <strong>49 次更新</strong>。同一件事反复改过的（比如票面白边改了四版）在上方卡片里只写最终结论；这里给出逐版本一句话索引，方便回溯「某一版到底动了什么」。
+                V5.0.1 是未改动的原件基线（保留作回退），因此本阶段实为 <strong>50 次更新</strong>。同一件事反复改过的（比如票面白边改了四版）在上方卡片里只写最终结论；这里给出逐版本一句话索引，方便回溯「某一版到底动了什么」。
               </p>
 <div class="mt-5 rounded-2xl bg-surface-container-low p-4">
 <div class="font-label-caps text-label-caps text-outline uppercase tracking-wider mb-3">六个打磨阶段</div>
@@ -1211,7 +1294,7 @@
 <div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">③ 打磨</span><span class=""><strong class="text-on-surface">5.0.22 – 5.0.30</strong>　操作行重排、图标重画、存储迁 IndexedDB</span></div>
 <div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">④ 数据与地图</span><span class=""><strong class="text-on-surface">5.0.31 – 5.0.39</strong>　老备份兼容、快照回滚、账本冷热分层、地图精度</span></div>
 <div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">⑤ 收口</span><span class=""><strong class="text-on-surface">5.0.40 – 5.0.48</strong>　按反馈回改、动效、安全修复、液态玻璃</span></div>
-<div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">⑥ 次版本</span><span class=""><strong class="text-on-surface">5.1.0 – 5.1.1</strong>　坐标数据契约变更、车站库扩容、激活码门禁</span></div>
+<div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">⑥ 次版本</span><span class=""><strong class="text-on-surface">5.1.0 – 5.1.2</strong>　坐标数据契约变更、车站库扩容、激活码门禁、六处修复与地图性能</span></div>
 </div>
 </div>
 <div class="mt-5">
@@ -1266,6 +1349,7 @@
 <div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.48</span><span class="">性能：自适应性能模式、交互期停地图滤镜、桌面端 GPU 兜底</span></div>
 <div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.1.0</span><span class="">次版本：车站坐标 14 → 3267、足迹分母、线路详情、年份图例、A4 打印</span></div>
 <div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.1.1</span><span class="">激活码门禁（网页 / 桌面同一套）、桌面端版本号同步、V5.0.48 入口关闭</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.1.2</span><span class="">六处问题修复（AI 弹窗 / 工坊滚动 / 西九龙站 / 重庆站名 / 香港点亮 / 站名拼音）、二维码叠图、地图拖动与缩放性能</span></div>
 </div>
 </div>
 <div class="mt-5 p-4 rounded-2xl bg-surface-container/50">
@@ -2048,7 +2132,7 @@
 <nav class="flex flex-wrap items-center gap-5 text-xs font-medium text-mutedText">
 <a class="hover:text-brand-600 transition-colors" href="index.html">官网首页</a>
 <a class="hover:text-brand-600 transition-colors" href="index.html#download">下载应用</a>
-<a class="hover:text-brand-600 transition-colors" href="https://jidiandian.top/release/TraceDot-V5.1.1.html" rel="noopener" target="_blank">在线应用</a>
+<a class="hover:text-brand-600 transition-colors" href="https://jidiandian.top/release/TraceDot-V5.1.2.html" rel="noopener" target="_blank">在线应用</a>
 <a class="hover:text-brand-600 transition-colors" href="changelog.html">更新日志</a>
 <a class="hover:text-brand-600 transition-colors" href="https://github.com/ajietudou007/TraceDot" rel="noopener" target="_blank">GitHub ↗</a>
 <a class="hover:text-brand-600 transition-colors" href="index.html#privacy">隐私声明</a>

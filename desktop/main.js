@@ -2,7 +2,7 @@ const { app, BrowserWindow, shell, Menu, dialog, screen } = require('electron');
 const path = require('path');
 
 const RELEASES_URL = 'https://github.com/ajietudou007/TraceDot/releases';
-const APP_VERSION = '5.1.1';
+const APP_VERSION = '5.1.2';
 let win = null;
 
 /* ---------- 渲染性能：让老显卡也走硬件光栅化 ----------
