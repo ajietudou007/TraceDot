@@ -24,7 +24,6 @@
       "app/**"
     ],
     "asar": true,
-    "electronDist": "./node_modules/electron/dist",
     "artifactName": "TraceDot-${version}-${arch}.${ext}",
     "mac": {
       "target": [
