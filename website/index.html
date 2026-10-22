@@ -900,7 +900,7 @@
                 </div>
               </a>
 
-              <a href="https://github.com/ajietudou007/TraceDot/releases/download/v5.1.5/TraceDot-Setup-5.1.5-x64.exe" target="_blank" rel="noopener" class="js-gh-dl p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
+              <a href="https://gitee.com/ajiepotato/TraceDot/releases/download/v5.1.5/TraceDot-Setup-5.1.5-x64.exe" target="_blank" rel="noopener" class="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
                 <div>
                   <div class="flex items-center justify-between">
                     <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">Windows (x64)</span>
@@ -927,7 +927,7 @@
 
             </div>
             <p class="text-[11px] text-mutedText mb-6">
-              以上三个平台入口均直达 v5.1.5 产物，下载自动择优走公益加速线路（国内直连，无需自备代理）<span class="text-brand-600" id="dlLineHint"></span>；如需历史版本或核验文件，可前往 GitHub 发布页。安装包未做代码签名：Windows 若弹出 SmartScreen 请选「仍要运行」，macOS 首次打开请对应用右键 → 打开；桌面端基于 Electron 33，需 macOS 11（Big Sur）及以上，更早的系统请使用网页版单文件。
+              Windows 安装包与单文件网页版由 Gitee 国内线路直发；两个 macOS 包仍走 GitHub，自动择优公益加速线路（国内直连，无需自备代理）<span class="text-brand-600" id="dlLineHint"></span>；如需历史版本或核验文件，可前往 GitHub 发布页。安装包未做代码签名：Windows 若弹出 SmartScreen 请选「仍要运行」，macOS 首次打开请对应用右键 → 打开；桌面端基于 Electron 33，需 macOS 11（Big Sur）及以上，更早的系统请使用网页版单文件。
             </p>
           </div>
 
@@ -937,7 +937,7 @@
               <div class="text-xs font-bold text-brand-900">需要单文件免安装 HTML？</div>
               <div class="text-[11px] text-brand-700">约 12.2 MB · 包含所有离线数据库与字体库</div>
             </div>
-            <a href="../release/TraceDot-V5.1.5.html" download="迹点点_V5.1.5.html" class="soft-pill-btn px-4 py-2 rounded-full bg-brand-600 text-white text-xs font-bold shadow-sm hover:bg-brand-700">
+            <a href="https://gitee.com/ajiepotato/TraceDot/releases/download/v5.1.5/TraceDot-V5.1.5.html" target="_blank" rel="noopener" class="soft-pill-btn px-4 py-2 rounded-full bg-brand-600 text-white text-xs font-bold shadow-sm hover:bg-brand-700">
               获取 HTML
             </a>
           </div>
@@ -1036,7 +1036,7 @@
 
 
 <script>
-/* ===== 下载加速线路自动择优 =====
+/* ===== 下载加速线路自动择优（仅 macOS 两个包；Windows 与单文件版走 Gitee 国内直连，无需代理） =====
    思路：href 里始终写 GitHub 原始地址（JS 被禁也能用），页面加载后按 mirrors.json
    里的优先级探测，命中第一条可用线路就把 href 改写成「前缀 + 原地址」。
    - 线路清单位于 mirrors.json，改那个文件即可全站生效，不必改本页

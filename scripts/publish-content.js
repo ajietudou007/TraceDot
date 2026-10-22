@@ -19,7 +19,12 @@ const RELEASE_DIR = path.join(ROOT, 'release');
 const MANIFEST = path.join(RELEASE_DIR, 'latest.json');
 const WEBSITE_INDEX = path.join(ROOT, 'website', 'index.html');
 const CHANGELOG = path.join(ROOT, 'CHANGELOG.md');
-const SITE = 'https://jidiandian.top/release/';
+/* 内容文件分发走 Gitee Release 资产（带版本 tag）：
+   - Gitee raw 域名有「large file require login」限制（约 10MB），12MB 的应用本体过不去；
+   - 清单 latest.json 本身走 raw.giteeusercontent.com 版本无关地址（见 desktop/main.js 的 PAGE_MANIFEST）；
+   - 因此每次发版后，必须把 release/ 里的 HTML 上传到对应版本的 Gitee Release 资产，
+     否则桌面端按清单里的 url 去拉会 404（脚本末尾会提醒）。 */
+const GITEE_RELEASE_BASE = 'https://gitee.com/ajiepotato/TraceDot/releases/download/v';
 const MIN_BYTES = 1024 * 1024;
 
 function fail(msg) {
@@ -118,7 +123,7 @@ const sameFile = path.resolve(destPath) === path.resolve(srcPath);
 const manifest = {
   version: version,
   file: fileName,
-  url: SITE + fileName,
+  url: GITEE_RELEASE_BASE + version + '/' + fileName,
   updated: today(),
   note:
     '桌面端内容更新清单。改这里并推送，已安装的壳会在下次启动时自动拉取新 HTML，无需重新打包。'
@@ -176,8 +181,10 @@ if (fs.existsSync(CHANGELOG)) {
 }
 
 console.log('\n下一步：');
-console.log('  git add release/ website/');
-console.log('  git commit -m "content: V' + version + '"');
-console.log('  git push');
+console.log('  1. 把 release/' + fileName + ' 上传到 Gitee Release v' + version + ' 的资产');
+console.log('     （gitee.com/ajiepotato/TraceDot/releases，桌面端与官网都从这里拉）');
+console.log('  2. git add release/ website/');
+console.log('  3. git commit -m "content: V' + version + '"');
+console.log('  4. git push origin main && git push gitee main');
 console.log('推送后约 1 分钟生效；已安装的桌面端下次启动会自动拉取。');
 console.log('本次不需要打 tag，也不需要重新打包桌面壳。');

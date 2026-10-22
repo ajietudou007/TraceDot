@@ -3,7 +3,8 @@ const path = require('path');
 const fs = require('fs');
 const https = require('https');
 
-/* 手动下载统一走官网下载区：那里的包由 Cloudflare R2 加速，比 GitHub Releases 快得多。
+/* 手动下载统一走官网下载区：Windows 安装包与单文件网页版已切 Gitee 国内线路直发，
+   macOS 两个包仍走 GitHub（页面自动择优公益加速线路）。
    GitHub 发布页仍从「项目主页」进入，用于查历史版本。 */
 const RELEASES_URL = 'https://jidiandian.top/#download';
 const APP_VERSION = '5.1.5';
@@ -14,7 +15,11 @@ let win = null;
    内容更新时只要替换这份 HTML，不必重新打包 dmg/exe。
    Electron 中 file:// 的 origin 与具体路径无关，所以从 asar 内迁到用户目录后，
    IndexedDB / localStorage 里的票根数据仍然连续。 */
-const PAGE_MANIFEST = 'https://jidiandian.top/release/latest.json';
+/* 内容热更新清单走 Gitee：raw.giteeusercontent.com 是版本无关地址（跟 main 分支走），
+   改仓库里的 release/latest.json 并推送，两端（GitHub/Gitee）同步后即全量生效。
+   小文件（清单几百字节）走 raw 直连；12 MB 的应用本体过不了 Gitee raw 的
+   「large file require login」限制，由清单里的 url 指向 Gitee Release 资产分发。 */
+const PAGE_MANIFEST = 'https://raw.giteeusercontent.com/ajiepotato/TraceDot/raw/main/release/latest.json';
 const PAGE_MAX_BYTES = 128 * 1024 * 1024;
 const PAGE_MIN_BYTES = 1024 * 1024;
 
@@ -360,7 +365,8 @@ function checkContent(interactive) {
         return null;
       }
 
-      const url = manifest.url || 'https://jidiandian.top/release/' + manifest.file;
+      /* 清单没给 url 时按「版本 tag + 文件名」拼 Gitee Release 资产地址 */
+      const url = manifest.url || 'https://gitee.com/ajiepotato/TraceDot/releases/download/v' + remote + '/' + manifest.file;
       /* 内容文件稳定在 12 MB 上下；万一服务器没给 Content-Length，就用它当分母估进度，
          总比让进度条干等着强（估到 95% 封顶，真正的 100% 只在写入完成时给） */
       const EST_BYTES = 12 * 1024 * 1024;
