@@ -19,7 +19,7 @@
 [🌐 官方网站](https://jidiandian.top) ·
 [📖 更新日志](CHANGELOG.md) ·
 [🖼 模块总览图](docs/screenshots/overview-16x9.png) ·
-[⬇ 下载应用](release/TraceDot-V5.1.3.html)
+[⬇ 下载应用](release/TraceDot-V5.1.5.html)
 
 </div>
 
@@ -141,14 +141,14 @@ V5.0.1 → V5.1.5 共 **53 次迭代**，六个阶段：打底（性能与报错
 
 ### 方式一 · 直接打开（推荐）
 
-下载 [`release/TraceDot-V5.1.3.html`](release/TraceDot-V5.1.3.html)，用现代浏览器双击打开即可。
+下载 [`release/TraceDot-V5.1.5.html`](release/TraceDot-V5.1.5.html)，用现代浏览器双击打开即可。
 **零安装、零依赖、断网可用。**
 
 ### 方式二 · 在线使用
 
 - 官网：<https://jidiandian.top>
 - 备用线路：<https://ajietudou007.github.io/TraceDot/website/>
-- 直接进应用：<https://jidiandian.top/release/TraceDot-V5.1.3.html>
+- 直接进应用：<https://jidiandian.top/release/TraceDot-V5.1.5.html>
 
 ### 方式三 · 桌面端（Windows 安装包）
 
@@ -180,14 +180,14 @@ python3 -m http.server 8080
 ```bash
 cd desktop
 npm install              # electron + electron-builder
-npm start                # 本地开发窗口（会把 ../release/TraceDot-V5.1.3.html 拷进 app/index.html）
+npm start                # 本地开发窗口（会把 ../release/TraceDot-V5.1.5.html 拷进 app/index.html）
 npm run dist:win         # 产出 Windows NSIS 安装包 → desktop/dist_electron/
 npm run dist:mac         # 产出 macOS dmg + zip
 ```
 
 | 命令 | 作用 |
 |---|---|
-| `npm run prep` | 把 `../release/TraceDot-V5.1.3.html` 复制为 `desktop/app/index.html` |
+| `npm run prep` | 把 `../release/TraceDot-V5.1.5.html` 复制为 `desktop/app/index.html` |
 | `npm start` | `prep` + `electron .`（开发模式，不触发自动更新） |
 | `npm run dist:win` | `prep` + `electron-builder --win`（NSIS，x64） |
 | `npm run dist:mac` | `prep` + `electron-builder --mac`（dmg + zip，arm64 / x64） |
@@ -217,7 +217,7 @@ npm run dist:mac         # 产出 macOS dmg + zip
 ```text
 TraceDot/
 ├── README.md                     # 本文件
-├── CHANGELOG.md                  # 全量版本日志（前身项目 V4.0 → 迹点点 V5.1.2）
+├── CHANGELOG.md                  # 全量版本日志（前身项目 V4.0 → 迹点点 V5.1.5）
 ├── CREDITS.md                    # 开源项目 / 数据源 / 云服务 / 工具链致谢
 ├── LICENSE                       # MIT（含第三方组件许可声明）
 ├── CNAME                         # jidiandian.top
@@ -226,7 +226,7 @@ TraceDot/
 │   ├── index.html                # 官方网站首页（苹果风格，纯静态单页）
 │   └── changelog.html            # 官方网站 · 更新日志页
 ├── release/
-│   └── TraceDot-V5.1.3.html     # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
+│   └── TraceDot-V5.1.5.html     # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
 ├── docs/
 │   ├── FEATURES.md               # 模块功能详表
 │   └── screenshots/              # 演示截图（含 16:9 头图与八模块总览图）
@@ -282,7 +282,7 @@ TraceDot/
 ## 📋 版本日志
 
 完整修改记录见 [CHANGELOG.md](CHANGELOG.md)——涵盖前身项目「12306 火车票票根编辑器」V4.0 → V6.2.4、
-迹点点 V2.x / V3.0.0 → V4.1.8，以及 **V5.0.1 → V5.1.3 全部 51 次迭代**。
+迹点点 V2.x / V3.0.0 → V4.1.8，以及 **V5.0.1 → V5.1.5 全部 53 次迭代**。
 
 ---
 
