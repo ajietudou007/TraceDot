@@ -50,7 +50,6 @@
 
 | 工具 | 用途 |
 |------|------|
-| **Trae（AI IDE）** | 人机结对开发平台——需求澄清、代码实现、Playwright 自动化验证全流程 |
 | **Playwright（Chromium headless）** | 功能回归自动化测试：无截图断言（expect_download 捕获导出、frame.evaluate、console / pageerror 监听）、行 / 列像素差异剖面分析（定位半像素漏色等渲染问题）、参考图像素分析 |
 | **Python 3（标准库）** | 版本快照打包脚本（repack：占位符替换 + gzip + base64 内联与计数断言）、维基百科景区数据抓取清洗、版本间 HTML / payload 差异比对 |
 | **git + GitHub** | 版本管理与开源发布；前身项目经 GitHub Pages 发布（ajietudou007.github.io） |
