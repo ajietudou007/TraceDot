@@ -6,7 +6,7 @@ const https = require('https');
 /* 手动下载统一走官网下载区：那里的包由 Cloudflare R2 加速，比 GitHub Releases 快得多。
    GitHub 发布页仍从「项目主页」进入，用于查历史版本。 */
 const RELEASES_URL = 'https://jidiandian.top/#download';
-const APP_VERSION = '5.1.3';
+const APP_VERSION = '5.1.5';
 let win = null;
 
 /* ---------- 壳与网页分离 ----------
@@ -103,12 +103,25 @@ function loadApp() {
   }
 }
 
+/* 把重定向的 Location 补全成绝对地址。
+   HTTP 允许 Location 是相对路径（'/x/y' 或 '../p'），而 https.get 只接受绝对 URL，
+   直接传会抛 Invalid URL —— 用 URL 构造器以原请求地址为基准补全。 */
+function resolveLocation(base, loc) {
+  try {
+    return new URL(String(loc), base).toString();
+  } catch (e) {
+    return String(loc);
+  }
+}
+
 function fetchText(url, timeout) {
   return new Promise((resolve, reject) => {
     const req = https.get(url, { headers: { 'User-Agent': 'TraceDot-Desktop' } }, (res) => {
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
         res.resume();
-        resolve(fetchText(res.headers.location, timeout));
+        /* Location 可能是相对路径（如只给「/release/latest.json」），
+           直接拿去做 https.get 会抛 Invalid URL —— 用 URL 构造器按原地址补全 */
+        resolve(fetchText(resolveLocation(url, res.headers.location), timeout));
         return;
       }
       if (res.statusCode !== 200) {
@@ -130,7 +143,115 @@ function fetchText(url, timeout) {
   });
 }
 
-function downloadTo(url, dest, timeout, redirects) {
+/* ---------- 下载进度窗（V5.1.5） ----------
+   壳与网页分离后，内容更新只下载一个约 12 MB 的 HTML，原来从「点确定」到「重启生效」
+   中间完全没有任何反馈，网络慢时用户会以为程序卡死。这里给一个无边框小窗：
+   进度条 + 百分比 + 已下载 / 总大小，同时把进度同步到任务栏（Windows）/ Dock（macOS）。
+   窗口用 data: URL 装一张静态 DOM，后续只改 #f 的 width 与 #s 的文本，不加载任何外部资源。 */
+let progWin = null;
+let progState = { pct: 0, text: '准备中', title: '正在下载…' };
+
+const PROG_HTML = [
+  '<!doctype html><html><head><meta charset="utf-8"><style>',
+  'html,body{margin:0;height:100%;overflow:hidden}',
+  'body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",system-ui,sans-serif;',
+  '  background:#fff;box-sizing:border-box;padding:20px 22px;color:#1f2937;',
+  '  -webkit-app-region:drag;cursor:default;user-select:none}',
+  '.t{font-size:13px;font-weight:600;letter-spacing:.01em}',
+  '.s{margin-top:6px;font-size:11px;color:#8b95a1;font-variant-numeric:tabular-nums}',
+  '.bar{margin-top:13px;height:6px;border-radius:3px;background:#eef1ef;overflow:hidden}',
+  '.f{height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,#2F9E62,#57C68C);',
+  '  transition:width .18s ease-out}',
+  '</style></head><body>',
+  '<div class="t" id="t"></div><div class="s" id="s"></div>',
+  '<div class="bar"><div class="f" id="f"></div></div>',
+  '</body></html>'
+].join('');
+
+function fmtBytes(n) {
+  n = Number(n) || 0;
+  if (n >= 1048576) return (n / 1048576).toFixed(1) + ' MB';
+  if (n >= 1024) return (n / 1024).toFixed(0) + ' KB';
+  return n + ' B';
+}
+
+/* 把当前状态刷进进度窗。页面还没加载完时 executeJavaScript 会 reject，
+   直接吞掉即可 —— did-finish-load 里会补一次全量刷新。 */
+function progFlush() {
+  if (!progWin || progWin.isDestroyed()) return;
+  const js =
+    '(function(){var t=document.getElementById("t"),s=document.getElementById("s"),f=document.getElementById("f");' +
+    'if(t)t.textContent=' + JSON.stringify(progState.title) + ';' +
+    'if(s)s.textContent=' + JSON.stringify(progState.text) + ';' +
+    'if(f)f.style.width="' + Math.max(0, Math.min(100, progState.pct)).toFixed(1) + '%";' +
+    'return 1})()';
+  progWin.webContents.executeJavaScript(js).catch(() => {});
+}
+
+function progOpen(title) {
+  progState = { pct: 0, text: '正在连接…', title: title || '正在下载…' };
+  if (progWin && !progWin.isDestroyed()) {
+    progFlush();
+    return;
+  }
+  progWin = new BrowserWindow({
+    width: 400,
+    height: 132,
+    parent: win && !win.isDestroyed() ? win : undefined,
+    modal: false,
+    frame: false,
+    resizable: false,
+    minimizable: false,
+    maximizable: false,
+    fullscreenable: false,
+    skipTaskbar: true,
+    alwaysOnTop: true,
+    show: false,
+    backgroundColor: '#ffffff',
+    webPreferences: {
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: true,
+      spellcheck: false
+    }
+  });
+  progWin.on('closed', () => {
+    progWin = null;
+  });
+  progWin.webContents.on('did-finish-load', progFlush);
+  progWin.once('ready-to-show', () => {
+    if (progWin && !progWin.isDestroyed()) progWin.show();
+  });
+  progWin.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(PROG_HTML)).catch(() => {});
+}
+
+/* pct 未知（服务器不给 Content-Length）时传 -1，任务栏显示不确定态 */
+function progSet(pct, text) {
+  progState.pct = Number.isFinite(pct) && pct >= 0 ? pct : 0;
+  if (text != null) progState.text = String(text);
+  progFlush();
+  if (win && !win.isDestroyed()) {
+    try {
+      win.setProgressBar(Number.isFinite(pct) && pct >= 0 ? Math.min(1, pct / 100) : 2);
+    } catch (e) {
+      /* 个别平台不支持任务栏进度，忽略 */
+    }
+  }
+}
+
+function progClose() {
+  if (progWin && !progWin.isDestroyed()) progWin.destroy();
+  progWin = null;
+  if (win && !win.isDestroyed()) {
+    try {
+      win.setProgressBar(-1);
+    } catch (e) {
+      /* ignore */
+    }
+  }
+}
+
+function downloadTo(url, dest, timeout, redirects, onProgress) {
   if ((redirects || 0) > 5) return Promise.reject(new Error('重定向过多'));
   return new Promise((resolve, reject) => {
     const part = dest + '.part';
@@ -147,9 +268,18 @@ function downloadTo(url, dest, timeout, redirects) {
     const req = https.get(url, { headers: { 'User-Agent': 'TraceDot-Desktop' } }, (res) => {
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
         res.resume();
-        file.close(() => fs.unlink(part, () => {}));
         settled = true;
-        resolve(downloadTo(res.headers.location, dest, timeout, (redirects || 0) + 1));
+        const next = resolveLocation(url, res.headers.location);
+        /* 必须等旧流彻底关闭、半成品删干净，再跟随重定向去开新流。
+           原来这里是 file.close(() => unlink) 之后就立刻递归 —— 旧流的 unlink 回调
+           会把新流刚建好的同名 .part 删掉，最终 rename 报 ENOENT。
+           （重定向要把 onProgress 一起带过去，否则跟随跳转后进度就断了。） */
+        file.destroy();
+        file.once('close', () => {
+          fs.unlink(part, () => {
+            downloadTo(next, dest, timeout, (redirects || 0) + 1, onProgress).then(resolve, reject);
+          });
+        });
         return;
       }
       if (res.statusCode !== 200) {
@@ -157,8 +287,18 @@ function downloadTo(url, dest, timeout, redirects) {
         fail(new Error('HTTP ' + res.statusCode));
         return;
       }
+      /* 总大小：优先 Content-Length；服务器不返回时传 0，进度窗会退化成
+         「已下载 xx MB」的不确定态，仍然有反馈 */
+      const total = parseInt(res.headers['content-length'], 10) || 0;
       res.on('data', (chunk) => {
         size += chunk.length;
+        if (onProgress) {
+          try {
+            onProgress(size, total);
+          } catch (e) {
+            /* 进度回调出错不能影响下载本身 */
+          }
+        }
         if (size > PAGE_MAX_BYTES) {
           req.destroy();
           fail(new Error('内容文件超出大小上限'));
@@ -221,7 +361,17 @@ function checkContent(interactive) {
       }
 
       const url = manifest.url || 'https://jidiandian.top/release/' + manifest.file;
-      return downloadTo(url, pagePath() + '.next').then(() => {
+      /* 内容文件稳定在 12 MB 上下；万一服务器没给 Content-Length，就用它当分母估进度，
+         总比让进度条干等着强（估到 95% 封顶，真正的 100% 只在写入完成时给） */
+      const EST_BYTES = 12 * 1024 * 1024;
+      progOpen('正在下载应用内容 V' + remote);
+      return downloadTo(url, pagePath() + '.next', 180000, 0, (got, total) => {
+        const denom = total > 0 ? total : EST_BYTES;
+        const pct = total > 0 ? (got / total) * 100 : Math.min(95, (got / denom) * 100);
+        progSet(pct, fmtBytes(got) + (total > 0 ? ' / ' + fmtBytes(total) : '') + ' · ' + pct.toFixed(0) + '%');
+      }).then(() => {
+        progSet(100, '下载完成，正在写入…');
+        progClose();
         try {
           fs.copyFileSync(pagePath(), pagePath() + '.prev');
         } catch (e) {
@@ -248,6 +398,7 @@ function checkContent(interactive) {
       });
     })
     .catch((err) => {
+      progClose();
       console.warn('content update failed:', err && err.message);
       if (interactive) {
         dialog.showMessageBox(win, {
@@ -330,6 +481,7 @@ function setupUpdater() {
   autoUpdater.autoInstallOnAppQuit = true;
 
   autoUpdater.on('error', (err) => {
+    progClose();
     // 未签名 Mac 包无法自动增量更新：降级为打开下载页手动下载
     const msg = String(err && err.message ? err.message : err);
     if (updaterReady && pendingDownload) {
@@ -349,6 +501,16 @@ function setupUpdater() {
     console.warn('updater error:', msg);
   });
 
+  /* 壳更新（安装包，几十 MB）也复用同一个进度窗与任务栏进度 ——
+     原来只在下载完成后才弹一次，中间几分钟同样是空白 */
+  autoUpdater.on('download-progress', (p) => {
+    const pct = Number(p && p.percent) || 0;
+    progSet(
+      pct,
+      fmtBytes(p && p.transferred) + ' / ' + fmtBytes(p && p.total) + ' · ' + pct.toFixed(0) + '%'
+    );
+  });
+
   autoUpdater.on('update-available', (info) => {
     pendingDownload = true;
     dialog
@@ -362,6 +524,7 @@ function setupUpdater() {
       .then((r) => {
         if (r.response === 0) {
           pendingDownload = false;
+          progOpen('正在下载新版本 V' + info.version + '…');
           autoUpdater.downloadUpdate();
         } else if (r.response === 2) {
           pendingDownload = false;
@@ -382,6 +545,7 @@ function setupUpdater() {
   });
 
   autoUpdater.on('update-downloaded', (info) => {
+    progClose();
     dialog
       .showMessageBox(win, {
         type: 'info',
