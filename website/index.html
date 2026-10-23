@@ -13,29 +13,29 @@
         extend: {
           colors: {
             brand: {
-              50: '#ecfdf5',
-              100: '#d1fae5',
-              200: '#a7f3d0',
-              300: '#6ee7b7',
-              400: '#34d399',
-              500: '#10b981',
-              600: '#059669',
-              700: '#047857',
-              800: '#065f46',
-              900: '#064e3b',
+              50: '#eef6f3',
+              100: '#d7ebe4',
+              200: '#b0d7cb',
+              300: '#85c2b1',
+              400: '#5aa893',
+              500: '#3f907c',
+              600: '#2E7D6B',
+              700: '#266757',
+              800: '#1f5347',
+              900: '#194339',
             },
             coral: {
-              500: '#ff6243',
-              600: '#ea580c',
+              500: '#d95a2b',
+              600: '#C2410C',
             },
-            softBg: '#F3F5F9',
+            softBg: '#F6F5F0',
             cardBg: '#FFFFFF',
-            slateText: '#1E293B',
+            slateText: '#16201C',
             mutedText: '#64748B',
           },
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
+            sans: ['"MiSans"', '"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', '"MiSans"', 'monospace'],
           },
           boxShadow: {
             'soft': '0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 20px 25px -5px rgba(0, 0, 0, 0.02)',
@@ -55,13 +55,16 @@
   <style>
     html { overflow-x: hidden; }
     body {
-      background-color: #F4F6FA;
-      color: #1E293B;
+      background-color: #F6F5F0;
+      color: #16201C;
       /* 窄屏下装饰性光晕（700/760px 固定宽）会把文档撑宽，这里收口横向溢出 */
       overflow-x: hidden;
-      font-family: 'Plus Jakarta Sans', 'Noto Sans SC', sans-serif;
+      font-family: 'MiSans', 'Plus Jakarta Sans', 'Noto Sans SC', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
+    /* 应用内嵌 MiSans 子集（可变字重 100-500 / 600-900），与最新版应用字体完全一致 */
+    @font-face{font-family:"MiSans";src:url("fonts/MiSans-w100-500.woff2") format("woff2");font-weight:100 500;font-style:normal;font-display:swap}
+    @font-face{font-family:"MiSans";src:url("fonts/MiSans-w600-900.woff2") format("woff2");font-weight:600 900;font-style:normal;font-display:swap}
     .pill-card {
       background: #FFFFFF;
       border: 1px solid rgba(226, 232, 240, 0.8);
@@ -107,7 +110,7 @@
     <header class="pointer-events-auto flex items-center justify-between gap-6 px-4 sm:px-6 py-2.5 rounded-full glass-nav shadow-soft max-w-5xl w-full border border-white/60">
       
       <!-- 品牌 Logo：保留原始形态，融入全新翠绿微质感胶囊 -->
-      <a href="#home" class="flex items-center gap-2.5 group shrink-0"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232E7E6B'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23FCF6E5'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23FCF6E5'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23FCF6E5'/%3E%3C/svg%3E" alt="迹点点 Logo" class="w-8 h-8 rounded-xl object-cover shadow-sm group-hover:scale-105 transition-transform shrink-0"><span class="font-extrabold text-sm sm:text-base text-slate-800 tracking-tight group-hover:text-brand-600 transition-colors">迹点点</span><span class="px-2 py-0.5 text-[10px] font-mono bg-brand-50 text-brand-700 border border-brand-200/80 rounded-full font-semibold">V5.1.8</span></a>
+      <a href="#home" class="flex items-center gap-2.5 group shrink-0"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232E7E6B'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23FCF6E5'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23FCF6E5'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23FCF6E5'/%3E%3C/svg%3E" alt="迹点点 Logo" class="w-8 h-8 rounded-xl object-cover shadow-sm group-hover:scale-105 transition-transform shrink-0"><span class="font-extrabold text-sm sm:text-base text-slate-800 tracking-tight group-hover:text-brand-600 transition-colors">迹点点</span><span class="px-2 py-0.5 text-[11px] font-mono bg-brand-50 text-brand-700 border border-brand-200/80 rounded-full font-semibold">V5.1.6</span></a>
 
       <!-- 导航链接：柔和圆润悬浮胶囊标签 -->
       <nav class="hidden md:flex items-center gap-1 bg-slate-100/70 p-1.5 rounded-full border border-slate-200/50">
@@ -148,7 +151,7 @@
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
               <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
             </span>
-            <span class="font-mono text-mutedText">TRACEDOT 5.1.5</span>
+            <span class="font-mono text-mutedText">TRACEDOT V5.1.6</span>
             <span class="text-slate-300">|</span>
             <span class="text-brand-700 font-semibold">纯前端 · 单文件 · 数据零外传</span>
           </div>
@@ -233,16 +236,16 @@
                 <div>
                   <div class="flex items-center gap-2">
                     <h4 class="text-xs font-bold text-slate-800 tracking-wider">TRIP ARCHIVE</h4>
-                    <span class="px-1.5 py-0.2 text-[9px] font-mono bg-emerald-50 text-brand-700 border border-brand-200 rounded font-semibold">V5.1.8</span>
+                    <span class="px-1.5 py-0.2 text-[10px] font-mono bg-emerald-50 text-brand-700 border border-brand-200 rounded font-semibold">V5.1.6</span>
                   </div>
-                  <p class="text-[10px] text-mutedText font-medium mt-0.5">45 段足迹 · 液态玻璃档案库</p>
+                  <p class="text-[11px] text-mutedText font-medium mt-0.5">45 段足迹 · 液态玻璃档案库</p>
                 </div>
               </div>
 
               <!-- 活跃胶囊状态 -->
               <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-brand-600 via-emerald-500 to-teal-500 text-white shadow-pill">
                 <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
-                <span class="text-[10px] font-black tracking-wider">LIVE STUDIO</span>
+                <span class="text-[11px] font-black tracking-wider">LIVE STUDIO</span>
               </div>
             </div>
 
@@ -271,12 +274,12 @@
                   
                   <div class="p-3 sm:p-3.5 bg-gradient-to-b from-emerald-50/40 via-white/80 to-white">
                     <!-- 顶部信息行 -->
-                    <div class="flex items-center justify-between pb-2 border-b border-dashed border-slate-200 text-[10px]">
+                    <div class="flex items-center justify-between pb-2 border-b border-dashed border-slate-200 text-[11px]">
                       <div class="flex items-center gap-2">
                         <span class="font-black tracking-widest text-brand-700 font-mono">CHINA AIR</span>
-                        <span class="px-1.5 py-0.5 rounded bg-brand-50 text-brand-800 font-mono font-bold text-[9px] border border-brand-200">MU5108</span>
+                        <span class="px-1.5 py-0.5 rounded bg-brand-50 text-brand-800 font-mono font-bold text-[10px] border border-brand-200">MU5108</span>
                       </div>
-                      <div class="text-right font-mono text-[9px] text-mutedText">
+                      <div class="text-right font-mono text-[10px] text-mutedText">
                         ELECTRONIC BOARDING PASS
                       </div>
                     </div>
@@ -285,10 +288,10 @@
                     <div class="flex items-center justify-between py-2.5">
                       <div class="text-left">
                         <div class="text-2xl font-black tracking-tight text-slate-800 font-mono">PEK</div>
-                        <div class="text-[10px] font-medium text-slate-500">北京首都 T2</div>
+                        <div class="text-[11px] font-medium text-slate-500">北京首都 T2</div>
                       </div>
                       <div class="flex flex-col items-center px-2">
-                        <span class="text-[9px] font-mono font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded-full border border-brand-200">3h 15m</span>
+                        <span class="text-[10px] font-mono font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded-full border border-brand-200">3h 15m</span>
                         <div class="flex items-center gap-1 text-emerald-400 mt-1">
                           <span class="w-4 h-[1px] bg-emerald-300"></span>
                           <svg class="w-3.5 h-3.5 text-brand-600 rotate-90 transform" fill="currentColor" viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"></path></svg>
@@ -297,26 +300,26 @@
                       </div>
                       <div class="text-right">
                         <div class="text-2xl font-black tracking-tight text-slate-800 font-mono">CTU</div>
-                        <div class="text-[10px] font-medium text-slate-500">成都双流 T2</div>
+                        <div class="text-[11px] font-medium text-slate-500">成都双流 T2</div>
                       </div>
                     </div>
 
                     <!-- 登机口/时间/座位 -->
                     <div class="grid grid-cols-4 gap-2 pt-2 border-t border-slate-100 text-center font-mono">
                       <div class="bg-slate-50/80 p-1.5 rounded-lg border border-slate-100">
-                        <div class="text-[8px] text-mutedText">GATE</div>
+                        <div class="text-[9px] text-mutedText">GATE</div>
                         <div class="text-xs font-bold text-slate-800">24</div>
                       </div>
                       <div class="bg-slate-50/80 p-1.5 rounded-lg border border-slate-100">
-                        <div class="text-[8px] text-mutedText">BOARDING</div>
+                        <div class="text-[9px] text-mutedText">BOARDING</div>
                         <div class="text-xs font-bold text-amber-600">08:30</div>
                       </div>
                       <div class="bg-slate-50/80 p-1.5 rounded-lg border border-slate-100">
-                        <div class="text-[8px] text-mutedText">SEAT</div>
+                        <div class="text-[9px] text-mutedText">SEAT</div>
                         <div class="text-xs font-bold text-brand-700">14A</div>
                       </div>
                       <div class="bg-slate-50/80 p-1.5 rounded-lg border border-slate-100 flex flex-col justify-center items-center">
-                        <div class="text-[8px] text-mutedText">CLASS</div>
+                        <div class="text-[9px] text-mutedText">CLASS</div>
                         <div class="text-xs font-bold text-slate-800">Y</div>
                       </div>
                     </div>
@@ -331,14 +334,14 @@
                   <div class="absolute inset-0 opacity-15 pointer-events-none" style="background-image: radial-gradient(#059669 1px, transparent 1px); background-size: 8px 8px;"></div>
 
                   <!-- 顶部车票号与安全码 -->
-                  <div class="relative flex items-center justify-between pb-2 border-b border-dashed border-teal-300/80 text-[10px] font-mono">
+                  <div class="relative flex items-center justify-between pb-2 border-b border-dashed border-teal-300/80 text-[11px] font-mono">
                     <div class="flex items-center gap-1.5">
-                      <span class="font-black text-rose-600 tracking-wider text-[11px]">G082341</span>
-                      <span class="text-teal-900 font-bold hidden sm:inline text-[9px] bg-teal-100/70 px-1.5 py-0.2 rounded border border-teal-200">12306 客票</span>
+                      <span class="font-black text-rose-600 tracking-wider text-[12px]">G082341</span>
+                      <span class="text-teal-900 font-bold hidden sm:inline text-[10px] bg-teal-100/70 px-1.5 py-0.2 rounded border border-teal-200">12306 客票</span>
                     </div>
-                    <div class="flex items-center gap-2 text-teal-800 text-[10px]">
+                    <div class="flex items-center gap-2 text-teal-800 text-[11px]">
                       <span class="font-semibold">中国铁路高速</span>
-                      <span class="text-[9px] opacity-75">CRH</span>
+                      <span class="text-[10px] opacity-75">CRH</span>
                     </div>
                   </div>
 
@@ -346,21 +349,21 @@
                   <div class="relative flex items-center justify-between py-3">
                     <div class="text-left">
                       <div class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">昆明南</div>
-                      <div class="text-[10px] text-teal-800 font-mono font-medium mt-0.5">Kunmingnan</div>
+                      <div class="text-[11px] text-teal-800 font-mono font-medium mt-0.5">Kunmingnan</div>
                     </div>
 
                     <!-- 车次与开行符号 -->
                     <div class="flex flex-col items-center px-2">
                       <span class="text-xs font-black font-mono text-teal-950 bg-white/90 px-2.5 py-0.5 rounded-full border border-teal-300 shadow-sm">G2884</span>
                       <div class="flex items-center gap-1 text-teal-600 my-0.5">
-                        <span class="text-[10px] font-mono">―――▶</span>
+                        <span class="text-[11px] font-mono">―――▶</span>
                       </div>
-                      <span class="text-[9px] text-teal-700 font-mono">4小时36分</span>
+                      <span class="text-[10px] text-teal-700 font-mono">4小时36分</span>
                     </div>
 
                     <div class="text-right">
                       <div class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">重庆西</div>
-                      <div class="text-[10px] text-teal-800 font-mono font-medium mt-0.5">Chongqingxi</div>
+                      <div class="text-[11px] text-teal-800 font-mono font-medium mt-0.5">Chongqingxi</div>
                     </div>
                   </div>
 
@@ -372,23 +375,23 @@
                     </div>
                     <div class="text-right font-black text-slate-900">
                       <span class="">02车11F号</span>
-                      <span class="text-[10px] font-medium text-teal-800 ml-1">二等座</span>
+                      <span class="text-[11px] font-medium text-teal-800 ml-1">二等座</span>
                     </div>
                   </div>
 
                   <!-- 底部票价、乘车人遮罩与二维防伪码 -->
-                  <div class="relative flex items-end justify-between pt-2.5 mt-1 text-[10px] font-mono text-teal-950">
+                  <div class="relative flex items-end justify-between pt-2.5 mt-1 text-[11px] font-mono text-teal-950">
                     <div>
-                      <div class="text-sm font-black text-rose-600">￥381.0<span class="text-[10px] font-normal ml-0.5 text-teal-900">元</span></div>
-                      <div class="text-[9px] text-teal-800 mt-0.5">530102********1234 李*</div>
-                      <div class="text-[8px] text-teal-700">限乘当日当次车 · 仅供报销凭证</div>
+                      <div class="text-sm font-black text-rose-600">￥381.0<span class="text-[11px] font-normal ml-0.5 text-teal-900">元</span></div>
+                      <div class="text-[10px] text-teal-800 mt-0.5">530102********1234 李*</div>
+                      <div class="text-[9px] text-teal-700">限乘当日当次车 · 仅供报销凭证</div>
                     </div>
                     
                     <!-- 拟真车票二维码与检票口 -->
                     <div class="flex items-center gap-2">
-                      <div class="text-right text-[9px] text-teal-800 leading-tight hidden sm:block">
+                      <div class="text-right text-[10px] text-teal-800 leading-tight hidden sm:block">
                         <div class="">检票: 12B</div>
-                        <div class="text-[8px] opacity-75">自动检票通道</div>
+                        <div class="text-[9px] opacity-75">自动检票通道</div>
                       </div>
                       <div class="w-9 h-9 rounded bg-white p-1 border border-teal-300 shadow-sm flex items-center justify-center shrink-0">
                         <svg class="w-full h-full text-slate-800" viewBox="0 0 24 24" fill="currentColor">
@@ -406,25 +409,25 @@
             <div class="grid grid-cols-3 gap-3 relative z-10">
               <div class="bg-slate-50/90 rounded-2xl p-3 text-center border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all">
                 <div class="text-lg font-extrabold text-slate-800 font-mono">45</div>
-                <div class="text-[10px] text-mutedText font-medium">张珍藏票据</div>
+                <div class="text-[11px] text-mutedText font-medium">张珍藏票据</div>
               </div>
               <div class="bg-emerald-50/60 rounded-2xl p-3 text-center border border-emerald-100 hover:bg-white hover:border-brand-300 hover:shadow-sm transition-all">
                 <div class="text-lg font-extrabold text-brand-600 font-mono">2,478<span class="text-xs">km</span></div>
-                <div class="text-[10px] text-brand-800 font-medium">累计旅程</div>
+                <div class="text-[11px] text-brand-800 font-medium">累计旅程</div>
               </div>
               <div class="bg-slate-50/90 rounded-2xl p-3 text-center border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all">
                 <div class="text-lg font-extrabold text-slate-800 font-mono">100<span class="text-xs">%</span></div>
-                <div class="text-[10px] text-mutedText font-medium">纯本地存储</div>
+                <div class="text-[11px] text-mutedText font-medium">纯本地存储</div>
               </div>
             </div>
 
             <!-- 底部快捷状态条 -->
             <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between px-2 relative z-10">
               <div class="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
-                <span class="w-5 h-5 rounded-full bg-emerald-100 text-brand-600 flex items-center justify-center text-[10px] font-bold">✓</span>
+                <span class="w-5 h-5 rounded-full bg-emerald-100 text-brand-600 flex items-center justify-center text-[11px] font-bold">✓</span>
                 <span class="">离线双保险引擎激活</span>
               </div>
-              <span class="text-[11px] font-mono text-brand-700 bg-brand-50 border border-brand-200 px-2 py-0.5 rounded-full">IndexedDB OK</span>
+              <span class="text-[12px] font-mono text-brand-700 bg-brand-50 border border-brand-200 px-2 py-0.5 rounded-full">IndexedDB OK</span>
             </div>
           </div>
 
@@ -435,7 +438,7 @@
             </div>
             <div>
               <div class="text-xs font-bold text-slate-800">视觉 OCR 大模型</div>
-              <div class="text-[10px] text-mutedText">自动解析照片票面</div>
+              <div class="text-[11px] text-mutedText">自动解析照片票面</div>
             </div>
           </div>
         </div>
@@ -448,7 +451,7 @@
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-8">
           <div class="space-y-2">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold font-mono">
-              V5.1.5 · WHAT'S NEW
+              V5.1.6 · WHAT'S NEW
             </div>
             <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               第五个大版本：把「看起来像」补齐成「真的是」
@@ -467,11 +470,24 @@
 
           <div class="p-5 rounded-2xl bg-brand-50/60 border border-brand-200 hover:bg-white hover:shadow-sm transition-all group ring-1 ring-brand-100">
             <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 text-brand-600 group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+            </div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-sm font-bold text-slate-800">32 套纪念票面进工坊</h3>
+              <span class="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-brand-500 text-white rounded">V5.1.6 新增</span>
+            </div>
+            <p class="text-xs text-mutedText mt-1 leading-relaxed">
+              交通票与影演票工坊新增 32 套纪念票面：公交 / 地铁 / 出租 / 船票 / 客运各 4 套，电影 / 演唱会 / 景区各 4 套，内置真二维码与条码渲染、换色跟随城市自动配色；工坊内「样式」选择条一键切换，所选样式随记录保存，珍藏册缩略图同款呈现。
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all group">
+            <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 text-brand-600 group-hover:scale-110 transition-transform">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </div>
             <div class="flex items-center gap-2">
               <h3 class="text-sm font-bold text-slate-800">放大后站名变巨大修复</h3>
-              <span class="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-brand-500 text-white rounded">V5.1.5 修复</span>
+              <span class="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-brand-500 text-white rounded">回归修复</span>
             </div>
             <p class="text-xs text-mutedText mt-1 leading-relaxed">
               地图标记的缩放补偿误用了 CSS transform —— CSS 的 translate() 必须带单位，无单位写法会被浏览器静默丢弃，放大后机场 / 火车站名跟着地图一起变成巨型文字。改用 SVG 原生 transform 后尺寸恒定；桌面端内容热更新补上无边框进度窗与任务栏进度。
@@ -484,7 +500,7 @@
             </div>
             <div class="flex items-center gap-2">
               <h3 class="text-sm font-bold text-slate-800">年度报告</h3>
-              <span class="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-brand-500 text-white rounded">第 8 视图</span>
+              <span class="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-brand-500 text-white rounded">第 8 视图</span>
             </div>
             <p class="text-xs text-mutedText mt-1 leading-relaxed">
               年度大数字、12 格月度热力、单程榜单与准点率一次看完；按月的「这一年」时间轴合并在报告里，不再往导航里塞第 9 个标签。
@@ -497,7 +513,7 @@
             </div>
             <div class="flex items-center gap-2">
               <h3 class="text-sm font-bold text-slate-800">票面码制做真</h3>
-              <span class="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-slate-200 text-slate-700 rounded">PDF417 / Code128</span>
+              <span class="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-slate-200 text-slate-700 rounded">PDF417 / Code128</span>
             </div>
             <p class="text-xs text-mutedText mt-1 leading-relaxed">
               登机牌条纹改用真票面码制 PDF417 + BCBP；火车票二维码不再统统指向 12306 首页，而是这张票自己的车次、日期、区间与票号；交通票与影演票启用 bwip 真条码渲染。
@@ -520,7 +536,7 @@
             </div>
             <div class="flex items-center gap-2">
               <h3 class="text-sm font-bold text-slate-800">数据不再悄悄丢</h3>
-              <span class="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-slate-200 text-slate-700 rounded">IndexedDB</span>
+              <span class="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-slate-200 text-slate-700 rounded">IndexedDB</span>
             </div>
             <p class="text-xs text-mutedText mt-1 leading-relaxed">
               账本迁入 IndexedDB 主存 + localStorage 镜像并引入写入时间戳仲裁，不再撞 5MB 墙；每次导入前自动留快照，菜单里一键回滚，且回滚本身还能撤销。
@@ -767,7 +783,7 @@
 
         <!-- 08 年度报告（V5 新增） -->
         <div class="pill-card p-6 flex flex-col justify-between group relative overflow-hidden">
-          <div class="absolute top-0 right-0 px-3 py-1 rounded-bl-2xl bg-brand-500 text-white text-[10px] font-bold font-mono">V5 NEW</div>
+          <div class="absolute top-0 right-0 px-3 py-1 rounded-bl-2xl bg-brand-500 text-white text-[11px] font-bold font-mono">V5 NEW</div>
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center font-mono font-bold text-lg group-hover:bg-teal-500 group-hover:text-white transition-all shadow-sm">
@@ -849,7 +865,7 @@
             </div>
           </div>
 
-          <div class="mt-6 pt-4 border-t border-slate-100 text-[11px] text-mutedText font-mono">
+          <div class="mt-6 pt-4 border-t border-slate-100 text-[12px] text-mutedText font-mono">
             * 仅在联网查询海报或选择云端 AI 时经由用户授权发起安全请求
           </div>
         </div>
@@ -861,14 +877,14 @@
               <span class="px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold font-mono">
                 DESKTOP APPS
               </span>
-              <span class="text-xs font-mono font-bold text-slate-400">V5.1.5 STABLE</span>
+              <span class="text-xs font-mono font-bold text-slate-400">V5.1.6 STABLE · 自动热更新</span>
             </div>
 
             <h3 class="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">
               下载原生客户端，随时随地开启
             </h3>
             <p class="text-sm text-mutedText mb-6">
-              原生轻量打包，支持 Mac 与 Windows，自带自动更新与离线资源包。网页版与桌面版同为 V5.1.5，数据格式完全一致，可随时互相导出导入。
+              原生轻量打包，支持 Mac 与 Windows，自带自动更新与离线资源包。<strong class="text-brand-700 font-semibold">已安装旧客户端的用户无需重新下载：启动应用后会自动热更新到最新内核（V5.1.6）</strong>，网页版与桌面版数据格式完全一致，可随时互相导出导入。
             </p>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
@@ -879,7 +895,7 @@
                     <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">macOS (Apple 芯片)</span>
                     <span class="w-2 h-2 rounded-full bg-brand-500"></span>
                   </div>
-                  <p class="text-[11px] text-mutedText mt-1 font-mono">.dmg · 约 103 MB · 需 macOS 11+</p>
+                  <p class="text-[12px] text-mutedText mt-1 font-mono">.dmg · 约 103 MB · 需 macOS 11+</p>
                 </div>
                 <div class="mt-3 text-xs font-bold text-brand-600 flex items-center gap-1">
                   <span class="">前往下载</span>
@@ -892,7 +908,7 @@
                   <div class="flex items-center justify-between">
                     <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">macOS (Intel 芯片)</span>
                   </div>
-                  <p class="text-[11px] text-mutedText mt-1 font-mono">.dmg · 约 107 MB · 需 macOS 11+</p>
+                  <p class="text-[12px] text-mutedText mt-1 font-mono">.dmg · 约 107 MB · 需 macOS 11+</p>
                 </div>
                 <div class="mt-3 text-xs font-bold text-brand-600 flex items-center gap-1">
                   <span class="">前往下载</span>
@@ -906,7 +922,7 @@
                     <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">Windows (x64)</span>
                     <span class="w-2 h-2 rounded-full bg-brand-500"></span>
                   </div>
-                  <p class="text-[11px] text-mutedText mt-1 font-mono">.exe · 约 84 MB</p>
+                  <p class="text-[12px] text-mutedText mt-1 font-mono">.exe · 约 84 MB</p>
                 </div>
                 <div class="mt-3 text-xs font-bold text-brand-600 flex items-center gap-1">
                   <span class="">前往下载</span>
@@ -917,7 +933,7 @@
               <a href="https://github.com/ajietudou007/TraceDot/releases" target="_blank" rel="noopener" class="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
                 <div>
                   <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">全版本历史发布</span>
-                  <p class="text-[11px] text-mutedText mt-1 font-mono">GitHub Releases ↗</p>
+                  <p class="text-[12px] text-mutedText mt-1 font-mono">GitHub Releases ↗</p>
                 </div>
                 <div class="mt-3 text-xs font-bold text-brand-600 flex items-center gap-1">
                   <span class="">查看更新</span>
@@ -926,7 +942,7 @@
               </a>
 
             </div>
-            <p class="text-[11px] text-mutedText mb-6">
+            <p class="text-[12px] text-mutedText mb-6">
               Windows 安装包与单文件网页版由 Gitee 国内线路直发；两个 macOS 包仍走 GitHub，自动择优公益加速线路（国内直连，无需自备代理）<span class="text-brand-600" id="dlLineHint"></span>；如需历史版本或核验文件，可前往 GitHub 发布页。安装包未做代码签名：Windows 若弹出 SmartScreen 请选「仍要运行」，macOS 首次打开请对应用右键 → 打开；桌面端基于 Electron 33，需 macOS 11（Big Sur）及以上，更早的系统请使用网页版单文件。
             </p>
           </div>
@@ -935,7 +951,8 @@
           <div class="p-4 rounded-2xl bg-brand-50/70 border border-brand-200/60 flex items-center justify-between">
             <div>
               <div class="text-xs font-bold text-brand-900">需要单文件免安装 HTML？</div>
-              <div class="text-[11px] text-brand-700">约 11.9 MB · 包含所有离线数据库与字体库</div>
+              <div class="text-[12px] text-brand-700">约 11.9 MB · 包含所有离线数据库与字体库 · 下载即为 V5.1.6 最新版，浏览器直接打开即用</div>
+              <div class="text-[12px] text-brand-700 mt-0.5">旧版桌面客户端同样无需重新下载，启动应用后会自动更新内核</div>
             </div>
             <a href="https://gitee.com/ajiepotato/TraceDot/releases/download/v5.1.8/TraceDot-V5.1.8.html" target="_blank" rel="noopener" class="soft-pill-btn px-4 py-2 rounded-full bg-brand-600 text-white text-xs font-bold shadow-sm hover:bg-brand-700">
               获取 HTML
@@ -1015,7 +1032,7 @@
     </div>
 
     <!-- 免责声明小标签卡 -->
-    <div class="mt-8 p-4 rounded-2xl bg-white border border-slate-200/60 text-[11px] text-mutedText leading-relaxed">
+    <div class="mt-8 p-4 rounded-2xl bg-white border border-slate-200/60 text-[12px] text-mutedText leading-relaxed">
       <span class="font-semibold text-slate-700">免责声明：</span>本项目仅供个人纪念、手账与娱乐创作使用，与中国国家铁路集团（12306）、各航空公司及文旅机构均无隶属或合作关系。严禁将生成的票面用于报销、退票、逃票、诈骗或其他违法用途。
     </div>
 

@@ -1,8 +1,8 @@
 <!DOCTYPE html><html class="scroll-smooth" lang="zh-CN" style=""><head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1" name="viewport">
-<title>更新日志 · 迹点点 TraceDot V5.1.5 · 旅行纪念票根工作室</title>
-<meta content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V5.1.5，共五个大阶段；其中 V5 阶段包含 52 次迭代。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。" name="description">
+<title>更新日志 · 迹点点 TraceDot V5.1.6 · 旅行纪念票根工作室</title>
+<meta content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V5.1.6，共五个大阶段；V5 阶段以热更新方式持续迭代。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。" name="description">
 <link href="https://fonts.googleapis.com" rel="preconnect">
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Noto+Sans+SC:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
@@ -82,18 +82,18 @@
             'surface-variant': '#dae2fd',
           },
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
+            sans: ['"MiSans"', '"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'monospace'],
-            'headline-xl': ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
-            'headline-lg': ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
-            'headline-md': ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
-            'headline-sm': ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
-            'body-lg': ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
-            'body-md': ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
-            'body-sm': ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
-            'label-numeric': ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
+            'headline-xl': ['"MiSans"', '"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
+            'headline-lg': ['"MiSans"', '"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
+            'headline-md': ['"MiSans"', '"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
+            'headline-sm': ['"MiSans"', '"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
+            'body-lg': ['"MiSans"', '"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
+            'body-md': ['"MiSans"', '"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
+            'body-sm': ['"MiSans"', '"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
+            'label-numeric': ['"MiSans"', '"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
             'label-code': ['"JetBrains Mono"', 'monospace'],
-            'label-caps': ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
+            'label-caps': ['"MiSans"', '"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
           },
           fontSize: {
             'headline-xl': ['48px', { lineHeight: '56px', fontWeight: '700', letterSpacing: '-0.03em' }],
@@ -126,13 +126,17 @@
     }
   </script>
 <style>
+    /* 应用内嵌 MiSans 子集（可变字重 100-500 / 600-900），与最新版应用字体完全一致 */
+    @font-face{font-family:"MiSans";src:url("fonts/MiSans-w100-500.woff2") format("woff2");font-weight:100 500;font-style:normal;font-display:swap}
+    @font-face{font-family:"MiSans";src:url("fonts/MiSans-w600-900.woff2") format("woff2");font-weight:600 900;font-style:normal;font-display:swap}
+
     html { overflow-x: hidden; }
     body {
       background-color: #F4F6FA;
       color: #1E293B;
       /* 窄屏下装饰性光晕（700/760px 固定宽）会把文档撑宽，这里收口横向溢出 */
       overflow-x: hidden;
-      font-family: 'Plus Jakarta Sans', 'Noto Sans SC', sans-serif;
+      font-family: 'MiSans', 'Plus Jakarta Sans', 'Noto Sans SC', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
     .pill-card {
@@ -183,9 +187,9 @@
 <div class="flex flex-col">
 <div class="flex items-center gap-2">
 <span class="font-extrabold text-slateText tracking-tight text-base font-sans">迹点点</span>
-<span class="px-2 py-0.5 text-[10px] font-mono font-semibold bg-brand-50 text-brand-700 rounded-full border border-brand-200">V5.1.5</span>
+<span class="px-2 py-0.5 text-[10px] font-mono font-semibold bg-brand-50 text-brand-700 rounded-full border border-brand-200">V5.1.6</span>
 </div>
-<span class="text-[10px] text-mutedText font-medium hidden sm:inline">TraceDot Studio</span>
+<span class="text-[11px] text-mutedText font-medium hidden sm:inline">TraceDot Studio</span>
 </div>
 </a>
 <!-- 导航链接：柔和圆润悬浮胶囊标签 -->
@@ -235,8 +239,8 @@
 </h1>
 <!-- 副标题描述 -->
 <p class="mt-4 font-body-lg text-body-lg text-on-surface-variant max-w-2xl text-center">
-          迹点点的完整版本史：从前身「12306 火车票票根编辑器」一路走到 V5.1.5，共五个阶段；
-          其中第五阶段单独收录了 51 次迭代。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。
+          迹点点的完整版本史：从前身「12306 火车票票根编辑器」一路走到 V5.1.6，共五个阶段；
+          第五阶段以热更新方式持续迭代。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。
         </p>
 <!-- 统计指标浮雕白卡组 (Soft UI) -->
 <div class="w-full mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl">
@@ -262,7 +266,7 @@
 <span class="material-symbols-outlined text-[20px]">verified</span>
 </div>
 <div class="flex items-center gap-1.5">
-<span class="font-label-numeric text-label-numeric text-primary tracking-tight">V5.1.5</span>
+<span class="font-label-numeric text-label-numeric text-primary tracking-tight">V5.1.6</span>
 </div>
 <span class="font-label-caps text-label-caps text-on-surface-variant mt-1 uppercase">当前稳定版本</span>
 </div>
@@ -293,6 +297,69 @@
 <!-- 经典贯穿时间轴线 (TraceDot 几何节点轴) -->
 <div class="hidden sm:block absolute left-8 top-6 bottom-10 w-0.5 bg-gradient-to-b from-primary-container via-surface-variant to-outline-variant"></div>
 <div class="space-y-10" id="changelogCardsList">
+<!-- ===================== 第五阶段: V5.1.6 最新稳定版（32 套纪念票面 + 视觉对齐） ===================== -->
+<div class="changelog-entry relative sm:pl-20 group" data-stage="stage-5" data-version="v5.1.6">
+<div class="hidden sm:flex absolute left-4.5 top-8 -translate-x-1/2 w-7 h-7 rounded-full bg-surface-container-lowest shadow-md items-center justify-center">
+<div class="w-3.5 h-3.5 rounded-full bg-primary-container ring-4 ring-primary-container/20 animate-pulse"></div>
+</div>
+<div class="rounded-3xl bg-surface-container-lowest p-6 sm:p-8 shadow-xl transition-all hover:shadow-2xl relative overflow-hidden">
+<div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-surface-container">
+<div class="flex items-center gap-3">
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">V5.1.6</span>
+<span class="px-3 py-1 rounded-full bg-primary-container text-on-primary font-label-caps text-label-caps uppercase">最新稳定版</span>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps">热更新</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
+<time class="font-label-code text-label-code text-on-surface-variant">2026-10-23</time>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-primary mb-2">
+<span class="material-symbols-outlined text-[18px]">style</span>
+<span class="font-headline-sm text-headline-sm">32 套纪念票面进工坊</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+交通票工坊新增 <strong>20 套</strong>（公交 / 地铁 / 出租 / 船票 / 客运各 4 套），影演票工坊新增 <strong>12 套</strong>（电影 / 演唱会 / 景区各 4 套）。新票面内置真二维码与 Code39 条码渲染，换色跟随城市自动配色，条码 / 票号 / 大写金额按填写内容实时生成；海报与景区图沿用工坊图片层（含裁剪定位）。
+</p>
+</div>
+</div>
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-secondary mb-2">
+<span class="material-symbols-outlined text-[18px]">format_size</span>
+<span class="font-headline-sm text-headline-sm">全局 MiSans 视觉对齐</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+32 套新票面字体栈统一切换为 <strong>MiSans</strong> 并整体上调字号等级；公交「班车票」重构为上下车站左右并排、站名放大铺满整行；修复取票码区域样式泄漏形成的黑块、「长卷」景区票右侧信息区缺失、启用日期折行与 6 张固定高度票面底行裁切。32 案例自动化探针（溢出 + 折行双检测）全部归零。
+</p>
+</div>
+</div>
+</div>
+<div class="mt-6 space-y-3">
+<div class="font-label-caps text-label-caps text-outline uppercase tracking-wider">详细条目 (Features &amp; Fixes)</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<p class="font-body-md text-body-md text-on-surface-variant">工坊配色条下新增「样式」选择条（经典 + 新样式，双主题适配）；所选样式随记录持久化，珍藏册缩略图与示例图全链路透传同款样式。</p>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<p class="font-body-md text-body-md text-on-surface-variant">电影「数字票」取票码区域被工坊同名根类样式污染的问题修复（类名冲突导致深色药丸背景、文字不可读）。</p>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<p class="font-body-md text-body-md text-on-surface-variant">地铁「一日通票」启用日期折行、公交「班车票」日期时间整行被裁等问题修复；固定高度票面按实测溢出量逐一补偿。</p>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
+<span class="material-symbols-outlined text-secondary text-[18px] mt-0.5">cloud_sync</span>
+<p class="font-body-md text-body-md text-on-surface-variant">本版为<strong>纯内容热更新</strong>：已安装桌面客户端的用户无需重新下载安装包，启动应用后自动更新到最新内核。</p>
+</div>
+</div>
+</div>
+</div>
+
 <!-- ===================== 第五阶段: V5.1.5 最新稳定版（放大后站名修复 + 更新进度条） ===================== -->
 <div class="changelog-entry relative sm:pl-20 group" data-stage="stage-5" data-version="v5.1.5">
 <div class="hidden sm:flex absolute left-4.5 top-8 -translate-x-1/2 w-7 h-7 rounded-full bg-surface-container-lowest shadow-md items-center justify-center">
@@ -302,7 +369,7 @@
 <div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-surface-container">
 <div class="flex items-center gap-3">
 <span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">V5.1.5</span>
-<span class="px-3 py-1 rounded-full bg-primary-container text-on-primary font-label-caps text-label-caps uppercase">最新稳定版</span>
+<span class="px-3 py-1 rounded-full bg-primary-container text-on-primary font-label-caps text-label-caps uppercase">稳定版</span>
 <span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps">回归修复</span>
 </div>
 <div class="flex items-center gap-2">
@@ -318,7 +385,7 @@
 <span class="font-headline-sm text-headline-sm">放大后站名不再爆大</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-缩放补偿写成了 CSS <code class="font-mono text-[12px]">transform</code>，而 CSS 的 <code class="font-mono text-[12px]">translate()</code> 必须带单位 —— 无单位写法属于无效声明，会被浏览器<strong>静默丢弃</strong>，于是整组补偿从未生效：放大时城市圆点、站点圆点、站名一起跟着地图放大。改用 SVG 原生 <code class="font-mono text-[12px]">transform</code> 属性后，放大 <strong>21.9 倍</strong>站名仍 15 px、圆点仍 5.7 px。
+缩放补偿写成了 CSS <code class="font-mono text-[13px]">transform</code>，而 CSS 的 <code class="font-mono text-[13px]">translate()</code> 必须带单位 —— 无单位写法属于无效声明，会被浏览器<strong>静默丢弃</strong>，于是整组补偿从未生效：放大时城市圆点、站点圆点、站名一起跟着地图放大。改用 SVG 原生 <code class="font-mono text-[13px]">transform</code> 属性后，放大 <strong>21.9 倍</strong>站名仍 15 px、圆点仍 5.7 px。
 </p>
 </div>
 </div>
@@ -339,7 +406,7 @@
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>巨型文字回归已修：</strong>站名、城市名、站点圆点的缩放补偿改用 SVG 原生 <code class="font-mono text-[12px]">transform</code> 属性，放大到 21.9 倍屏幕上尺寸仍恒定。
+<strong>巨型文字回归已修：</strong>站名、城市名、站点圆点的缩放补偿改用 SVG 原生 <code class="font-mono text-[13px]">transform</code> 属性，放大到 21.9 倍屏幕上尺寸仍恒定。
 </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
@@ -351,7 +418,7 @@
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>下载器两处隐患：</strong>重定向的 <code class="font-mono text-[12px]">Location</code> 为相对路径时不再抛 <code class="font-mono text-[12px]">Invalid URL</code>；跟随重定向前先等旧流关闭并清理半成品，不再出现 <code class="font-mono text-[12px]">rename</code> 报 <code class="font-mono text-[12px]">ENOENT</code>。
+<strong>下载器两处隐患：</strong>重定向的 <code class="font-mono text-[13px]">Location</code> 为相对路径时不再抛 <code class="font-mono text-[13px]">Invalid URL</code>；跟随重定向前先等旧流关闭并清理半成品，不再出现 <code class="font-mono text-[13px]">rename</code> 报 <code class="font-mono text-[13px]">ENOENT</code>。
 </span>
 </div>
 </div>
@@ -383,7 +450,7 @@
 <span class="font-headline-sm text-headline-sm">城市不再点错省</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-城市匹配原来是子串判断，<code class="font-mono text-[12px]">昆山南</code> 会命中西藏「山南」、<code class="font-mono text-[12px]">大兴</code> 命中「大兴安岭」。现在改为<strong>前缀锚定</strong>，并新增构建期「站点 → 城市」显式映射表 <strong>3267 站</strong>（由 12306 所属城市 + 底图市级轮廓判定生成），运行时 O(1) 查表，跨省误配彻底消失。
+城市匹配原来是子串判断，<code class="font-mono text-[13px]">昆山南</code> 会命中西藏「山南」、<code class="font-mono text-[13px]">大兴</code> 命中「大兴安岭」。现在改为<strong>前缀锚定</strong>，并新增构建期「站点 → 城市」显式映射表 <strong>3267 站</strong>（由 12306 所属城市 + 底图市级轮廓判定生成），运行时 O(1) 查表，跨省误配彻底消失。
 </p>
 </div>
 </div>
@@ -394,7 +461,7 @@
 <span class="font-headline-sm text-headline-sm">缩放拖动更跟手</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除、松手 180 ms 后恢复。城市与站点改父级整组 <code class="font-mono text-[12px]">transform</code> 补偿（DOM 写入由 3~4N 降到 N），绘图加数据签名跳过重复重建，滚轮布局读取并入 rAF。
+SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除、松手 180 ms 后恢复。城市与站点改父级整组 <code class="font-mono text-[13px]">transform</code> 补偿（DOM 写入由 3~4N 降到 N），绘图加数据签名跳过重复重建，滚轮布局读取并入 rAF。
 </p>
 </div>
 </div>
@@ -452,7 +519,7 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>稳健性：</strong>快照键改为严格递增，同毫秒连续快照不再互相覆盖；删除从未生效的 <code class="font-mono text-[12px]">.g-lit</code> 死代码查询。
+<strong>稳健性：</strong>快照键改为严格递增，同毫秒连续快照不再互相覆盖；删除从未生效的 <code class="font-mono text-[13px]">.g-lit</code> 死代码查询。
                     </span>
 </div>
 </div>
@@ -484,7 +551,7 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">航司 Logo 不再串票</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-珍藏册缩略图由离屏登机牌 iframe 逐条「采样渲染」，采样载荷 <code class="font-mono text-[12px]">planeSample()</code> 漏了 <code class="font-mono text-[12px]">airline</code> 字段，渲染时沿用上一张票的航司状态。现在采样与「重新编辑」预填都带上航司，采样前显式清空，预览缓存 <code class="font-mono text-[12px]">pv1 → pv2</code> 旧图整体作废。
+珍藏册缩略图由离屏登机牌 iframe 逐条「采样渲染」，采样载荷 <code class="font-mono text-[13px]">planeSample()</code> 漏了 <code class="font-mono text-[13px]">airline</code> 字段，渲染时沿用上一张票的航司状态。现在采样与「重新编辑」预填都带上航司，采样前显式清空，预览缓存 <code class="font-mono text-[13px]">pv1 → pv2</code> 旧图整体作废。
 </p>
 </div>
 </div>
@@ -505,13 +572,13 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>航司 Logo 与所选航司不一致：</strong>采样与预填带上 <code class="font-mono text-[12px]">airline</code>，采样前显式清空航司与配色，不再继承上一张；预览缓存版本 <code class="font-mono text-[12px]">pv1 → pv2</code>，旧图作废重画。
+<strong>航司 Logo 与所选航司不一致：</strong>采样与预填带上 <code class="font-mono text-[13px]">airline</code>，采样前显式清空航司与配色，不再继承上一张；预览缓存版本 <code class="font-mono text-[13px]">pv1 → pv2</code>，旧图作废重画。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>地图出发地 / 到达地标反：</strong>名称与三字码相距超过 300 km 时以名称为准，地图点选定位 <code class="font-mono text-[12px]">tripEndXY()</code> 同步改为同一口径。
+<strong>地图出发地 / 到达地标反：</strong>名称与三字码相距超过 300 km 时以名称为准，地图点选定位 <code class="font-mono text-[13px]">tripEndXY()</code> 同步改为同一口径。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
@@ -529,7 +596,7 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>桌面端同步到 5.1.3：</strong><code class="font-mono text-[12px]">package.json</code> / <code class="font-mono text-[12px]">package-lock.json</code> / <code class="font-mono text-[12px]">main.js</code> 版本号改为 5.1.3，打包源指向 <code class="font-mono text-[12px]">release/TraceDot-V5.1.3.html</code>。
+<strong>桌面端同步到 5.1.3：</strong><code class="font-mono text-[13px]">package.json</code> / <code class="font-mono text-[13px]">package-lock.json</code> / <code class="font-mono text-[13px]">main.js</code> 版本号改为 5.1.3，打包源指向 <code class="font-mono text-[13px]">release/TraceDot-V5.1.3.html</code>。
                     </span>
 </div>
 </div>
@@ -559,12 +626,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">六处问题一次修完</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                      AI 设置弹窗的四个关闭监听原本挂在 <code class="font-mono text-[12px]">TV.init()</code> 末尾，初始化抛错时永远绑不上；三个工坊的预览票面 sticky 吸顶，与「入册信息」分两层滚动；香港西九龙站坐标误写成山东半岛；火车票工坊站点表仍是「重庆南」；跨城行程终点沿用起点城市导致香港不点亮；站名拼音把「重庆东」拼成 Chongqing。
+                      AI 设置弹窗的四个关闭监听原本挂在 <code class="font-mono text-[13px]">TV.init()</code> 末尾，初始化抛错时永远绑不上；三个工坊的预览票面 sticky 吸顶，与「入册信息」分两层滚动；香港西九龙站坐标误写成山东半岛；火车票工坊站点表仍是「重庆南」；跨城行程终点沿用起点城市导致香港不点亮；站名拼音把「重庆东」拼成 Chongqing。
                     </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">bindModal()</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Xianggangxijiulong</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">bindModal()</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Xianggangxijiulong</span>
 </div>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
@@ -574,12 +641,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">地图拖动 / 缩放更顺滑</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                      标签不再逐帧改 <code class="font-mono text-[12px]">font-size</code> + <code class="font-mono text-[12px]">x/y</code>（会让每个文本重新排版取字形），改为 <code class="font-mono text-[12px]">transform</code> 围绕所属点缩放；屏幕矩形缓存 120ms；线路流光只在缩放变化 ≥3% 时更新；视角无变化时整帧跳过。<strong>外观与交互结果不变</strong>。
+                      标签不再逐帧改 <code class="font-mono text-[13px]">font-size</code> + <code class="font-mono text-[13px]">x/y</code>（会让每个文本重新排版取字形），改为 <code class="font-mono text-[13px]">transform</code> 围绕所属点缩放；屏幕矩形缓存 120ms；线路流光只在缩放变化 ≥3% 时更新；视角无变化时整帧跳过。<strong>外观与交互结果不变</strong>。
                     </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">transform</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">120ms cache</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">transform</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">120ms cache</span>
 </div>
 </div>
 </div>
@@ -588,7 +655,7 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>弹窗关不掉：</strong>改为幂等的 <code class="font-mono text-[12px]">bindModal()</code>，初始化开头与设置面板打开前各兜一次；历史数据强制归一为数组，单条坏记录不再中断整个 <code class="font-mono text-[12px]">init()</code>。
+<strong>弹窗关不掉：</strong>改为幂等的 <code class="font-mono text-[13px]">bindModal()</code>，初始化开头与设置面板打开前各兜一次；历史数据强制归一为数组，单条坏记录不再中断整个 <code class="font-mono text-[13px]">init()</code>。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
@@ -600,19 +667,19 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>地图数据修正：</strong>香港西九龙按真实经纬度重算为 <code class="font-mono text-[12px]">[907.8,767.2]</code>，与深圳北、深圳相邻；城市归属改为「先看地名、再信记录的 city」，并补香港中心坐标与省色。
+<strong>地图数据修正：</strong>香港西九龙按真实经纬度重算为 <code class="font-mono text-[13px]">[907.8,767.2]</code>，与深圳北、深圳相邻；城市归属改为「先看地名、再信记录的 city」，并补香港中心坐标与省色。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>二维码叠图：</strong>每次重绘分配画布代次、一帧只允许贴一张码，新重绘先 <code class="font-mono text-[12px]">clearTimeout</code> 掉上一帧定时器，透明底旧码不再从新码空隙里露出来。
+<strong>二维码叠图：</strong>每次重绘分配画布代次、一帧只允许贴一张码，新重绘先 <code class="font-mono text-[13px]">clearTimeout</code> 掉上一帧定时器，透明底旧码不再从新码空隙里露出来。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>桌面端同步到 5.1.2：</strong><code class="font-mono text-[12px]">package.json</code> / <code class="font-mono text-[12px]">package-lock.json</code> / <code class="font-mono text-[12px]">main.js</code> 版本号改为 5.1.2，打包源指向 <code class="font-mono text-[12px]">release/TraceDot-V5.1.2.html</code>。
+<strong>桌面端同步到 5.1.2：</strong><code class="font-mono text-[13px]">package.json</code> / <code class="font-mono text-[13px]">package-lock.json</code> / <code class="font-mono text-[13px]">main.js</code> 版本号改为 5.1.2，打包源指向 <code class="font-mono text-[13px]">release/TraceDot-V5.1.2.html</code>。
                     </span>
 </div>
 </div>
@@ -646,8 +713,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                     </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">jdd-beta-gate.v1</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">__JDD_BETA_OK__</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">jdd-beta-gate.v1</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">__JDD_BETA_OK__</span>
 </div>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
@@ -661,8 +728,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                     </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">Electron 33</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Web + Desktop</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">Electron 33</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Web + Desktop</span>
 </div>
 </div>
 </div>
@@ -671,19 +738,19 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>不落明文：</strong>激活码本身不进代码，只存一份 djb2 摘要做比对；记忆写进 localStorage <code class="font-mono text-[12px]">jdd-beta-gate.v1</code>，并提供 <code class="font-mono text-[12px]">window.jddBetaReset()</code> 便于重新验证。
+<strong>不落明文：</strong>激活码本身不进代码，只存一份 djb2 摘要做比对；记忆写进 localStorage <code class="font-mono text-[13px]">jdd-beta-gate.v1</code>，并提供 <code class="font-mono text-[13px]">window.jddBetaReset()</code> 便于重新验证。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>未通过时不执行任何启动逻辑：</strong>原 V5.1.0 的启动调用（<code class="font-mono text-[12px]">TV.init()</code>、<code class="font-mono text-[12px]">TICKET.init()</code>、<code class="font-mono text-[12px]">years()</code>、<code class="font-mono text-[12px]">render()</code>、<code class="font-mono text-[12px]">select(0, true)</code>）整体包进 <code class="font-mono text-[12px]">if (window.__JDD_BETA_OK__)</code>，锁屏期间不会先渲染再收起。
+<strong>未通过时不执行任何启动逻辑：</strong>原 V5.1.0 的启动调用（<code class="font-mono text-[13px]">TV.init()</code>、<code class="font-mono text-[13px]">TICKET.init()</code>、<code class="font-mono text-[13px]">years()</code>、<code class="font-mono text-[13px]">render()</code>、<code class="font-mono text-[13px]">select(0, true)</code>）整体包进 <code class="font-mono text-[13px]">if (window.__JDD_BETA_OK__)</code>，锁屏期间不会先渲染再收起。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>桌面端同步到 5.1.1：</strong><code class="font-mono text-[12px]">package.json</code> / <code class="font-mono text-[12px]">main.js</code> 版本号改为 5.1.1，打包源指向 <code class="font-mono text-[12px]">release/TraceDot-V5.1.1.html</code>；主进程去掉 V5.0.48 专属的「切换性能模式」菜单，<strong>保留</strong> <code class="font-mono text-[12px]">ignore-gpu-blocklist</code> / <code class="font-mono text-[12px]">enable-gpu-rasterization</code> 两个 Chromium 开关、<code class="font-mono text-[12px]">ready-to-show</code> 启动、<code class="font-mono text-[12px]">v8CacheOptions: 'code'</code> 与刷新率注入（都是通用优化，V5.1.1 仍受益）。
+<strong>桌面端同步到 5.1.1：</strong><code class="font-mono text-[13px]">package.json</code> / <code class="font-mono text-[13px]">main.js</code> 版本号改为 5.1.1，打包源指向 <code class="font-mono text-[13px]">release/TraceDot-V5.1.1.html</code>；主进程去掉 V5.0.48 专属的「切换性能模式」菜单，<strong>保留</strong> <code class="font-mono text-[13px]">ignore-gpu-blocklist</code> / <code class="font-mono text-[13px]">enable-gpu-rasterization</code> 两个 Chromium 开关、<code class="font-mono text-[13px]">ready-to-show</code> 启动、<code class="font-mono text-[13px]">v8CacheOptions: 'code'</code> 与刷新率注入（都是通用优化，V5.1.1 仍受益）。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
@@ -719,12 +786,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">车站坐标 14 → 3267</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                      <code class="font-mono text-[12px]">STATION_XY</code> 由 14 个站扩到 <strong>3267 个</strong>（12306 现役客运站 99.8%），45 个主要枢纽全部有坐标（含此前缺的常州、沧州、香港西九龙、成都天府）；<code class="font-mono text-[12px]">JDD_APT_XY</code> 591 → <strong>592</strong>（国内 319 换 OurAirports Unlicense，境外 273 条原样保留）。放大后终于能落到具体车站，而不是只到城市级。
+                      <code class="font-mono text-[13px]">STATION_XY</code> 由 14 个站扩到 <strong>3267 个</strong>（12306 现役客运站 99.8%），45 个主要枢纽全部有坐标（含此前缺的常州、沧州、香港西九龙、成都天府）；<code class="font-mono text-[13px]">JDD_APT_XY</code> 591 → <strong>592</strong>（国内 319 换 OurAirports Unlicense，境外 273 条原样保留）。放大后终于能落到具体车站，而不是只到城市级。
                     </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">STATION_XY · 3267</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">ODbL</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">STATION_XY · 3267</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">ODbL</span>
 </div>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
@@ -738,8 +805,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                     </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">369 / 33</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Detail Modal</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">369 / 33</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Detail Modal</span>
 </div>
 </div>
 </div>
@@ -748,25 +815,25 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>年份图例与 A4 打印：</strong>图层开关打开后线路改按出行年份上色，图例列出「年份 → 颜色 → 段数」，12 色固定分配、同一年永远同色；打印走纯 CSS <code class="font-mono text-[12px]">@media print</code>（不引任何库），打印态自动隐去地图与导航，只留报告正文。
+<strong>年份图例与 A4 打印：</strong>图层开关打开后线路改按出行年份上色，图例列出「年份 → 颜色 → 段数」，12 色固定分配、同一年永远同色；打印走纯 CSS <code class="font-mono text-[13px]">@media print</code>（不引任何库），打印态自动隐去地图与导航，只留报告正文。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>内嵌投影能力装回：</strong>经纬度 ⇄ 画布坐标互转（<code class="font-mono text-[12px]">geoXY</code> / <code class="font-mono text-[12px]">geoLL</code>，二次多项式，挂 <code class="font-mono text-[12px]">window.jddGeoXY</code>）。<strong>没有套残差修正表</strong>——留一法实测不修正平均误差 1.75px，任何修正方式 1.91~2.72px 反而更差；根因是重庆残差模长 20.78px 而中位数仅 1.06px，且「真值」是市区中心、底图「重庆」是整个直辖市重心，语义不同，硬修会把小误差城市的点带偏。
+<strong>内嵌投影能力装回：</strong>经纬度 ⇄ 画布坐标互转（<code class="font-mono text-[13px]">geoXY</code> / <code class="font-mono text-[13px]">geoLL</code>，二次多项式，挂 <code class="font-mono text-[13px]">window.jddGeoXY</code>）。<strong>没有套残差修正表</strong>——留一法实测不修正平均误差 1.75px，任何修正方式 1.91~2.72px 反而更差；根因是重庆残差模长 20.78px 而中位数仅 1.06px，且「真值」是市区中心、底图「重庆」是整个直辖市重心，语义不同，硬修会把小误差城市的点带偏。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>ODbL 义务落实：</strong>数据源与署名写进代码内注释块与文档 <code class="font-mono text-[12px]">数据源与署名_V5.1.0.md</code>（含「如何确认遵守义务」自检三条）：OSM 节点 2870 站 ODbL 1.0、CC0 补缺 394 站、OurAirports 机场 Unlicense、12306 站名册 3269 站。CC0 库含过期条目（如「济南东」为胶济线老站），只用于补缺，并通过「距 12306 所属城市中心 &gt;120km 则弃用」筛掉 3 个可疑坐标。
+<strong>ODbL 义务落实：</strong>数据源与署名写进代码内注释块与文档 <code class="font-mono text-[13px]">数据源与署名_V5.1.0.md</code>（含「如何确认遵守义务」自检三条）：OSM 节点 2870 站 ODbL 1.0、CC0 补缺 394 站、OurAirports 机场 Unlicense、12306 站名册 3269 站。CC0 库含过期条目（如「济南东」为胶济线老站），只用于补缺，并通过「距 12306 所属城市中心 &gt;120km 则弃用」筛掉 3 个可疑坐标。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-outline text-[18px] mt-0.5">radio_button_unchecked</span>
 <span class="font-body-md text-body-md text-on-surface-variant">
-<strong>版本号为什么是 5.1.0：</strong>本次改了坐标数据契约（车站表换源扩容、机场表换源），按既定规则属「数据契约变更」，升次版本而非补丁号。基线为 V5.0.47，V5.0.x 全部 47 个版本 HTML + 31 份过程文档已归档至 <code class="font-mono text-[12px]">归档_V5.0/</code>。
+<strong>版本号为什么是 5.1.0：</strong>本次改了坐标数据契约（车站表换源扩容、机场表换源），按既定规则属「数据契约变更」，升次版本而非补丁号。基线为 V5.0.47，V5.0.x 全部 47 个版本 HTML + 31 份过程文档已归档至 <code class="font-mono text-[13px]">归档_V5.0/</code>。
                     </span>
 </div>
 </div>
@@ -796,12 +863,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">自适应性能模式</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                      在 Intel 核显的 Mac 上「特别卡」的机型，现在会自己降级：启动后采样 90 帧，拿 <strong>实测帧时间对比屏幕刷新率折算的标准帧长</strong>，p75 超过 1.75 倍且高于 22ms、或长帧占比过三分之一，连续两轮命中才切性能模式；命中 WebGL 软件渲染（SwiftShader / 基础渲染驱动）则直接切。降级只动大面积滤镜与装饰动画——整窗 <code class="font-mono text-[12px]">blur(80px)</code> 光晕、26–34px 毛玻璃收到 8–10px、logo 三层 240px 投影收成一层、导航流光与地图循环动画暂停——<strong>不改布局、不改配色</strong>。
+                      在 Intel 核显的 Mac 上「特别卡」的机型，现在会自己降级：启动后采样 90 帧，拿 <strong>实测帧时间对比屏幕刷新率折算的标准帧长</strong>，p75 超过 1.75 倍且高于 22ms、或长帧占比过三分之一，连续两轮命中才切性能模式；命中 WebGL 软件渲染（SwiftShader / 基础渲染驱动）则直接切。降级只动大面积滤镜与装饰动画——整窗 <code class="font-mono text-[13px]">blur(80px)</code> 光晕、26–34px 毛玻璃收到 8–10px、logo 三层 240px 投影收成一层、导航流光与地图循环动画暂停——<strong>不改布局、不改配色</strong>。
                     </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">jddPerf</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Auto Eco</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">jddPerf</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Auto Eco</span>
 </div>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
@@ -811,12 +878,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">拖拽缩放不再掉帧</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                      地图的投影滤镜挂在 <code class="font-mono text-[12px]">.g-land</code> 整组上，而组里还有无限循环的线路动画 —— 等于缩放时整块 1100×800 的 <code class="font-mono text-[12px]">drop-shadow</code> 每帧重算。现在 <code class="font-mono text-[12px]">viewBox</code> 连续变化期间只关<strong>滤镜</strong>（不隐藏任何图层，阴影色块不会中途消失），停顿 180ms 后自动恢复，静态观感不变。
+                      地图的投影滤镜挂在 <code class="font-mono text-[13px]">.g-land</code> 整组上，而组里还有无限循环的线路动画 —— 等于缩放时整块 1100×800 的 <code class="font-mono text-[13px]">drop-shadow</code> 每帧重算。现在 <code class="font-mono text-[13px]">viewBox</code> 连续变化期间只关<strong>滤镜</strong>（不隐藏任何图层，阴影色块不会中途消失），停顿 180ms 后自动恢复，静态观感不变。
                     </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">map-busy</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Map Filter</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">map-busy</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Map Filter</span>
 </div>
 </div>
 </div>
@@ -825,19 +892,19 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>桌面端显卡兜底：</strong>主进程加 <code class="font-mono text-[12px]">ignore-gpu-blocklist</code> 与 <code class="font-mono text-[12px]">enable-gpu-rasterization</code> —— Chromium 会按驱动版本把一批 Intel 核显列进黑名单，命中后整窗退回软件合成，这是「特别卡」最常见的根因；窗口改为首帧就绪后再显示（<code class="font-mono text-[12px]">ready-to-show</code>），并开启 <code class="font-mono text-[12px]">v8CacheOptions: 'code'</code> 缓存 12 MB 内联脚本的编译结果。
+<strong>桌面端显卡兜底：</strong>主进程加 <code class="font-mono text-[13px]">ignore-gpu-blocklist</code> 与 <code class="font-mono text-[13px]">enable-gpu-rasterization</code> —— Chromium 会按驱动版本把一批 Intel 核显列进黑名单，命中后整窗退回软件合成，这是「特别卡」最常见的根因；窗口改为首帧就绪后再显示（<code class="font-mono text-[13px]">ready-to-show</code>），并开启 <code class="font-mono text-[13px]">v8CacheOptions: 'code'</code> 缓存 12 MB 内联脚本的编译结果。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>不会误伤 30Hz / 120Hz 屏：</strong>判定不看绝对帧时间，而由主进程把 <code class="font-mono text-[12px]">displayFrequency</code> 注入渲染进程，按刷新率折算基准帧长再看倍数；22ms 的绝对下限则保证 ProMotion 屏只跑 60fps 时不会被当成卡顿而降级。
+<strong>不会误伤 30Hz / 120Hz 屏：</strong>判定不看绝对帧时间，而由主进程把 <code class="font-mono text-[13px]">displayFrequency</code> 注入渲染进程，按刷新率折算基准帧长再看倍数；22ms 的绝对下限则保证 ProMotion 屏只跑 60fps 时不会被当成卡顿而降级。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>随时能改回来：</strong>桌面端「帮助 → 切换性能模式」，应用内 <kbd class="font-mono text-[12px]">Ctrl/Cmd + Alt + P</kbd>，网页版 <code class="font-mono text-[12px]">?perf=eco</code> / <code class="font-mono text-[12px]">?perf=full</code>；自动降级时会弹一条带「改回原样」的提示，选择记进 localStorage。
+<strong>随时能改回来：</strong>桌面端「帮助 → 切换性能模式」，应用内 <kbd class="font-mono text-[13px]">Ctrl/Cmd + Alt + P</kbd>，网页版 <code class="font-mono text-[13px]">?perf=eco</code> / <code class="font-mono text-[13px]">?perf=full</code>；自动降级时会弹一条带「改回原样」的提示，选择记进 localStorage。
                     </span>
 </div>
 </div>
@@ -867,12 +934,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">液态玻璃导航</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                        右上导航胶囊由「半透明白胶囊」改成四层玻璃：半透明渐变底 + <code class="font-mono text-[12px]">blur(34px) saturate(200%)</code>、上缘受光 / 下缘收光、静态镜面高光，再叠一层 14s 极慢流光（只动 transform，走合成层，不逐帧重算模糊）。选中项保留品牌绿但改为<strong>透光绿玻璃珠</strong>（顶部镜面 + 内白边 + 绿色外发光），下拉菜单同步同一套玻璃语言。
+                        右上导航胶囊由「半透明白胶囊」改成四层玻璃：半透明渐变底 + <code class="font-mono text-[13px]">blur(34px) saturate(200%)</code>、上缘受光 / 下缘收光、静态镜面高光，再叠一层 14s 极慢流光（只动 transform，走合成层，不逐帧重算模糊）。选中项保留品牌绿但改为<strong>透光绿玻璃珠</strong>（顶部镜面 + 内白边 + 绿色外发光），下拉菜单同步同一套玻璃语言。
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">Liquid Glass</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Dock · Pop</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">Liquid Glass</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Dock · Pop</span>
 </div>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
@@ -882,12 +949,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">线路动效与图标可见</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                        飞机 / 火车图标「看不见」的根因找到了：一条 <code class="font-mono text-[12px]">prefers-reduced-motion: reduce</code> 把 <code class="font-mono text-[12px]">.rail-flow / .air-flow</code> 整层 <code class="font-mono text-[12px]">display:none</code>，系统一开「减少动效」就一个不剩。现在改成图标始终沿线路运行，铁路虚线自己流动（1.35s/周期），航班实线上再叠一条 3s 周期的流光虚线，不动发光层以免每帧重算模糊。
+                        飞机 / 火车图标「看不见」的根因找到了：一条 <code class="font-mono text-[13px]">prefers-reduced-motion: reduce</code> 把 <code class="font-mono text-[13px]">.rail-flow / .air-flow</code> 整层 <code class="font-mono text-[13px]">display:none</code>，系统一开「减少动效」就一个不剩。现在改成图标始终沿线路运行，铁路虚线自己流动（1.35s/周期），航班实线上再叠一条 3s 周期的流光虚线，不动发光层以免每帧重算模糊。
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">rail-flow</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Map Motion</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">rail-flow</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Map Motion</span>
 </div>
 </div>
 </div>
@@ -896,19 +963,19 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>摄像头扫描下线：</strong>登机牌工坊删掉整条拍照链路（页面区块、相机弹窗、<code class="font-mono text-[12px]">.scan-*</code> 样式、<code class="font-mono text-[12px]">getUserMedia</code> 与拍照识别、四处事件绑定、Esc 关闭），保留图片上传 + AI 视觉识别。
+<strong>摄像头扫描下线：</strong>登机牌工坊删掉整条拍照链路（页面区块、相机弹窗、<code class="font-mono text-[13px]">.scan-*</code> 样式、<code class="font-mono text-[13px]">getUserMedia</code> 与拍照识别、四处事件绑定、Esc 关闭），保留图片上传 + AI 视觉识别。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>导出图不再留白边：</strong>预览靠 CSS <code class="font-mono text-[12px]">scale(1.015)+overflow:hidden</code> 裁掉四周，导出走的却是不裁的原始画布。新增 <code class="font-mono text-[12px]">__jddCropCanvas()</code>（1.5% 居中裁切再放回原尺寸），接入单张保存、批量 2x、双面合并、PDF 正背面、缩略图共 6 处，端到端实测四边边缘带 <strong>1/1/4/4px → 0/0/0/0</strong>。
+<strong>导出图不再留白边：</strong>预览靠 CSS <code class="font-mono text-[13px]">scale(1.015)+overflow:hidden</code> 裁掉四周，导出走的却是不裁的原始画布。新增 <code class="font-mono text-[13px]">__jddCropCanvas()</code>（1.5% 居中裁切再放回原尺寸），接入单张保存、批量 2x、双面合并、PDF 正背面、缩略图共 6 处，端到端实测四边边缘带 <strong>1/1/4/4px → 0/0/0/0</strong>。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>票面材质与 PWA：</strong>交通票 / 影演票的 HTML 票面叠加 SVG <code class="font-mono text-[12px]">feTurbulence</code> 纸张颗粒（零位图开销）；补齐 theme-color / SVG 图标 / apple 全屏声明 / data-URI manifest，放到 http(s) 上即可被安装。
+<strong>票面材质与 PWA：</strong>交通票 / 影演票的 HTML 票面叠加 SVG <code class="font-mono text-[13px]">feTurbulence</code> 纸张颗粒（零位图开销）；补齐 theme-color / SVG 图标 / apple 全屏声明 / data-URI manifest，放到 http(s) 上即可被安装。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
@@ -944,12 +1011,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">存储型 XSS 修复</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                        年度报告「这一年之最」三张卡没有转义（车次 / 出发站 / 到达站），导入一份恶意备份就能在年报里执行脚本。已用 <code class="font-mono text-[12px]">esc()</code> 收口，PoC 复测由「能执行」降至 <strong>0 次</strong>。
+                        年度报告「这一年之最」三张卡没有转义（车次 / 出发站 / 到达站），导入一份恶意备份就能在年报里执行脚本。已用 <code class="font-mono text-[13px]">esc()</code> 收口，PoC 复测由「能执行」降至 <strong>0 次</strong>。
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">S1 · XSS</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">esc()</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">S1 · XSS</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">esc()</span>
 </div>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
@@ -959,12 +1026,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">导入上限与 CSP</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                        备份导入加 30MB / 5000 条上限（原本定 2 万条，压测发现 <code class="font-mono text-[12px]">upsert</code> 是 O(n²) 会把页面拖死）；补上 <code class="font-mono text-[12px]">object-src / base-uri / form-action</code> 三条低风险 CSP 指令，挡住插件内嵌、<code class="font-mono text-[12px]">&lt;base&gt;</code> 劫持与表单外发。
+                        备份导入加 30MB / 5000 条上限（原本定 2 万条，压测发现 <code class="font-mono text-[13px]">upsert</code> 是 O(n²) 会把页面拖死）；补上 <code class="font-mono text-[13px]">object-src / base-uri / form-action</code> 三条低风险 CSP 指令，挡住插件内嵌、<code class="font-mono text-[13px]">&lt;base&gt;</code> 劫持与表单外发。
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">S4 · Limit</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">CSP</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">S4 · Limit</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">CSP</span>
 </div>
 </div>
 </div>
@@ -979,7 +1046,7 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-outline text-[18px] mt-0.5">radio_button_unchecked</span>
 <span class="font-body-md text-body-md text-on-surface-variant">
-<strong>按决定保留（未修）：</strong>内置 API Key 可被静态提取、本地数据明文且同浏览器任意本地页可读。建议在服务商侧设消费上限并轮换 Key。完整 <code class="font-mono text-[12px]">script-src</code> 会继承进 iframe，需逐视图回归后再开。
+<strong>按决定保留（未修）：</strong>内置 API Key 可被静态提取、本地数据明文且同浏览器任意本地页可读。建议在服务商侧设消费上限并轮换 Key。完整 <code class="font-mono text-[13px]">script-src</code> 会继承进 iframe，需逐视图回归后再开。
                     </span>
 </div>
 </div>
@@ -1009,12 +1076,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">载荷注册表</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                        新增 <code class="font-mono text-[12px]">JDD_PLUGINS</code> 一张表（label / payload / frame / env / view / boot），<code class="font-mono text-[12px]">MODS</code> 与五个 <code class="font-mono text-[12px]">jddBootXxx</code> 包装全部由它生成，对外开放 <code class="font-mono text-[12px]">window.jddPlugins.all / get / register</code>。加新模块从此只改一处。
+                        新增 <code class="font-mono text-[13px]">JDD_PLUGINS</code> 一张表（label / payload / frame / env / view / boot），<code class="font-mono text-[13px]">MODS</code> 与五个 <code class="font-mono text-[13px]">jddBootXxx</code> 包装全部由它生成，对外开放 <code class="font-mono text-[13px]">window.jddPlugins.all / get / register</code>。加新模块从此只改一处。
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">JDD_PLUGINS</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Registry</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">JDD_PLUGINS</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Registry</span>
 </div>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
@@ -1024,12 +1091,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">账本冷热分层</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                        localStorage 镜像超过 1.1MB 时只存轻索引（列表与地图要用的字段），详情仍在 IndexedDB；IDB 不可用时强制写全量，保证「只有一份数据」的场景不降级。<code class="font-mono text-[12px]">jddStore.stats().mirror</code> 可看当前是 full 还是 hot。
+                        localStorage 镜像超过 1.1MB 时只存轻索引（列表与地图要用的字段），详情仍在 IndexedDB；IDB 不可用时强制写全量，保证「只有一份数据」的场景不降级。<code class="font-mono text-[13px]">jddStore.stats().mirror</code> 可看当前是 full 还是 hot。
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">1.1MB</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Hot / Cold</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">1.1MB</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Hot / Cold</span>
 </div>
 </div>
 </div>
@@ -1038,7 +1105,7 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>修一个真会丢数据的坑（写入时间戳）：</strong><code class="font-mono text-[12px]">write()</code> 之后立刻刷新，IDB 事务还没提交（还是旧数据），而启动逻辑「IDB 无条件优先」会把更新的镜像覆盖掉——实测 <strong>400 条变 46 条</strong>。现在两边都带时间戳（IDB 的时间戳与 records 在同一事务里，回滚就一起回滚），启动时谁新用谁。
+<strong>修一个真会丢数据的坑（写入时间戳）：</strong><code class="font-mono text-[13px]">write()</code> 之后立刻刷新，IDB 事务还没提交（还是旧数据），而启动逻辑「IDB 无条件优先」会把更新的镜像覆盖掉——实测 <strong>400 条变 46 条</strong>。现在两边都带时间戳（IDB 的时间戳与 records 在同一事务里，回滚就一起回滚），启动时谁新用谁。
                     </span>
 </div>
 </div>
@@ -1068,12 +1135,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">导入前自动快照</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                        存储层新增 <code class="font-mono text-[12px]">snapshots</code> 表（IDB 1 → 2，只新建表不动 records），保留最近 5 份；每次导入前自动留档，行程地图菜单可直接查看。
+                        存储层新增 <code class="font-mono text-[13px]">snapshots</code> 表（IDB 1 → 2，只新建表不动 records），保留最近 5 份；每次导入前自动留档，行程地图菜单可直接查看。
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">snapshots</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Last 5</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">snapshots</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Last 5</span>
 </div>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
@@ -1087,8 +1154,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">Rollback</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Undoable</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">Rollback</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Undoable</span>
 </div>
 </div>
 </div>
@@ -1097,7 +1164,7 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>老备份终于导得进来（V5.0.31）：</strong>V4.x / 手机端导出的是 <code class="font-mono text-[12px]">{app, version, data:{'trip-ledger.records.v1':'&lt;JSON 字符串&gt;'}}</code>，旧解析器只认 <code class="font-mono text-[12px]">{records:[…]}</code>，老用户一律「格式不支持」。新增通用解析器，逐层解字符串 → 认 records / data / 任意键 → 兜底深扫。
+<strong>老备份终于导得进来（V5.0.31）：</strong>V4.x / 手机端导出的是 <code class="font-mono text-[13px]">{app, version, data:{'trip-ledger.records.v1':'&lt;JSON 字符串&gt;'}}</code>，旧解析器只认 <code class="font-mono text-[13px]">{records:[…]}</code>，老用户一律「格式不支持」。新增通用解析器，逐层解字符串 → 认 records / data / 任意键 → 兜底深扫。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
@@ -1133,12 +1200,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">三层存储架构</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                        新增 <code class="font-mono text-[12px]">jddStore</code>（内存缓存 + IndexedDB 主存 + localStorage 镜像），<code class="font-mono text-[12px]">readLedger / writeLedger</code> 改走它、旧实现留作兜底；记录写 <code class="font-mono text-[12px]">sv=2</code>，老记录自动补版，回退开关 <code class="font-mono text-[12px]">jdd-store-mode='ls'</code>。
+                        新增 <code class="font-mono text-[13px]">jddStore</code>（内存缓存 + IndexedDB 主存 + localStorage 镜像），<code class="font-mono text-[13px]">readLedger / writeLedger</code> 改走它、旧实现留作兜底；记录写 <code class="font-mono text-[13px]">sv=2</code>，老记录自动补版，回退开关 <code class="font-mono text-[13px]">jdd-store-mode='ls'</code>。
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">jddStore</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">IndexedDB</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">jddStore</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">IndexedDB</span>
 </div>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
@@ -1148,12 +1215,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">干掉 5MB 静默失败</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                        localStorage 撞 5MB 墙时 <code class="font-mono text-[12px]">writeLedger</code> 会静默失败、记录悄悄丢失——这是最难排查的一类问题。迁 IDB 后账本体量不再受单键限制。
+                        localStorage 撞 5MB 墙时 <code class="font-mono text-[13px]">writeLedger</code> 会静默失败、记录悄悄丢失——这是最难排查的一类问题。迁 IDB 后账本体量不再受单键限制。
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">5MB Wall</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Silent Fail</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">5MB Wall</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Silent Fail</span>
 </div>
 </div>
 </div>
@@ -1162,13 +1229,13 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>「清除所有数据」真正生效：</strong>清不掉的根因是 <code class="font-mono text-[12px]">jddStore</code> 内存缓存没清，下次写入又把旧数据镜像回去；<code class="font-mono text-[12px]">doWipe</code> 现在显式调用 <code class="font-mono text-[12px]">jddStore.clear()</code>。
+<strong>「清除所有数据」真正生效：</strong>清不掉的根因是 <code class="font-mono text-[13px]">jddStore</code> 内存缓存没清，下次写入又把旧数据镜像回去；<code class="font-mono text-[13px]">doWipe</code> 现在显式调用 <code class="font-mono text-[13px]">jddStore.clear()</code>。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>地图跟随筛选：</strong><code class="font-mono text-[12px]">drawMap</code> 与 <code class="font-mono text-[12px]">render</code> 不在同一个闭包里，render 里的 drawMap 恒为 undefined、调用被静默吞掉，所以筛选一直不同步；现在把 drawMap 挂到 <code class="font-mono text-[12px]">window.__jddDrawMap</code>，跨闭包打通。
+<strong>地图跟随筛选：</strong><code class="font-mono text-[13px]">drawMap</code> 与 <code class="font-mono text-[13px]">render</code> 不在同一个闭包里，render 里的 drawMap 恒为 undefined、调用被静默吞掉，所以筛选一直不同步；现在把 drawMap 挂到 <code class="font-mono text-[13px]">window.__jddDrawMap</code>，跨闭包打通。
                     </span>
 </div>
 </div>
@@ -1202,8 +1269,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">Toolbar</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">3-in-1 Import</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">Toolbar</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">3-in-1 Import</span>
 </div>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
@@ -1213,12 +1280,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">图标按功能重画</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                        六个图标按钮统一成「透明底 + hover 泛青」并去掉遗留的 <code class="font-mono text-[12px]">.btn</code> 白底：票面设置 = 票 + 色点、文字 = A、细节调整 = 四角框 + 十字、导入 / 导出 = 托盘进出、删除 = 垃圾桶。
+                        六个图标按钮统一成「透明底 + hover 泛青」并去掉遗留的 <code class="font-mono text-[13px]">.btn</code> 白底：票面设置 = 票 + 色点、文字 = A、细节调整 = 四角框 + 十字、导入 / 导出 = 托盘进出、删除 = 垃圾桶。
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">Icons</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">V5.0.27</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">Icons</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">V5.0.27</span>
 </div>
 </div>
 </div>
@@ -1227,13 +1294,13 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>粘贴框三连修（V5.0.19 → 21）：</strong>先是聚焦时出现很重的绿环 → 改成虚线框；再是悬停「冒出一个框」（主题 <code class="font-mono text-[12px]">.card:hover</code> 加边框 + 大投影）；最后不再用 <code class="font-mono text-[12px]">.card</code> 容器、换成 <code class="font-mono text-[12px]">.paste-pane</code>，彻底不继承卡片悬停。
+<strong>粘贴框三连修（V5.0.19 → 21）：</strong>先是聚焦时出现很重的绿环 → 改成虚线框；再是悬停「冒出一个框」（主题 <code class="font-mono text-[13px]">.card:hover</code> 加边框 + 大投影）；最后不再用 <code class="font-mono text-[13px]">.card</code> 容器、换成 <code class="font-mono text-[13px]">.paste-pane</code>，彻底不继承卡片悬停。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>视觉去层（V5.0.15）：</strong>工坊与珍藏册各叠了一层整页柔光雾，票面预览脚下还铺了白色柔光底板，五个视图「像另起了一张纸」。撤掉后七个视图底色统一落在 <code class="font-mono text-[12px]">--paper</code> 上。
+<strong>视觉去层（V5.0.15）：</strong>工坊与珍藏册各叠了一层整页柔光雾，票面预览脚下还铺了白色柔光底板，五个视图「像另起了一张纸」。撤掉后七个视图底色统一落在 <code class="font-mono text-[13px]">--paper</code> 上。
                     </span>
 </div>
 </div>
@@ -1267,8 +1334,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">PDF417</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">BCBP</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">PDF417</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">BCBP</span>
 </div>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
@@ -1282,8 +1349,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">Self-QR</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">200ms Debounce</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">Self-QR</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">200ms Debounce</span>
 </div>
 </div>
 </div>
@@ -1292,7 +1359,7 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>粘贴即录入（V5.0.18）：</strong>贴一段 12306 短信 / 订单邮件正文就能自动填票面，复用既有解析与回填链路，并补上短信特有写法（无年份的「10月11日」、<code class="font-mono text-[12px]">- / 至 / →</code> 区间、订单号）。
+<strong>粘贴即录入（V5.0.18）：</strong>贴一段 12306 短信 / 订单邮件正文就能自动填票面，复用既有解析与回填链路，并补上短信特有写法（无年份的「10月11日」、<code class="font-mono text-[13px]">- / 至 / →</code> 区间、订单号）。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
@@ -1332,8 +1399,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">YEAR IN REVIEW</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">View #8</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">YEAR IN REVIEW</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">View #8</span>
 </div>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
@@ -1343,12 +1410,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">排版对齐既有体系</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                        年报标题改用显示字体 34px / -.026em（同 <code class="font-mono text-[12px]">.doc h2</code>），卡片圆角 14→16、内嵌格 6→8、卡片底 .68→.66、描边改 <code class="font-mono text-[12px]">var(--line)</code>、小标签字距 .16em→.14em，与既有 token 完全对齐。
+                        年报标题改用显示字体 34px / -.026em（同 <code class="font-mono text-[13px]">.doc h2</code>），卡片圆角 14→16、内嵌格 6→8、卡片底 .68→.66、描边改 <code class="font-mono text-[13px]">var(--line)</code>、小标签字距 .16em→.14em，与既有 token 完全对齐。
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">Tokens</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">V5.0.14</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">Tokens</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">V5.0.14</span>
 </div>
 </div>
 </div>
@@ -1363,7 +1430,7 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>天数被砍成 7（V5.0.4）：</strong>两处硬编码 <code class="font-mono text-[12px]">Math.min(7,…)</code>，连 AI 正确识别的 10 天行程也被压回 7 天；抽 <code class="font-mono text-[12px]">MAX_DAYS = 15</code> 统一口径，并给「模型偶发输出非法 JSON」加了结构修复 + 一次重试。
+<strong>天数被砍成 7（V5.0.4）：</strong>两处硬编码 <code class="font-mono text-[13px]">Math.min(7,…)</code>，连 AI 正确识别的 10 天行程也被压回 7 天；抽 <code class="font-mono text-[13px]">MAX_DAYS = 15</code> 统一口径，并给「模型偶发输出非法 JSON」加了结构修复 + 一次重试。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
@@ -1399,12 +1466,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">bwip 真实 Code128</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                        bwip-js 作为按需载荷（gzip + base85）注入交通票 / 影演票 iframe，票面条码由「伪随机宽度拼 <code class="font-mono text-[12px]">&lt;i&gt;</code>」换成<strong>真正的 Code128</strong>；库解不出来时自动回退旧画法，不阻塞出图。
+                        bwip-js 作为按需载荷（gzip + base85）注入交通票 / 影演票 iframe，票面条码由「伪随机宽度拼 <code class="font-mono text-[13px]">&lt;i&gt;</code>」换成<strong>真正的 Code128</strong>；库解不出来时自动回退旧画法，不阻塞出图。
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">bwip-js</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Code128</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">bwip-js</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Code128</span>
 </div>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
@@ -1418,8 +1485,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">CSV</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">ICS / JSON</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">CSV</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">ICS / JSON</span>
 </div>
 </div>
 </div>
@@ -1428,13 +1495,13 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>直辖市终于点亮（V5.0.8）：</strong>北京 / 天津 / 上海 / 重庆 / 香港 / 澳门 原被 <code class="font-mono text-[12px]">continue</code> 跳过——它们的轮廓在区级而非市级。改按省码整片点亮后，重庆不再是一个孤零零的圆点。
+<strong>直辖市终于点亮（V5.0.8）：</strong>北京 / 天津 / 上海 / 重庆 / 香港 / 澳门 原被 <code class="font-mono text-[13px]">continue</code> 跳过——它们的轮廓在区级而非市级。改按省码整片点亮后，重庆不再是一个孤零零的圆点。
                     </span>
 </div>
 <div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container/50">
 <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
 <span class="font-body-md text-body-md text-on-surface">
-<strong>票种点可见（V5.0.38 → 40）：</strong>公交 / 地铁 / 出租车 / 客运 / 电影 / 景区 / 演唱会 原来画在 <code class="font-mono text-[12px]">.g-detail</code> 层，那层 <code class="font-mono text-[12px]">opacity:0</code>，全国视图等于没有。先试「同城重合画同心环」反而叠成水波纹，最终改为<strong>一城一点</strong>：按坐标合并、颜色取张数最多的票种、明细走悬停。
+<strong>票种点可见（V5.0.38 → 40）：</strong>公交 / 地铁 / 出租车 / 客运 / 电影 / 景区 / 演唱会 原来画在 <code class="font-mono text-[13px]">.g-detail</code> 层，那层 <code class="font-mono text-[13px]">opacity:0</code>，全国视图等于没有。先试「同城重合画同心环」反而叠成水波纹，最终改为<strong>一城一点</strong>：按坐标合并、颜色取张数最多的票种、明细走悬停。
                     </span>
 </div>
 </div>
@@ -1468,8 +1535,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">1.37MB JS</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">On Demand</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">1.37MB JS</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">On Demand</span>
 </div>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low flex flex-col justify-between">
@@ -1479,12 +1546,12 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <span class="font-headline-sm text-headline-sm">base85 解码重写</span>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                        原来往普通数组 push 247 万个元素再整体拷贝，峰值内存约 20MB；改定长 <code class="font-mono text-[12px]">Uint8Array</code> 后降到约 5MB，<strong>耗时降七成</strong>。
+                        原来往普通数组 push 247 万个元素再整体拷贝，峰值内存约 20MB；改定长 <code class="font-mono text-[13px]">Uint8Array</code> 后降到约 5MB，<strong>耗时降七成</strong>。
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">20MB → 5MB</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Uint8Array</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">20MB → 5MB</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Uint8Array</span>
 </div>
 </div>
 </div>
@@ -1530,68 +1597,68 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="mt-5 rounded-2xl bg-surface-container-low p-4">
 <div class="font-label-caps text-label-caps text-outline uppercase tracking-wider mb-3">六个打磨阶段</div>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 font-body-sm text-body-sm text-on-surface-variant">
-<div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">① 打底</span><span class=""><strong class="text-on-surface">5.0.2 – 5.0.8</strong>　先解决「慢」和「报错」</span></div>
-<div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">② 工坊成形</span><span class=""><strong class="text-on-surface">5.0.9 – 5.0.21</strong>　真条码、数据导出、年度报告、粘贴即录入</span></div>
-<div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">③ 打磨</span><span class=""><strong class="text-on-surface">5.0.22 – 5.0.30</strong>　操作行重排、图标重画、存储迁 IndexedDB</span></div>
-<div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">④ 数据与地图</span><span class=""><strong class="text-on-surface">5.0.31 – 5.0.39</strong>　老备份兼容、快照回滚、账本冷热分层、地图精度</span></div>
-<div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">⑤ 收口</span><span class=""><strong class="text-on-surface">5.0.40 – 5.0.48</strong>　按反馈回改、动效、安全修复、液态玻璃</span></div>
-<div class="flex items-start gap-2"><span class="font-label-code text-[11px] text-primary mt-0.5">⑥ 次版本</span><span class=""><strong class="text-on-surface">5.1.0 – 5.1.3</strong>　坐标数据契约变更、车站库扩容、激活码门禁、六处修复与地图性能、航司 Logo 与地图标反修复</span></div>
+<div class="flex items-start gap-2"><span class="font-label-code text-[12px] text-primary mt-0.5">① 打底</span><span class=""><strong class="text-on-surface">5.0.2 – 5.0.8</strong>　先解决「慢」和「报错」</span></div>
+<div class="flex items-start gap-2"><span class="font-label-code text-[12px] text-primary mt-0.5">② 工坊成形</span><span class=""><strong class="text-on-surface">5.0.9 – 5.0.21</strong>　真条码、数据导出、年度报告、粘贴即录入</span></div>
+<div class="flex items-start gap-2"><span class="font-label-code text-[12px] text-primary mt-0.5">③ 打磨</span><span class=""><strong class="text-on-surface">5.0.22 – 5.0.30</strong>　操作行重排、图标重画、存储迁 IndexedDB</span></div>
+<div class="flex items-start gap-2"><span class="font-label-code text-[12px] text-primary mt-0.5">④ 数据与地图</span><span class=""><strong class="text-on-surface">5.0.31 – 5.0.39</strong>　老备份兼容、快照回滚、账本冷热分层、地图精度</span></div>
+<div class="flex items-start gap-2"><span class="font-label-code text-[12px] text-primary mt-0.5">⑤ 收口</span><span class=""><strong class="text-on-surface">5.0.40 – 5.0.48</strong>　按反馈回改、动效、安全修复、液态玻璃</span></div>
+<div class="flex items-start gap-2"><span class="font-label-code text-[12px] text-primary mt-0.5">⑥ 次版本</span><span class=""><strong class="text-on-surface">5.1.0 – 5.1.3</strong>　坐标数据契约变更、车站库扩容、激活码门禁、六处修复与地图性能、航司 Logo 与地图标反修复</span></div>
 </div>
 </div>
 <div class="mt-5">
 <div class="font-label-caps text-label-caps text-outline uppercase tracking-wider mb-3">版本索引（一句话 / 版）</div>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1.5 font-body-sm text-body-sm text-on-surface-variant">
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.2</span><span class="">载荷按需解压（−914 KB）、解码重写、清数据保留 AI Key</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.3</span><span class="">AI 规划超时：预算不够，调到够用</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.4</span><span class="">天数上限 7 → 15；AI 非法 JSON 容错</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.5</span><span class="">入册字段按票种自适应；新增船票</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.6</span><span class="">历史行程行内空胶囊只渲染有值的</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.7</span><span class="">点历史行程自动放大，公交 / 地铁 / 出租 / 船票同样生效</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.8</span><span class="">重庆等直辖市没被点亮（改按省码整片点亮）</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.9</span><span class="">bwip 真条码；CSV / ICS / 备份 JSON 导出</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.10</span><span class="">修「启动即弹导出菜单」</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.11</span><span class="">地图年份回放滑杆；1080×1440 分享卡</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.12</span><span class="">第 8 个视图：年度报告</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.13</span><span class="">票面纸张颗粒；PWA 声明</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.14</span><span class="">年报排版对齐既有 token</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.15</span><span class="">去掉工坊 / 珍藏册的整页柔光雾与票面底板</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.16</span><span class="">恢复柔光雾；撤掉年份滑杆</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.17</span><span class="">登机牌 PDF417 + BCBP；火车票二维码自指；重算防抖</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.18</span><span class="">粘贴即录入（短信 / 邮件正文）</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.19</span><span class="">粘贴框聚焦不出现绿环</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.20</span><span class="">粘贴框悬停不再「冒框」</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.21</span><span class="">粘贴面板换掉 <code class="font-mono text-[11px]">.card</code> 容器（根因）</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.22</span><span class="">预览区操作行重排；三个导入合成一弹层</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.23</span><span class="">白边：以为是反光层</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.24</span><span class="">白边：擦圆角外的死白</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.25</span><span class="">白边：关反光层</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.26</span><span class="">白边定稿：画布放大 1.5% 裁掉最外圈</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.27</span><span class="">六个图标按钮重画 + 去 <code class="font-mono text-[11px]">.btn</code> 遗留</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.28</span><span class="">账本迁 IndexedDB（<code class="font-mono text-[11px]">jddStore</code>）</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.29</span><span class="">清数据无效 / 珍藏册时间轴抽搐 / 地图筛选不同步</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.30</span><span class=""><code class="font-mono text-[11px]">drawMap</code> 跨闭包（挂 <code class="font-mono text-[11px]">window.__jddDrawMap</code>）</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.31</span><span class="">通用备份解析器（认 V4 / 手机端格式）</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.32</span><span class="">删掉从未执行的死代码块（报 SyntaxError）</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.33</span><span class="">复活交互层（补 <code class="font-mono text-[11px]">})();</code>）+ 导出图裁白边</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.34</span><span class="">导入前快照 + 一键回滚（可撤销）</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.35</span><span class="">旧备份的票面草稿迁移 + 旧会话归档</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.36</span><span class="">计划页「按天行程 / 时间轴」双视图</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.37</span><span class="">载荷注册表 + 冷热分层 + 写入时间戳（修丢数据）</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.38</span><span class="">航班真实大圆；其他票种点全部可见</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.39</span><span class="">票种点与城市重合时改画外环</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.40</span><span class="">回改：弧线回来、一城一点、删分享卡</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.41</span><span class="">图标消失根因：减少动效时整层 <code class="font-mono text-[11px]">display:none</code></span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.42</span><span class="">铁路虚线流动 + 航班流光；图标始终动画</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.43</span><span class="">安全：年报 XSS 修复、导入上限、OCR 提示</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.44</span><span class="">安全：三条低风险 CSP</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.45</span><span class="">登机牌去掉摄像头扫描</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.46</span><span class="">右上导航改液态玻璃</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.47</span><span class="">液态玻璃第二遍（更透、绿珠玻璃化）</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.0.48</span><span class="">性能：自适应性能模式、交互期停地图滤镜、桌面端 GPU 兜底</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.1.0</span><span class="">次版本：车站坐标 14 → 3267、足迹分母、线路详情、年份图例、A4 打印</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.1.1</span><span class="">激活码门禁（网页 / 桌面同一套）、桌面端版本号同步、V5.0.48 入口关闭</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.1.2</span><span class="">六处问题修复（AI 弹窗 / 工坊滚动 / 西九龙站 / 重庆站名 / 香港点亮 / 站名拼音）、二维码叠图、地图拖动与缩放性能</span></div>
-<div class="flex gap-2"><span class="font-label-code text-[11px] text-primary shrink-0 w-12">5.1.3</span><span class="">登机牌航司 Logo 串票、地图出发 / 到达标反、同名车站合并、地名短键匹配、官网 logo 外链改内联</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.2</span><span class="">载荷按需解压（−914 KB）、解码重写、清数据保留 AI Key</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.3</span><span class="">AI 规划超时：预算不够，调到够用</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.4</span><span class="">天数上限 7 → 15；AI 非法 JSON 容错</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.5</span><span class="">入册字段按票种自适应；新增船票</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.6</span><span class="">历史行程行内空胶囊只渲染有值的</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.7</span><span class="">点历史行程自动放大，公交 / 地铁 / 出租 / 船票同样生效</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.8</span><span class="">重庆等直辖市没被点亮（改按省码整片点亮）</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.9</span><span class="">bwip 真条码；CSV / ICS / 备份 JSON 导出</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.10</span><span class="">修「启动即弹导出菜单」</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.11</span><span class="">地图年份回放滑杆；1080×1440 分享卡</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.12</span><span class="">第 8 个视图：年度报告</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.13</span><span class="">票面纸张颗粒；PWA 声明</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.14</span><span class="">年报排版对齐既有 token</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.15</span><span class="">去掉工坊 / 珍藏册的整页柔光雾与票面底板</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.16</span><span class="">恢复柔光雾；撤掉年份滑杆</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.17</span><span class="">登机牌 PDF417 + BCBP；火车票二维码自指；重算防抖</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.18</span><span class="">粘贴即录入（短信 / 邮件正文）</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.19</span><span class="">粘贴框聚焦不出现绿环</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.20</span><span class="">粘贴框悬停不再「冒框」</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.21</span><span class="">粘贴面板换掉 <code class="font-mono text-[12px]">.card</code> 容器（根因）</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.22</span><span class="">预览区操作行重排；三个导入合成一弹层</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.23</span><span class="">白边：以为是反光层</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.24</span><span class="">白边：擦圆角外的死白</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.25</span><span class="">白边：关反光层</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.26</span><span class="">白边定稿：画布放大 1.5% 裁掉最外圈</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.27</span><span class="">六个图标按钮重画 + 去 <code class="font-mono text-[12px]">.btn</code> 遗留</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.28</span><span class="">账本迁 IndexedDB（<code class="font-mono text-[12px]">jddStore</code>）</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.29</span><span class="">清数据无效 / 珍藏册时间轴抽搐 / 地图筛选不同步</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.30</span><span class=""><code class="font-mono text-[12px]">drawMap</code> 跨闭包（挂 <code class="font-mono text-[12px]">window.__jddDrawMap</code>）</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.31</span><span class="">通用备份解析器（认 V4 / 手机端格式）</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.32</span><span class="">删掉从未执行的死代码块（报 SyntaxError）</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.33</span><span class="">复活交互层（补 <code class="font-mono text-[12px]">})();</code>）+ 导出图裁白边</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.34</span><span class="">导入前快照 + 一键回滚（可撤销）</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.35</span><span class="">旧备份的票面草稿迁移 + 旧会话归档</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.36</span><span class="">计划页「按天行程 / 时间轴」双视图</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.37</span><span class="">载荷注册表 + 冷热分层 + 写入时间戳（修丢数据）</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.38</span><span class="">航班真实大圆；其他票种点全部可见</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.39</span><span class="">票种点与城市重合时改画外环</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.40</span><span class="">回改：弧线回来、一城一点、删分享卡</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.41</span><span class="">图标消失根因：减少动效时整层 <code class="font-mono text-[12px]">display:none</code></span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.42</span><span class="">铁路虚线流动 + 航班流光；图标始终动画</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.43</span><span class="">安全：年报 XSS 修复、导入上限、OCR 提示</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.44</span><span class="">安全：三条低风险 CSP</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.45</span><span class="">登机牌去掉摄像头扫描</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.46</span><span class="">右上导航改液态玻璃</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.47</span><span class="">液态玻璃第二遍（更透、绿珠玻璃化）</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.0.48</span><span class="">性能：自适应性能模式、交互期停地图滤镜、桌面端 GPU 兜底</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.1.0</span><span class="">次版本：车站坐标 14 → 3267、足迹分母、线路详情、年份图例、A4 打印</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.1.1</span><span class="">激活码门禁（网页 / 桌面同一套）、桌面端版本号同步、V5.0.48 入口关闭</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.1.2</span><span class="">六处问题修复（AI 弹窗 / 工坊滚动 / 西九龙站 / 重庆站名 / 香港点亮 / 站名拼音）、二维码叠图、地图拖动与缩放性能</span></div>
+<div class="flex gap-2"><span class="font-label-code text-[12px] text-primary shrink-0 w-12">5.1.3</span><span class="">登机牌航司 Logo 串票、地图出发 / 到达标反、同名车站合并、地名短键匹配、官网 logo 外链改内联</span></div>
 </div>
 </div>
 <div class="mt-5 p-4 rounded-2xl bg-surface-container/50">
@@ -1599,10 +1666,10 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1.5 font-body-sm text-body-sm text-on-surface-variant">
 <div class="flex gap-2"><span class="text-outline">·</span><span class="">GPX 导出：可行性已验证（投影可逆，平均误差约 2px），系数按反馈删了，要做需重新生成</span></div>
 <div class="flex gap-2"><span class="text-outline">·</span><span class="">暗色模式：底图填充写死在 SVG defs，反色会毁掉线路配色</span></div>
-<div class="flex gap-2"><span class="text-outline">·</span><span class="">完整 CSP：只上了三条低风险指令，<code class="font-mono text-[11px]">script-src</code> 需逐视图回归</span></div>
+<div class="flex gap-2"><span class="text-outline">·</span><span class="">完整 CSP：只上了三条低风险指令，<code class="font-mono text-[12px]">script-src</code> 需逐视图回归</span></div>
 <div class="flex gap-2"><span class="text-outline">·</span><span class="">内置 API Key：按决定保留，建议在服务商侧设消费上限 + 轮换</span></div>
 <div class="flex gap-2"><span class="text-outline">·</span><span class="">本地数据加密：按决定保留明文（同浏览器任意本地页可读）</span></div>
-<div class="flex gap-2"><span class="text-outline">·</span><span class="">车站 / 机场表：已于 V5.1.0 扩容（<code class="font-mono text-[11px]">STATION_XY</code> 14 → 3267、<code class="font-mono text-[11px]">JDD_APT_XY</code> 591 → 592）；剩 3 个 OSM 限流批次待重跑 <code class="font-mono text-[11px]">fetch-osm-stations.js</code> 补</span></div>
+<div class="flex gap-2"><span class="text-outline">·</span><span class="">车站 / 机场表：已于 V5.1.0 扩容（<code class="font-mono text-[12px]">STATION_XY</code> 14 → 3267、<code class="font-mono text-[12px]">JDD_APT_XY</code> 591 → 592）；剩 3 个 OSM 限流批次待重跑 <code class="font-mono text-[12px]">fetch-osm-stations.js</code> 补</span></div>
 </div>
 </div>
 </div>
@@ -1640,8 +1707,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">overlayFields</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Archive Preview</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">overlayFields</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Archive Preview</span>
 </div>
 </div>
 <!-- 火车记录字段源切换 -->
@@ -1656,8 +1723,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">tk / pv</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Snapshot</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">tk / pv</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Snapshot</span>
 </div>
 </div>
 </div>
@@ -1718,8 +1785,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">JDD_V5_CSS</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Mobile V5</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">JDD_V5_CSS</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Mobile V5</span>
 </div>
 </div>
 <!-- 弹窗与工坊交互优化 -->
@@ -1734,8 +1801,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">Dialog UX</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Workshop</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">Dialog UX</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Workshop</span>
 </div>
 </div>
 </div>
@@ -1796,8 +1863,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">Safe Area</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Mobile Layout</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">Safe Area</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Mobile Layout</span>
 </div>
 </div>
 <!-- 选中态与控制岛修复 -->
@@ -1812,8 +1879,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">Tab Bar</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Map Ctrl</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">Tab Bar</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Map Ctrl</span>
 </div>
 </div>
 </div>
@@ -1852,8 +1919,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">Archive Timeline</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Desktop UX</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">Archive Timeline</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Desktop UX</span>
 </div>
 </div>
 <!-- 手机端设计系统级重构 -->
@@ -1868,8 +1935,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">Design Tokens</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Mobile Shell</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">Design Tokens</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Mobile Shell</span>
 </div>
 </div>
 </div>
@@ -1942,8 +2009,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">spec()</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Queue</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">spec()</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Queue</span>
 </div>
 </div>
 <!-- 快照继承规则 -->
@@ -1958,8 +2025,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">tk / pv</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Snapshot</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">tk / pv</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Snapshot</span>
 </div>
 </div>
 </div>
@@ -2008,8 +2075,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">Design Tokens</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Floating Bar</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">Design Tokens</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Floating Bar</span>
 </div>
 </div>
 <!-- 页面与裁决层 -->
@@ -2024,8 +2091,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">JDD_OVERRIDE</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Pages</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">JDD_OVERRIDE</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Pages</span>
 </div>
 </div>
 </div>
@@ -2080,8 +2147,8 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-primary">UI Framework</span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-on-surface-variant">Mobile Viewport</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-primary">UI Framework</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-on-surface-variant">Mobile Viewport</span>
 </div>
 </div>
 <!-- 视口与样式注入 -->
@@ -2096,7 +2163,7 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
                       </p>
 </div>
 <div class="mt-3 flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[11px] text-secondary">Cross-Platform</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest font-label-code text-[12px] text-secondary">Cross-Platform</span>
 </div>
 </div>
 </div>
@@ -2381,7 +2448,7 @@ SVG 实时滤镜每帧重栅格化是卡顿主因 —— 交互期自动摘除�
 </nav>
 </div>
 <!-- 免责声明小标签卡 -->
-<div class="mt-8 p-4 rounded-2xl bg-white border border-slate-200/60 text-[11px] text-mutedText leading-relaxed">
+<div class="mt-8 p-4 rounded-2xl bg-white border border-slate-200/60 text-[12px] text-mutedText leading-relaxed">
 <span class="font-semibold text-slate-700">免责声明：</span>本项目仅供个人纪念、手账与娱乐创作使用，与中国国家铁路集团（12306）、各航空公司及文旅机构均无隶属或合作关系。严禁将生成的票面用于报销、退票、逃票、诈骗或其他违法用途。
     </div>
 <div class="mt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-mutedText pt-4 border-t border-slate-100">
