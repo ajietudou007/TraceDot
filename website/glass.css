@@ -464,7 +464,18 @@ section+section{padding-top:3.75rem}
 /* grid-auto-rows:1fr 让所有行等高（取最高行）——两行卡片底部严格齐平，
    原实现各行按自身内容定高，第一行比第二行高 49px，视觉上参差。 */
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:1fr;gap:2rem}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:stretch}
+
+/* 两栏收尾对齐：隐私卡与下载卡等高，两侧最后一个区块都贴底，
+   使「脚注」底边与「温馨提示」底边始终落在同一条水平线上。
+   ⚠️ .chip 是 inline-flex 药丸，进了 flex 列会被拉伸成通栏，必须单独 align-self。
+   ⚠️ 余高必须由前置区块（.stack / .dl-grid）吸收，不能用 margin-top:auto
+      —— auto 会覆盖脚注 1rem、提示板 1.25rem 的间距，导致两块贴在一起。
+   ⚠️ 两侧都要贴底：窄屏时左栏反而更高，只处理一侧会出现 18.8px 空隙。
+   实测 1440：卡片 845.3/859.1 → 859.1/859.1，底边差 13.8px → 0。 */
+#privacy,#download{display:flex;flex-direction:column}
+#privacy .chip{align-self:flex-start}
+#privacy .stack,#download .dl-grid{flex:1 1 auto}
 
 /* ── 5. Hero ──────────────────────────────────────────────────────── */
 .hero{padding-top:9rem;padding-bottom:2rem}
