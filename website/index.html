@@ -1,1161 +1,575 @@
-<!DOCTYPE html><html lang="zh-CN" class="scroll-smooth" style=""><head></head><body class="selection:bg-brand-100 selection:text-brand-800">
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>迹点点 TraceDot · 旅行纪念票根工作室</title>
-  <meta name="description" content="迹点点 TraceDot：把火车票、登机牌、城市交通与演出门票整理成一张属于你的旅途地图。纯前端、单文件、数据不出浏览器。">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Noto+Sans+SC:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#eef6f3',
-              100: '#d7ebe4',
-              200: '#b0d7cb',
-              300: '#85c2b1',
-              400: '#5aa893',
-              500: '#3f907c',
-              600: '#2E7D6B',
-              700: '#266757',
-              800: '#1f5347',
-              900: '#194339',
-            },
-            coral: {
-              500: '#d95a2b',
-              600: '#C2410C',
-            },
-            softBg: '#F6F5F0',
-            cardBg: '#FFFFFF',
-            slateText: '#16201C',
-            mutedText: '#64748B',
-          },
-          fontFamily: {
-            sans: ['"MiSans"', '"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', '"MiSans"', 'monospace'],
-          },
-          boxShadow: {
-            'soft': '0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 20px 25px -5px rgba(0, 0, 0, 0.02)',
-            'soft-lg': '0 20px 40px -15px rgba(16, 185, 129, 0.08), 0 15px 35px -5px rgba(0, 0, 0, 0.05)',
-            'pill': '0 4px 14px 0 rgba(16, 185, 129, 0.35)',
-            'coral-pill': '0 6px 20px 0 rgba(255, 98, 67, 0.4)',
-            'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.03)',
-          },
-          borderRadius: {
-            '4xl': '2rem',
-            '5xl': '2.5rem',
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    html { overflow-x: hidden; }
-    body {
-      background-color: #F6F5F0;
-      color: #16201C;
-      /* 窄屏下装饰性光晕（700/760px 固定宽）会把文档撑宽，这里收口横向溢出 */
-      overflow-x: hidden;
-      font-family: 'MiSans', 'Plus Jakarta Sans', 'Noto Sans SC', sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
-    /* 应用内嵌 MiSans 子集（可变字重 100-500 / 600-900），与最新版应用字体完全一致 */
-    @font-face{font-family:"MiSans";src:url("fonts/MiSans-w100-500.woff2") format("woff2");font-weight:100 500;font-style:normal;font-display:swap}
-    @font-face{font-family:"MiSans";src:url("fonts/MiSans-w600-900.woff2") format("woff2");font-weight:600 900;font-style:normal;font-display:swap}
-    .pill-card {
-      background: #FFFFFF;
-      border: 1px solid rgba(226, 232, 240, 0.8);
-      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.03), 0 6px 12px -2px rgba(0, 0, 0, 0.02);
-      border-radius: 2rem;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .pill-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 35px -10px rgba(16, 185, 129, 0.08), 0 10px 20px -5px rgba(0, 0, 0, 0.04);
-      border-color: rgba(52, 211, 153, 0.4);
-    }
-    .soft-pill-btn {
-      transition: all 0.25s ease;
-    }
-    .soft-pill-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px -4px rgba(16, 185, 129, 0.35);
-    }
-    .soft-pill-btn:active {
-      transform: translateY(0);
-    }
-    .glass-nav {
-      background: rgba(255, 255, 255, 0.82);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-    }
-    /* 自定义微妙动态脉冲波纹 */
-    @keyframes floatSoft {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
-    }
-    .animate-float {
-      animation: floatSoft 5s ease-in-out infinite;
-    }
-  </style>
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>迹点点 TraceDot · 旅行纪念票根工作室</title>
+<meta name="description" content="迹点点 TraceDot：把火车票、登机牌、城市交通与演出门票整理成一张属于你的旅途地图。纯前端、单文件、数据不出浏览器。">
+<meta name="theme-color" content="#F6F5F0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="glass.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232E7E6B'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23FCF6E5'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23FCF6E5'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23FCF6E5'/%3E%3C/svg%3E">
+</head>
+<body>
 
+<!-- ══════════════════════════════════════════════════════════════════
+     液态玻璃折射引擎（SVG filter）
+     原理：backdrop-filter 的 blur/saturate 等 10 个函数只能改颜色与清晰度，
+     没有一个能「移动像素」——所以纯 backdrop-filter 永远是毛玻璃。
+     真实折射（Apple Liquid Glass 的定义性特征）必须用 feDisplacementMap：
+       feTurbulence 生成有机噪声 → feGaussianBlur 柔化成水波
+       → feDisplacementMap 按 R/G 通道把背景像素推开。
+     低频 baseFrequency(0.008 0.012) = 大尺度液面涌动（非细碎磨砂）；
+     scale 30 = 边缘可见的折射位移；filter region 放宽 25% 防止边缘硬切。
+     Chromium 支持 backdrop-filter:url()，Safari/Firefox 不支持
+     → CSS 侧用 @supports 门控，失败则回退 frosted 版（不丢 blur）。
+     ══════════════════════════════════════════════════════════════════ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="lg-refract" x="-25%" y="-25%" width="150%" height="150%"
+            color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.012"
+                    numOctaves="2" seed="7" result="noise"/>
+      <feGaussianBlur in="noise" stdDeviation="6" result="liquid"/>
+      <feDisplacementMap in="SourceGraphic" in2="liquid" scale="30"
+                         xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
 
+<!-- ══════════════════════════════════════════════════════════════
+     极光光场：两层不同速度的流动光带，低透明度、避开中央内容区。
+     只动 transform（合成层），不用 blur filter，不参与内容层叠。
+     ══════════════════════════════════════════════════════════════ -->
+<div class="aurora" aria-hidden="true">
+  <div class="aurora-band ab-1"></div>
+  <div class="aurora-band ab-2"></div>
+  <div class="aurora-band ab-3"></div>
+</div>
 
-  <!-- 顶部悬浮胶囊导航条 -->
-  <div class="fixed top-5 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
-    <header class="pointer-events-auto flex items-center justify-between gap-6 px-4 sm:px-6 py-2.5 rounded-full glass-nav shadow-soft max-w-5xl w-full border border-white/60">
-      
-      <!-- 品牌 Logo：保留原始形态，融入全新翠绿微质感胶囊 -->
-      <a href="#home" class="flex items-center gap-2.5 group shrink-0"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232E7E6B'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23FCF6E5'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23FCF6E5'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23FCF6E5'/%3E%3C/svg%3E" alt="迹点点 Logo" class="w-8 h-8 rounded-xl object-cover shadow-sm group-hover:scale-105 transition-transform shrink-0"><span class="font-extrabold text-sm sm:text-base text-slate-800 tracking-tight group-hover:text-brand-600 transition-colors">迹点点</span><span class="px-2 py-0.5 text-[11px] font-mono bg-brand-50 text-brand-700 border border-brand-200/80 rounded-full font-semibold">V5.1.6</span></a>
+<!-- ══════════════════════════════════════════════════════════════
+     液态玻璃导航层（浮于内容之上，不参与内容层叠）
+     ══════════════════════════════════════════════════════════════ -->
+<div class="navwrap">
+  <header class="glass-nav" id="topnav">
+    <a href="#home" class="brand">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232E7E6B'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23FCF6E5'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23FCF6E5'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23FCF6E5'/%3E%3C/svg%3E" alt="迹点点 Logo" class="brand-logo">
+      <span class="brand-name">迹点点</span>
+      <span class="brand-ver">V5.1.6</span>
+    </a>
 
-      <!-- 导航链接：柔和圆润悬浮胶囊标签 -->
-      <nav class="hidden md:flex items-center gap-1 bg-slate-100/70 p-1.5 rounded-full border border-slate-200/50">
-        <a href="#home" class="px-4 py-1.5 text-xs font-semibold text-slateText hover:text-brand-600 hover:bg-white rounded-full transition-all">首页</a>
-        <a href="#metrics" class="px-4 py-1.5 text-xs font-medium text-mutedText hover:text-slateText hover:bg-white rounded-full transition-all">数据看板</a>
-        <a href="#modules" class="px-4 py-1.5 text-xs font-medium text-mutedText hover:text-slateText hover:bg-white rounded-full transition-all">功能模块</a>
-        <a href="#features" class="px-4 py-1.5 text-xs font-medium text-mutedText hover:text-slateText hover:bg-white rounded-full transition-all">技术亮点</a>
-        <a href="changelog.html" class="px-4 py-1.5 text-xs font-medium text-mutedText hover:text-slateText hover:bg-white rounded-full transition-all">更新日志</a>
-        <a href="#privacy" class="px-4 py-1.5 text-xs font-medium text-mutedText hover:text-slateText hover:bg-white rounded-full transition-all">隐私说明</a>
-        <a href="#creator" class="px-4 py-1.5 text-xs font-medium text-mutedText hover:text-slateText hover:bg-white rounded-full transition-all">关于作者</a>
-      </nav>
+    <nav class="nav-links" id="navLinks">
+      <a href="#home" class="on">首页</a>
+      <a href="#metrics">数据看板</a>
+      <a href="#modules">功能模块</a>
+      <a href="#features">技术亮点</a>
+      <a href="changelog.html">更新日志</a>
+      <a href="#privacy">隐私说明</a>
+      <a href="#credits">致谢</a>
+      <a href="#creator">关于作者</a>
+    </nav>
 
-      <!-- 动作按钮 -->
-      <div class="flex items-center gap-2.5">
-        <a href="https://github.com/ajietudou007/TraceDot" target="_blank" rel="noopener" class="hidden sm:flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors" title="GitHub 源码">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path></svg>
-        </a>
-        <a href="#download" class="soft-pill-btn flex items-center gap-2 bg-gradient-to-r from-brand-500 to-emerald-600 hover:from-brand-600 hover:to-emerald-700 text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-full shadow-pill">
-          <span class="">下载桌面版</span>
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-        </a>
-      </div>
-    </header>
+    <div class="nav-actions">
+      <a href="https://github.com/ajietudou007/TraceDot" target="_blank" rel="noopener" class="icon-btn" title="GitHub 源码">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      </a>
+      <a href="#download" class="glass-btn-primary">下载桌面版
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+      </a>
+      <button class="burger" id="burger" aria-label="展开菜单" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#home">首页</a>
+    <a href="#metrics">数据看板</a>
+    <a href="#modules">功能模块</a>
+    <a href="#features">技术亮点</a>
+    <a href="changelog.html">更新日志</a>
+    <a href="#privacy">隐私说明</a>
+    <a href="#credits">致谢</a>
+    <a href="#creator">关于作者</a>
+    <a href="#download" class="mm-primary">下载桌面版</a>
   </div>
+</div>
 
-  <main id="home" class="pt-28 pb-12">
-    <!-- Hero 首屏：极致清爽的高端软质多态风格 -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 relative">
-      <!-- 柔和背景环境光晕 -->
-      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-gradient-to-tr from-emerald-200/40 via-teal-100/30 to-amber-100/30 rounded-full blur-3xl pointer-events-none -z-10"></div>
-      
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-        <!-- 左侧文案与主要行动组 -->
-        <div class="lg:col-span-6 flex flex-col items-start space-y-6">
-          <!-- 小胶囊标签 -->
-          <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/90 border border-slate-200/80 shadow-sm text-xs font-medium text-slate-700">
-            <span class="flex h-2 w-2 relative">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
-            </span>
-            <span class="font-mono text-mutedText">TRACEDOT V5.1.6</span>
-            <span class="text-slate-300">|</span>
-            <span class="text-brand-700 font-semibold">纯前端 · 单文件 · 数据零外传</span>
-          </div>
+<main id="home">
 
-          <!-- 主标题 -->
-          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
-            把每一次出发，<br>
-            化作一张 <span class="bg-gradient-to-r from-brand-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">温润可触</span> 的记忆。
-          </h1>
-
-          <p class="text-base sm:text-lg text-mutedText max-w-xl leading-relaxed">
-            将火车票、登机牌、城市公共交通、演出门票与船票整理汇聚成一张专属的时光旅行地图，并在年底生成一份属于你的年度报告。纯本地运行，免安装双击即用。
-          </p>
-
-          <!-- 胶囊功能特色微徽章组（参考多态卡片风格） -->
-          <div class="flex flex-wrap gap-2.5 pt-1">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700 shadow-sm">
-              <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
-              <span class="">自绘矢量航迹地图</span>
-            </div>
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700 shadow-sm">
-              <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
-              <span class="">12306 / 登机牌 / 交通 / 影演</span>
-            </div>
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-200 text-xs font-medium text-brand-800 shadow-sm">
-              <span class="w-1.5 h-1.5 rounded-full bg-brand-600"></span>
-              <span class="">年度报告（V5 新增）</span>
-            </div>
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700 shadow-sm">
-              <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
-              <span class="">本地离线双重存储</span>
-            </div>
-          </div>
-
-          <!-- 行动按钮组 -->
-          <div class="flex flex-wrap items-center gap-4 pt-4">
-            <a href="#download" class="soft-pill-btn inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-gradient-to-r from-brand-500 to-emerald-600 text-white font-bold text-sm shadow-pill">
-              <span class="">立即下载体验</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-            </a>
-            
-            <a href="https://jidiandian.top/release/TraceDot-V5.1.8.html" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200/90 text-slate-800 font-semibold text-sm shadow-sm transition-all hover:border-slate-300">
-              <span class="">浏览器在线打开</span>
-              <span class="text-mutedText">↗</span>
-            </a>
-          </div>
-
-          <div class="pt-2 flex items-center gap-6 text-xs text-mutedText font-mono">
-            <span class="flex items-center gap-1.5">
-              <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-              无服务器上传
-            </span>
-            <span class="flex items-center gap-1.5">
-              <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-              零商业依赖
-            </span>
-            <span class="flex items-center gap-1.5">
-              <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-              开源透明
-            </span>
-          </div>
+  <!-- ══════════════ Hero：液态玻璃票面主视觉 ══════════════ -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="chip-live">
+          <span class="dot"></span>
+          <span class="mono">TRACEDOT V5.1.6</span>
+          <span class="sep"></span>
+          <span>纯前端 · 单文件 · 数据零外传</span>
         </div>
 
-        <!-- 右侧：参考图质感的多态交互预览卡片群（精美微质感卡片） -->
-        <div class="lg:col-span-6 relative w-full">
-          <!-- 极光背景弥散光辉与透视光弧 (参考图玻璃光影) -->
-          <div class="absolute -inset-4 bg-gradient-to-tr from-brand-500/20 via-emerald-400/15 to-teal-400/20 rounded-3xl blur-2xl pointer-events-none -z-10"></div>
-          <div class="absolute -top-12 -right-8 w-64 h-64 bg-emerald-300/30 rounded-full blur-3xl pointer-events-none -z-10"></div>
-          <div class="absolute -bottom-10 -left-6 w-60 h-60 bg-teal-400/20 rounded-full blur-3xl pointer-events-none -z-10"></div>
+        <h1 class="hero-title">
+          把每一次出发，<br>
+          化作一张 <em class="grad">温润可触</em> 的记忆。
+        </h1>
 
-          <!-- 大卡容器：精致高折射微晶玻璃质感底座 -->
-          <div class="pill-card p-6 sm:p-7 relative overflow-hidden bg-white/90 border border-emerald-200/60 shadow-xl backdrop-blur-xl">
-            <!-- 玻璃背光透光微发光光环 -->
-            <div class="absolute top-0 right-1/4 w-72 h-36 bg-gradient-to-b from-brand-300/25 to-transparent rounded-full blur-2xl pointer-events-none"></div>
+        <p class="hero-lead">
+          将火车票、登机牌、城市公共交通、演出门票与船票整理汇聚成一张专属的时光旅行地图，
+          并在年底生成一份属于你的年度报告。纯本地运行，免安装双击即用。
+        </p>
 
-            <!-- 头部状态栏 -->
-            <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5 relative z-10">
-              <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-brand-500 to-emerald-400 flex items-center justify-center text-white shadow-pill">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-                </div>
-                <div>
-                  <div class="flex items-center gap-2">
-                    <h4 class="text-xs font-bold text-slate-800 tracking-wider">TRIP ARCHIVE</h4>
-                    <span class="px-1.5 py-0.2 text-[10px] font-mono bg-emerald-50 text-brand-700 border border-brand-200 rounded font-semibold">V5.1.6</span>
-                  </div>
-                  <p class="text-[11px] text-mutedText font-medium mt-0.5">45 段足迹 · 液态玻璃档案库</p>
-                </div>
+        <div class="hero-tags">
+          <span class="tag">自绘矢量航迹地图</span>
+          <span class="tag">12306 / 登机牌 / 交通 / 影演</span>
+          <span class="tag tag-hl">年度报告（V5 新增）</span>
+        </div>
+
+        <div class="hero-cta">
+          <a href="#download" class="glass-btn-primary lg">
+            立即下载体验
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          </a>
+          <a href="https://jidiandian.top/release/TraceDot-V5.1.8.html" target="_blank" rel="noopener" class="glass-btn lg">浏览器在线打开 <span class="arr">↗</span></a>
+        </div>
+
+        <div class="hero-assure">
+          <span>无服务器上传</span><span>零商业依赖</span><span>开源透明</span>
+        </div>
+      </div>
+
+      <!-- 液态玻璃票面展台 -->
+      <div class="hero-stage">
+        <div class="glass-card stage">
+          <div class="stage-aura"></div>
+
+          <div class="stage-head">
+            <div class="stage-head-l">
+              <div class="stage-ico">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
               </div>
-
-              <!-- 活跃胶囊状态 -->
-              <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-brand-600 via-emerald-500 to-teal-500 text-white shadow-pill">
-                <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
-                <span class="text-[11px] font-black tracking-wider">LIVE STUDIO</span>
-              </div>
-            </div>
-
-            <!-- 真实票据立体层叠展台：融入参考图精致多层弧形玻璃面板与光路 -->
-            <div class="relative rounded-3xl p-4 sm:p-5 mb-5 overflow-visible shadow-inner border border-emerald-100/80" style="background: radial-gradient(120% 120% at 50% 0%, rgba(209, 250, 229, 0.45) 0%, rgba(240, 253, 244, 0.8) 50%, rgba(255, 255, 255, 0.95) 100%);">
-              
-              <!-- 顶层透视光弧 (参考图中的顶部发光轨道弧度) -->
-              <div class="absolute inset-x-8 top-3 h-12 pointer-events-none opacity-40">
-                <svg viewBox="0 0 400 60" class="w-full h-full stroke-brand-500 fill-none" stroke-width="1.5">
-                  <path d="M 20,50 Q 200,-10 380,50" stroke-dasharray="4 4"></path>
-                  <circle cx="200" cy="20" r="4" class="fill-brand-500"></circle>
-                  <circle cx="200" cy="20" r="9" stroke="currentColor" class="text-brand-400"></circle>
-                </svg>
-              </div>
-
-              <div class="relative min-h-[320px] flex items-center justify-center py-2">
-                
-                <!-- 1. 背景层叠透光玻璃弧面卡片群 (参考图多重折射晶莹弧边) -->
-                <div class="absolute -top-1 w-[88%] h-24 rounded-3xl border border-white/80 shadow-sm pointer-events-none transform -rotate-1 scale-95 opacity-50" style="background: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(209, 250, 229, 0.3) 100%); backdrop-filter: blur(8px);"></div>
-                <div class="absolute top-2 w-[92%] h-28 rounded-3xl border border-emerald-200/60 shadow-sm pointer-events-none transform rotate-1 scale-98 opacity-70" style="background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(167, 243, 208, 0.25) 100%); backdrop-filter: blur(10px);"></div>
-
-                <!-- 2. 中层：航空登机牌 (Boarding Pass) - 透光微质感玻璃浮雕 -->
-                <div class="w-full max-w-[400px] rounded-2xl bg-white/90 text-slate-800 shadow-md border border-slate-200/90 overflow-hidden transform -rotate-2 -translate-y-3 transition-transform duration-300 hover:rotate-0 hover:z-20 backdrop-blur-md">
-                  <!-- 登机牌顶部航司翠绿极光色带 -->
-                  <div class="h-2 bg-gradient-to-r from-brand-600 via-teal-500 to-emerald-400"></div>
-                  
-                  <div class="p-3 sm:p-3.5 bg-gradient-to-b from-emerald-50/40 via-white/80 to-white">
-                    <!-- 顶部信息行 -->
-                    <div class="flex items-center justify-between pb-2 border-b border-dashed border-slate-200 text-[11px]">
-                      <div class="flex items-center gap-2">
-                        <span class="font-black tracking-widest text-brand-700 font-mono">CHINA AIR</span>
-                        <span class="px-1.5 py-0.5 rounded bg-brand-50 text-brand-800 font-mono font-bold text-[10px] border border-brand-200">MU5108</span>
-                      </div>
-                      <div class="text-right font-mono text-[10px] text-mutedText">
-                        ELECTRONIC BOARDING PASS
-                      </div>
-                    </div>
-
-                    <!-- 航线大字代码与城市 -->
-                    <div class="flex items-center justify-between py-2.5">
-                      <div class="text-left">
-                        <div class="text-2xl font-black tracking-tight text-slate-800 font-mono">PEK</div>
-                        <div class="text-[11px] font-medium text-slate-500">北京首都 T2</div>
-                      </div>
-                      <div class="flex flex-col items-center px-2">
-                        <span class="text-[10px] font-mono font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded-full border border-brand-200">3h 15m</span>
-                        <div class="flex items-center gap-1 text-emerald-400 mt-1">
-                          <span class="w-4 h-[1px] bg-emerald-300"></span>
-                          <svg class="w-3.5 h-3.5 text-brand-600 rotate-90 transform" fill="currentColor" viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"></path></svg>
-                          <span class="w-4 h-[1px] bg-emerald-300"></span>
-                        </div>
-                      </div>
-                      <div class="text-right">
-                        <div class="text-2xl font-black tracking-tight text-slate-800 font-mono">CTU</div>
-                        <div class="text-[11px] font-medium text-slate-500">成都双流 T2</div>
-                      </div>
-                    </div>
-
-                    <!-- 登机口/时间/座位 -->
-                    <div class="grid grid-cols-4 gap-2 pt-2 border-t border-slate-100 text-center font-mono">
-                      <div class="bg-slate-50/80 p-1.5 rounded-lg border border-slate-100">
-                        <div class="text-[9px] text-mutedText">GATE</div>
-                        <div class="text-xs font-bold text-slate-800">24</div>
-                      </div>
-                      <div class="bg-slate-50/80 p-1.5 rounded-lg border border-slate-100">
-                        <div class="text-[9px] text-mutedText">BOARDING</div>
-                        <div class="text-xs font-bold text-amber-600">08:30</div>
-                      </div>
-                      <div class="bg-slate-50/80 p-1.5 rounded-lg border border-slate-100">
-                        <div class="text-[9px] text-mutedText">SEAT</div>
-                        <div class="text-xs font-bold text-brand-700">14A</div>
-                      </div>
-                      <div class="bg-slate-50/80 p-1.5 rounded-lg border border-slate-100 flex flex-col justify-center items-center">
-                        <div class="text-[9px] text-mutedText">CLASS</div>
-                        <div class="text-xs font-bold text-slate-800">Y</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 3. 前层核心：12306 经典浅青绿玻璃质感高铁票 (高透光/高光反射边/未来感弧面玻璃) -->
-                <div class="absolute w-full max-w-[400px] rounded-3xl p-4 sm:p-5 shadow-2xl border border-white/90 overflow-hidden transform rotate-2 translate-y-7 z-10 transition-transform duration-300 hover:scale-[1.02] hover:rotate-1" style="background: linear-gradient(135deg, rgba(240, 253, 244, 0.94) 0%, rgba(220, 252, 231, 0.88) 45%, rgba(204, 251, 241, 0.92) 100%); backdrop-filter: blur(16px); box-shadow: 0 20px 40px -12px rgba(5, 150, 105, 0.18), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);">
-                  
-                  <!-- 车票高光反射条与防伪细网格 (模拟图2高折射率玻璃反光) -->
-                  <div class="absolute -top-12 -left-12 w-48 h-48 bg-gradient-to-br from-white/80 via-white/20 to-transparent rounded-full blur-xl pointer-events-none"></div>
-                  <div class="absolute inset-0 opacity-15 pointer-events-none" style="background-image: radial-gradient(#059669 1px, transparent 1px); background-size: 8px 8px;"></div>
-
-                  <!-- 顶部车票号与安全码 -->
-                  <div class="relative flex items-center justify-between pb-2 border-b border-dashed border-teal-300/80 text-[11px] font-mono">
-                    <div class="flex items-center gap-1.5">
-                      <span class="font-black text-rose-600 tracking-wider text-[12px]">G082341</span>
-                      <span class="text-teal-900 font-bold hidden sm:inline text-[10px] bg-teal-100/70 px-1.5 py-0.2 rounded border border-teal-200">12306 客票</span>
-                    </div>
-                    <div class="flex items-center gap-2 text-teal-800 text-[11px]">
-                      <span class="font-semibold">中国铁路高速</span>
-                      <span class="text-[10px] opacity-75">CRH</span>
-                    </div>
-                  </div>
-
-                  <!-- 发到站与车次核心大字 -->
-                  <div class="relative flex items-center justify-between py-3">
-                    <div class="text-left">
-                      <div class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">昆明南</div>
-                      <div class="text-[11px] text-teal-800 font-mono font-medium mt-0.5">Kunmingnan</div>
-                    </div>
-
-                    <!-- 车次与开行符号 -->
-                    <div class="flex flex-col items-center px-2">
-                      <span class="text-xs font-black font-mono text-teal-950 bg-white/90 px-2.5 py-0.5 rounded-full border border-teal-300 shadow-sm">G2884</span>
-                      <div class="flex items-center gap-1 text-teal-600 my-0.5">
-                        <span class="text-[11px] font-mono">―――▶</span>
-                      </div>
-                      <span class="text-[10px] text-teal-700 font-mono">4小时36分</span>
-                    </div>
-
-                    <div class="text-right">
-                      <div class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">重庆西</div>
-                      <div class="text-[11px] text-teal-800 font-mono font-medium mt-0.5">Chongqingxi</div>
-                    </div>
-                  </div>
-
-                  <!-- 发车时间与车厢席位 -->
-                  <div class="relative flex items-center justify-between py-1.5 bg-white/80 px-3 rounded-xl border border-teal-200/70 font-mono text-xs shadow-sm">
-                    <div class="flex items-center gap-1.5 text-slate-800">
-                      <span class="font-bold">2026年09月16日</span>
-                      <span class="font-black text-teal-900">10:24开</span>
-                    </div>
-                    <div class="text-right font-black text-slate-900">
-                      <span class="">02车11F号</span>
-                      <span class="text-[11px] font-medium text-teal-800 ml-1">二等座</span>
-                    </div>
-                  </div>
-
-                  <!-- 底部票价、乘车人遮罩与二维防伪码 -->
-                  <div class="relative flex items-end justify-between pt-2.5 mt-1 text-[11px] font-mono text-teal-950">
-                    <div>
-                      <div class="text-sm font-black text-rose-600">￥381.0<span class="text-[11px] font-normal ml-0.5 text-teal-900">元</span></div>
-                      <div class="text-[10px] text-teal-800 mt-0.5">530102********1234 李*</div>
-                      <div class="text-[9px] text-teal-700">限乘当日当次车 · 仅供报销凭证</div>
-                    </div>
-                    
-                    <!-- 拟真车票二维码与检票口 -->
-                    <div class="flex items-center gap-2">
-                      <div class="text-right text-[10px] text-teal-800 leading-tight hidden sm:block">
-                        <div class="">检票: 12B</div>
-                        <div class="text-[9px] opacity-75">自动检票通道</div>
-                      </div>
-                      <div class="w-9 h-9 rounded bg-white p-1 border border-teal-300 shadow-sm flex items-center justify-center shrink-0">
-                        <svg class="w-full h-full text-slate-800" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm13-2h3v3h-3v-3zm0 5h3v3h-3v-3zm-3-5h2v2h-2v-2zm0 4h2v4h-2v-4zm5-2h2v5h-2v-5z"></path>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
+              <div>
+                <div class="stage-kicker">TRIP ARCHIVE <span class="mini-ver">V5.1.6</span></div>
+                <div class="stage-sub">10 种票面 · 32 套纪念票面 · 液态玻璃档案库</div>
               </div>
             </div>
-
-            <!-- 统计指标胶囊行（45张珍藏、2,478km、100%本地存储） -->
-            <div class="grid grid-cols-3 gap-3 relative z-10">
-              <div class="bg-slate-50/90 rounded-2xl p-3 text-center border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all">
-                <div class="text-lg font-extrabold text-slate-800 font-mono">45</div>
-                <div class="text-[11px] text-mutedText font-medium">张珍藏票据</div>
-              </div>
-              <div class="bg-emerald-50/60 rounded-2xl p-3 text-center border border-emerald-100 hover:bg-white hover:border-brand-300 hover:shadow-sm transition-all">
-                <div class="text-lg font-extrabold text-brand-600 font-mono">2,478<span class="text-xs">km</span></div>
-                <div class="text-[11px] text-brand-800 font-medium">累计旅程</div>
-              </div>
-              <div class="bg-slate-50/90 rounded-2xl p-3 text-center border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all">
-                <div class="text-lg font-extrabold text-slate-800 font-mono">100<span class="text-xs">%</span></div>
-                <div class="text-[11px] text-mutedText font-medium">纯本地存储</div>
-              </div>
-            </div>
-
-            <!-- 底部快捷状态条 -->
-            <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between px-2 relative z-10">
-              <div class="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
-                <span class="w-5 h-5 rounded-full bg-emerald-100 text-brand-600 flex items-center justify-center text-[11px] font-bold">✓</span>
-                <span class="">离线双保险引擎激活</span>
-              </div>
-              <span class="text-[12px] font-mono text-brand-700 bg-brand-50 border border-brand-200 px-2 py-0.5 rounded-full">IndexedDB OK</span>
-            </div>
+            <div class="live-pill"><span class="dot"></span>LIVE STUDIO</div>
           </div>
 
-          <!-- 悬浮微卡点缀 (参考图玻璃微卡) -->
-          <div class="hidden sm:flex absolute -bottom-5 -left-5 bg-white/95 p-3.5 rounded-2xl shadow-soft border border-emerald-200/80 items-center gap-3 animate-float backdrop-blur-md z-20">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-500 to-emerald-400 text-white flex items-center justify-center font-bold text-xs shadow-sm">
-              AI
-            </div>
-            <div>
-              <div class="text-xs font-bold text-slate-800">视觉 OCR 大模型</div>
-              <div class="text-[11px] text-mutedText">自动解析照片票面</div>
-            </div>
+          <!-- 立体票面层叠 -->
+          <div class="stage-planes">
+            <div class="plane-bg p1"></div>
+            <div class="plane-bg p2"></div>
+
+            <!-- 登机牌 -->
+            <article class="tk plane" style="--tk-a:#2E7D6B;--tk-b:#0E7490">
+              <div class="tk-band"></div>
+              <div class="tk-body">
+                <div class="tk-row top">
+                  <span class="tk-air">CHINA AIR <b>MU5108</b></span>
+                  <span class="tk-en">ELECTRONIC BOARDING PASS</span>
+                </div>
+                <div class="tk-route">
+                  <div class="tk-port"><b>PEK</b><i>北京首都 T2</i></div>
+                  <div class="tk-flight"><span>3h 15m</span>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+                  </div>
+                  <div class="tk-port r"><b>CTU</b><i>成都双流 T2</i></div>
+                </div>
+              </div>
+            </article>
+
+            <!-- 12306 高铁票 -->
+            <article class="tk train" style="--tk-a:#2E7D6B;--tk-b:#C2410C">
+              <div class="tk-sheen"></div>
+              <div class="tk-grain"></div>
+              <div class="tk-row top">
+                <span class="tk-no">G082341 <i>12306 客票</i></span>
+                <span class="tk-rail">中国铁路高速 <i>CRH</i></span>
+              </div>
+              <div class="tk-route big">
+                <div class="tk-port"><b>昆明南</b><i>Kunmingnan</i></div>
+                <div class="tk-train"><b>G2884</b><span class="tk-arrow">―――▶</span><i>4小时36分</i></div>
+                <div class="tk-port r"><b>重庆西</b><i>Chongqingxi</i></div>
+              </div>
+              <div class="tk-meta">
+                <span>2026年09月16日 <b>10:24开</b></span>
+                <span><b>02车11F号</b> 二等座</span>
+              </div>
+              <div class="tk-foot">
+                <div><b class="price">￥381.0<span>元</span></b><i>530102********1234 李*</i><i>限乘当日当次车 · 仅供报销凭证</i></div>
+                <div class="tk-code"><i>检票 12B</i>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm13-2h3v3h-3v-3zm0 5h3v3h-3v-3zm-3-5h2v2h-2v-2zm0 4h2v4h-2v-4zm5-2h2v5h-2v-5z"/></svg>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="stage-stats">
+            <div><b>10</b><i>种票面支持</i></div>
+            <div><b>32</b><i>套纪念票面</i></div>
+            <div><b>2,478<span>km</span></b><i>示例累计旅程</i></div>
+            <div><b>100%</b><i>纯本地存储</i></div>
+          </div>
+
+          <div class="stage-foot">
+            <span><b>✓</b> 离线双保险引擎激活</span>
+            <span class="mono-chip">IndexedDB OK</span>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- 场景 02 · V5 全新能力（版本速览） -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-14" id="whatsnew">
-      <div class="pill-card p-8 sm:p-10">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-8">
-          <div class="space-y-2">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold font-mono">
-              V5.1.6 · WHAT'S NEW
-            </div>
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              第五个大版本：把「看起来像」补齐成「真的是」
-            </h2>
-            <p class="text-sm text-mutedText max-w-2xl leading-relaxed">
-              票面上的码可以真被扫出来，数据不再悄悄丢失，年底还能回头看一整年的足迹。V5 阶段共端上 53 次迭代，每一条都写进了更新日志。
-            </p>
-          </div>
-          <a href="changelog.html" class="soft-pill-btn inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold shadow-md hover:bg-slate-800 shrink-0">
-            <span>查看完整更新日志</span>
-            <span>↗</span>
+  <!-- ══════════════ V5 全新能力 ══════════════ -->
+  <section class="wrap" id="whatsnew">
+    <div class="glass-card pad">
+      <div class="sec-head">
+        <div>
+          <span class="chip">V5.1.6 · WHAT'S NEW</span>
+          <h2>第五个大版本：把「看起来像」补齐成「真的是」</h2>
+          <p class="sec-lead">票面上的码可以真被扫出来，数据不再悄悄丢失，年底还能回头看一整年的足迹。V5 阶段共端上 53 次迭代，每一条都写进了更新日志。</p>
+        </div>
+        <a href="changelog.html" class="glass-btn">查看完整更新日志 <span class="arr">↗</span></a>
+      </div>
+
+      <div class="grid-4">
+        <article class="mini">
+          <span class="mini-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 7.4h15.2a1 1 0 0 1 1 1v1.9a1.85 1.85 0 0 0 0 3.7v1.9a1 1 0 0 1-1 1H4.4a1 1 0 0 1-1-1v-1.9a1.85 1.85 0 0 0 0-3.7V8.4a1 1 0 0 1 1-1z"/><path d="M14.6 7.4v9.6" stroke-dasharray="2 2.2"/></svg></span>
+          <div class="mini-t">32 套纪念票面进工坊 <b class="badge new">新增</b></div>
+          <p>公交 / 地铁 / 出租 / 船票 / 客运与电影 / 演唱会 / 景区各 4 套，内置真二维码与条码，换色跟随城市。</p>
+        </article>
+
+        <article class="mini">
+          <span class="mini-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 12a8.4 8.4 0 1 1-2.5-6"/><path d="M20.4 3.9v5.4h-5.4"/></svg></span>
+          <div class="mini-t">地图站名缩放修复 <b class="badge fix">回归修复</b></div>
+          <p>缩放补偿误用 CSS transform，放大后站名变巨型文字；改用 SVG transform 修复。</p>
+        </article>
+
+        <article class="mini">
+          <span class="mini-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="3.6" width="6.8" height="6.8" rx="1.6"/><rect x="13.6" y="3.6" width="6.8" height="6.8" rx="1.6"/><rect x="3.6" y="13.6" width="6.8" height="6.8" rx="1.6"/><rect x="13.6" y="13.6" width="6.8" height="6.8" rx="1.6"/></svg></span>
+          <div class="mini-t">年度报告 <b class="badge new">第 8 视图</b></div>
+          <p>年度大数字、12 格月度热力、单程榜单与准点率一次看完，按月时间轴合并在报告内。</p>
+        </article>
+
+        <article class="mini">
+          <span class="mini-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="3.6" width="6.4" height="6.4" rx="1.4"/><rect x="14" y="3.6" width="6.4" height="6.4" rx="1.4"/><rect x="3.6" y="14" width="6.4" height="6.4" rx="1.4"/><rect x="14" y="14" width="2.6" height="2.6" rx=".6"/><rect x="18" y="18" width="2.4" height="2.4" rx=".6"/></svg></span>
+          <div class="mini-t">票面码制做真 <b class="badge">PDF417 / Code128</b></div>
+          <p>登机牌改用真 PDF417 + BCBP；火车票二维码指向这张票自己的车次与票号，不再一律跳 12306 首页。</p>
+        </article>
+
+        <article class="mini">
+          <span class="mini-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="5" width="14.8" height="15.4" rx="2.4"/><path d="M9.2 5V4a1.4 1.4 0 0 1 1.4-1.4h2.8A1.4 1.4 0 0 1 14.8 4v1"/><path d="M8.6 11.2h6.8"/><path d="M8.6 15.2h4.4"/></svg></span>
+          <div class="mini-t">粘贴即录入</div>
+          <p>把 12306 短信或订单邮件正文整段贴进工坊即自动填票，支持多种区间写法与订单号识别。</p>
+        </article>
+
+        <article class="mini">
+          <span class="mini-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6.2" rx="7.4" ry="3.2"/><path d="M4.6 6.2v11.6c0 1.77 3.31 3.2 7.4 3.2s7.4-1.43 7.4-3.2V6.2"/><path d="M4.6 12c0 1.77 3.31 3.2 7.4 3.2s7.4-1.43 7.4-3.2"/></svg></span>
+          <div class="mini-t">数据不再悄悄丢 <b class="badge">IndexedDB</b></div>
+          <p>账本迁入 IndexedDB 主存 + localStorage 镜像，不再撞 5MB 墙；导入前自动快照，回滚可撤销。</p>
+        </article>
+
+        <article class="mini">
+          <span class="mini-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4v11.4"/><path d="M7.6 10.6 12 15l4.4-4.4"/><path d="M4.6 18.6v.6a1.8 1.8 0 0 0 1.8 1.8h11.2a1.8 1.8 0 0 0 1.8-1.8v-.6"/></svg></span>
+          <div class="mini-t">老备份导得进来</div>
+          <p>备份解析器认得 V4 与手机端旧结构，老用户不再被「格式不支持」挡在门外，草稿自动迁移。</p>
+        </article>
+
+        <article class="mini">
+          <span class="mini-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8 20 6v5.9c0 4.5-3.3 7.9-8 9.2-4.7-1.3-8-4.7-8-9.2V6z"/><path d="M8.8 11.9 11.4 14.5l3.9-4.6"/></svg></span>
+          <div class="mini-t">安全评审与加固</div>
+          <p>修掉一处可被恶意备份触发的存储型 XSS，补上导入体积与条数上限，联网识别时明确提示照片将上传。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 数据看板 ══════════════ -->
+  <section class="wrap" id="metrics">
+    <div class="glass-card pad">
+      <div class="metrics-grid">
+        <div class="metrics-l">
+          <span class="chip">THE ESSENTIALS</span>
+          <h2>一份极其轻巧的工具，<br>装下整段远方旅程。</h2>
+          <p class="sec-lead">从生成第一张复古火车票，到翻开整本珍藏册、再到年底回看一整年的年度报告。八个模块都收在一个文件里，过去繁重复杂的整理与绘图操作，全部化作轻柔流畅的指尖体验。</p>
+        </div>
+        <div class="metrics-cards">
+          <div class="metric"><span class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 2.2 4.6 13.4h5.9l-.9 8.4 8.8-11.4h-6z"/></svg></span><b>0</b><i>运行时依赖</i></div>
+          <div class="metric"><span class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 7.4h15.2a1 1 0 0 1 1 1v1.9a1.85 1.85 0 0 0 0 3.7v1.9a1 1 0 0 1-1 1H4.4a1 1 0 0 1-1-1v-1.9a1.85 1.85 0 0 0 0-3.7V8.4a1 1 0 0 1 1-1z"/><path d="M14.6 7.4v9.6" stroke-dasharray="2 2.2"/></svg></span><b>10</b><i>种票面支持</i></div>
+          <div class="metric"><span class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="3.6" width="6.8" height="6.8" rx="1.6"/><rect x="13.6" y="3.6" width="6.8" height="6.8" rx="1.6"/><rect x="3.6" y="13.6" width="6.8" height="6.8" rx="1.6"/><rect x="13.6" y="13.6" width="6.8" height="6.8" rx="1.6"/></svg></span><b>8</b><i>大功能模块</i></div>
+          <div class="metric"><span class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><b>100%</b><i>数据本地化</i></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 八大功能模块 ══════════════ -->
+  <section class="wrap" id="modules">
+    <div class="sec-center">
+      <span class="chip">THE WORKSPACE · 8 MODULES</span>
+      <h2>八大功能模块，收录你的每一次抵达</h2>
+      <p class="sec-lead wide">从一张泛黄的火车软纸票，到跨越重洋的登机牌、散落各地的城市地铁票，再到年末那份只讲你自己的年度回顾。</p>
+    </div>
+
+    <div class="grid-4">
+      <article class="glass-card mod">
+        <div class="mod-top"><span class="mod-no">01</span><span class="mod-en">MAP &amp; ROUTES</span></div>
+        <h3>行程地图</h3>
+        <p>全境底图自动绘制，铁路实线、航班虚线航路，到访城市逐一点亮；筛选即时联动，直辖市按省域整片点亮。</p>
+        <div class="mod-foot"><span>全国站名 &amp; 机场坐标 · 筛选联动</span><span>→</span></div>
+      </article>
+
+      <article class="glass-card mod">
+        <div class="mod-top"><span class="mod-no">02</span><span class="mod-en">AI PLANNER</span></div>
+        <h3>我的旅游计划</h3>
+        <p>对话式 AI 规划：实时查景点、酒店与天气，按天生成时间轴与行李清单，支持多轮自然语言调整，最长 15 天。</p>
+        <div class="mod-foot"><span>高德 API + 智能推演 · 最长 15 天</span><span>→</span></div>
+      </article>
+
+      <article class="glass-card mod">
+        <div class="mod-top"><span class="mod-no">03</span><span class="mod-en">TRAIN TICKET</span></div>
+        <h3>火车票工坊</h3>
+        <p>12306 经典与现代双风格，八款底图；支持 PDF / OCR 导入与高清导出，粘贴短信正文即自动填票。</p>
+        <div class="mod-foot"><span>8 款版画底纸 · 粘贴即录入</span><span>→</span></div>
+      </article>
+
+      <article class="glass-card mod">
+        <div class="mod-top"><span class="mod-no">04</span><span class="mod-en">BOARDING PASS</span></div>
+        <h3>登机牌工坊</h3>
+        <p>全球 8500+ 机场与航司二字码联想，纸质扫描件 AI 转录回填；条码为真 PDF417 + BCBP，可被扫码枪读出。</p>
+        <div class="mod-foot"><span>OurAirports 数据库 · PDF417</span><span>→</span></div>
+      </article>
+
+      <article class="glass-card mod">
+        <div class="mod-top"><span class="mod-no">05</span><span class="mod-en">TRANSIT TICKETS</span></div>
+        <h3>交通票工坊</h3>
+        <p>公交、地铁（48 城全库）、出租、公路客运与船票，按像素规范还原城市交通记忆，条码为真 Code128。</p>
+        <div class="mod-foot"><span>48 城地铁 · 8000+ 站点 · 含船票</span><span>→</span></div>
+      </article>
+
+      <article class="glass-card mod">
+        <div class="mod-top"><span class="mod-no">06</span><span class="mod-en">VENUE &amp; CINEMA</span></div>
+        <h3>影演票工坊</h3>
+        <p>电影票、景区门票、演唱会入场券；OMDb 海报自动联动，全国 5400+ 景区库，叠加 SVG 纸张颗粒。</p>
+        <div class="mod-foot"><span>海报智能匹配 · 纸张颗粒</span><span>→</span></div>
+      </article>
+
+      <article class="glass-card mod">
+        <div class="mod-top"><span class="mod-no">07</span><span class="mod-en">CHRONICLE TIMELINE</span></div>
+        <h3>珍藏册 · 编年史</h3>
+        <p>把所有票据按行程正序串成编年史时间轴，按票种与城市筛选，一键导出高清原图与备份。</p>
+        <div class="mod-foot"><span>CSV / ICS / 备份 JSON</span><span>→</span></div>
+      </article>
+
+      <article class="glass-card mod new">
+        <span class="mod-badge">V5 NEW</span>
+        <div class="mod-top"><span class="mod-no">08</span><span class="mod-en">YEAR IN REVIEW</span></div>
+        <h3>年度报告</h3>
+        <p>总里程、到访城市、12 格月度热力、最远单程与准点率，一次看完一整年。</p>
+        <div class="mod-foot"><span>12 格热力 · 榜单 · 准点率</span><span>→</span></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ══════════════ 技术亮点 · 隐私 · 下载 ══════════════ -->
+  <section class="wrap" id="features">
+    <div class="grid-2">
+      <article class="glass-card pad" id="privacy">
+        <span class="chip">ARCHITECTURE &amp; PRIVACY</span>
+        <h2>你的数据，只属于你的浏览器</h2>
+        <p class="sec-lead">迹点点所有数据逻辑均在前端运行：无后台用户数据库、无账户绑定、无追踪。断网环境下所有制票与时间轴整理功能均可离线运行。</p>
+
+        <div class="stack">
+          <div class="stack-item"><span class="s-no">01</span><div><b>原生单文件，零构建负担</b><p>原生 HTML / CSS / JS，无需安装环境，双击即可直接在任何现代浏览器中运行。</p></div></div>
+          <div class="stack-item"><span class="s-no">02</span><div><b>IndexedDB 主存 + localStorage 镜像</b><p>V5 起账本以 IndexedDB 为主存、localStorage 为镜像，并用写入时间戳仲裁新旧；导出前的自动快照与一键回滚让误导入不再是单向操作。</p></div></div>
+          <div class="stack-item"><span class="s-no">03</span><div><b>本地多引擎 OCR 与 AI 转录</b><p>内置 PP-OCRv6 与 Tesseract.js 本地离线引擎，亦可按需使用多模态大模型一键提取纸质票面；V5 起选择联网引擎会明确提示照片将上传。</p></div></div>
+          <div class="stack-item"><span class="s-no">04</span><div><b>V5 安全评审与加固</b><p>修复一处可由恶意备份触发的存储型 XSS，加入导入体积与条数上限、三条低风险 CSP 指令，制票与时间轴整理依旧全程离线。</p></div></div>
+        </div>
+
+        <p class="fine">* 仅在联网查询海报或选择云端 AI 时经由用户授权发起安全请求</p>
+      </article>
+
+      <article class="glass-card pad tint" id="download">
+        <div class="dl-head">
+          <span class="chip">DESKTOP APPS</span>
+          <span class="mono">V5.1.6 STABLE · 自动热更新</span>
+        </div>
+        <h2>下载原生客户端，随时随地开启</h2>
+        <p class="sec-lead">原生轻量打包，支持 Mac 与 Windows，自带自动更新与离线资源包。<b>已安装旧客户端的用户无需重新下载：启动应用后会自动热更新到最新内核（V5.1.6）</b>，网页版与桌面版数据格式完全一致，可随时互相导出导入。</p>
+
+        <!-- 下载清单：单列 5 行 —— 网页离线版 → Windows → macOS Apple → macOS Intel → 历史版本 -->
+        <div class="dl-grid">
+          <a href="https://gitee.com/ajiepotato/TraceDot/releases/download/v5.1.8/TraceDot-V5.1.8.html" target="_blank" rel="noopener" class="dl-card">
+            <span class="dl-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>
+            </span>
+            <span class="dl-txt"><b>网页离线版</b><i>单文件 HTML · 约 11.9 MB · 双击即用</i></span>
+            <span class="dl-act">下载 ↓</span>
+          </a>
+
+          <a href="https://gitee.com/ajiepotato/TraceDot/releases/download/v5.1.5/TraceDot-Setup-5.1.5-x64.exe" target="_blank" rel="noopener" class="dl-card">
+            <span class="dl-ico">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.6l7.4-1.1v7H3v-5.9zm0 12.8l7.4 1.1v-6.9H3v5.8zm8.4 1.2L21 21v-8.4h-9.6v6.9zM11.4 4.6v7.1H21V3l-9.6 1.6z"/></svg>
+            </span>
+            <span class="dl-txt"><b>Windows 客户端</b><i>.exe 安装包 · 约 84 MB · x64</i></span>
+            <span class="dl-act">下载 ↓</span>
+          </a>
+
+          <a href="https://github.com/ajietudou007/TraceDot/releases/download/v5.1.5/TraceDot-5.1.5-arm64.dmg" target="_blank" rel="noopener" class="dl-card js-gh-dl">
+            <span class="dl-ico">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 1.4c0 1.14-.42 2.2-1.26 3.03-.9.9-2.02 1.42-3.12 1.33-.13-1.09.42-2.24 1.24-3.04.86-.86 2.14-1.42 3.14-1.32zM20.9 17.1c-.55 1.27-.82 1.84-1.53 2.96-.99 1.56-2.38 3.5-4.1 3.51-1.53.02-1.92-1-3.99-.99-2.07.01-2.5 1.01-4.03.99-1.72-.02-3.04-1.77-4.03-3.33C.46 16.9.17 11.8 1.87 9.09 3.08 7.16 4.99 6.03 6.78 6.03c1.83 0 2.98 1 4.49 1 1.47 0 2.36-1 4.48-1 1.6 0 3.29.87 4.5 2.37-3.95 2.17-3.31 7.82.65 9.7z"/></svg>
+            </span>
+            <span class="dl-txt"><b>macOS · Apple 芯片</b><i>.dmg · 约 103 MB · 需 macOS 11+</i></span>
+            <span class="dl-act">下载 ↓</span>
+          </a>
+
+          <a href="https://github.com/ajietudou007/TraceDot/releases/download/v5.1.5/TraceDot-5.1.5-x64.dmg" target="_blank" rel="noopener" class="dl-card js-gh-dl">
+            <span class="dl-ico">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 1.4c0 1.14-.42 2.2-1.26 3.03-.9.9-2.02 1.42-3.12 1.33-.13-1.09.42-2.24 1.24-3.04.86-.86 2.14-1.42 3.14-1.32zM20.9 17.1c-.55 1.27-.82 1.84-1.53 2.96-.99 1.56-2.38 3.5-4.1 3.51-1.53.02-1.92-1-3.99-.99-2.07.01-2.5 1.01-4.03.99-1.72-.02-3.04-1.77-4.03-3.33C.46 16.9.17 11.8 1.87 9.09 3.08 7.16 4.99 6.03 6.78 6.03c1.83 0 2.98 1 4.49 1 1.47 0 2.36-1 4.48-1 1.6 0 3.29.87 4.5 2.37-3.95 2.17-3.31 7.82.65 9.7z"/></svg>
+            </span>
+            <span class="dl-txt"><b>macOS · Intel 芯片</b><i>.dmg · 约 107 MB · 需 macOS 11+</i></span>
+            <span class="dl-act">下载 ↓</span>
+          </a>
+
+          <a href="https://github.com/ajietudou007/TraceDot/releases" target="_blank" rel="noopener" class="dl-card">
+            <span class="dl-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1M3.5 4.5V10h5.4"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7.8V12l3 1.8"/></svg>
+            </span>
+            <span class="dl-txt"><b>全版本历史发布</b><i>GitHub Releases · 含校验文件</i></span>
+            <span class="dl-act">查看 ↗</span>
           </a>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-          <div class="p-5 rounded-2xl bg-brand-50/60 border border-brand-200 hover:bg-white hover:shadow-sm transition-all group ring-1 ring-brand-100">
-            <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 text-brand-600 group-hover:scale-110 transition-transform">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-            </div>
-            <div class="flex items-center gap-2">
-              <h3 class="text-sm font-bold text-slate-800">32 套纪念票面进工坊</h3>
-              <span class="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-brand-500 text-white rounded">V5.1.6 新增</span>
-            </div>
-            <p class="text-xs text-mutedText mt-1 leading-relaxed">
-              交通票与影演票工坊新增 32 套纪念票面：公交 / 地铁 / 出租 / 船票 / 客运各 4 套，电影 / 演唱会 / 景区各 4 套，内置真二维码与条码渲染、换色跟随城市自动配色；工坊内「样式」选择条一键切换，所选样式随记录保存，珍藏册缩略图同款呈现。
-            </p>
-          </div>
-
-          <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all group">
-            <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 text-brand-600 group-hover:scale-110 transition-transform">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            </div>
-            <div class="flex items-center gap-2">
-              <h3 class="text-sm font-bold text-slate-800">放大后站名变巨大修复</h3>
-              <span class="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-brand-500 text-white rounded">回归修复</span>
-            </div>
-            <p class="text-xs text-mutedText mt-1 leading-relaxed">
-              地图标记的缩放补偿误用了 CSS transform —— CSS 的 translate() 必须带单位，无单位写法会被浏览器静默丢弃，放大后机场 / 火车站名跟着地图一起变成巨型文字。改用 SVG 原生 transform 后尺寸恒定；桌面端内容热更新补上无边框进度窗与任务栏进度。
-            </p>
-          </div>
-
-          <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all group">
-            <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 text-brand-600 group-hover:scale-110 transition-transform">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-            </div>
-            <div class="flex items-center gap-2">
-              <h3 class="text-sm font-bold text-slate-800">年度报告</h3>
-              <span class="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-brand-500 text-white rounded">第 8 视图</span>
-            </div>
-            <p class="text-xs text-mutedText mt-1 leading-relaxed">
-              年度大数字、12 格月度热力、单程榜单与准点率一次看完；按月的「这一年」时间轴合并在报告里，不再往导航里塞第 9 个标签。
-            </p>
-          </div>
-
-          <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all group">
-            <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 text-brand-600 group-hover:scale-110 transition-transform">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m-8-8h16M6 4v16M9 4v16M12 4v16M15 4v16M18 4v16"></path></svg>
-            </div>
-            <div class="flex items-center gap-2">
-              <h3 class="text-sm font-bold text-slate-800">票面码制做真</h3>
-              <span class="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-slate-200 text-slate-700 rounded">PDF417 / Code128</span>
-            </div>
-            <p class="text-xs text-mutedText mt-1 leading-relaxed">
-              登机牌条纹改用真票面码制 PDF417 + BCBP；火车票二维码不再统统指向 12306 首页，而是这张票自己的车次、日期、区间与票号；交通票与影演票启用 bwip 真条码渲染。
-            </p>
-          </div>
-
-          <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all group">
-            <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 text-brand-600 group-hover:scale-110 transition-transform">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-            </div>
-            <h3 class="text-sm font-bold text-slate-800">粘贴即录入</h3>
-            <p class="text-xs text-mutedText mt-1 leading-relaxed">
-              把 12306 短信或订单邮件正文整段贴进火车票工坊即可自动填票面，支持无年份日期、「-/至/→」多种区间写法与订单号识别。
-            </p>
-          </div>
-
-          <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all group">
-            <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 text-brand-600 group-hover:scale-110 transition-transform">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7c0-1.66 3.58-3 8-3s8 1.34 8 3-3.58 3-8 3-8-1.34-8-3zm0 0v10c0 1.66 3.58 3 8 3s8-1.34 8-3V7"></path></svg>
-            </div>
-            <div class="flex items-center gap-2">
-              <h3 class="text-sm font-bold text-slate-800">数据不再悄悄丢</h3>
-              <span class="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-slate-200 text-slate-700 rounded">IndexedDB</span>
-            </div>
-            <p class="text-xs text-mutedText mt-1 leading-relaxed">
-              账本迁入 IndexedDB 主存 + localStorage 镜像并引入写入时间戳仲裁，不再撞 5MB 墙；每次导入前自动留快照，菜单里一键回滚，且回滚本身还能撤销。
-            </p>
-          </div>
-
-          <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all group">
-            <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 text-brand-600 group-hover:scale-110 transition-transform">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-            </div>
-            <h3 class="text-sm font-bold text-slate-800">老备份导得进来</h3>
-            <p class="text-xs text-mutedText mt-1 leading-relaxed">
-              通用备份解析器认得 V4 与手机端导出的旧结构，老用户不再被一句「格式不支持」挡在门外；旧票面草稿自动迁移到新表单。
-            </p>
-          </div>
-
-          <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-100 hover:bg-white hover:border-brand-200 hover:shadow-sm transition-all group">
-            <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 text-brand-600 group-hover:scale-110 transition-transform">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-            </div>
-            <h3 class="text-sm font-bold text-slate-800">安全评审与加固</h3>
-            <p class="text-xs text-mutedText mt-1 leading-relaxed">
-              修掉一处可被恶意备份触发的存储型 XSS，补上导入体积与条数上限、CSP 三条低风险指令，并在使用联网识别引擎时明确提示照片将上传。
-            </p>
-          </div>
-
+        <div class="tips">
+          <div class="tips-head"><span class="tips-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.8"/><path d="M12 11.2v5.2"/><path d="M12 8.1v.15"/></svg></span><b>温馨提示</b></div>
+          <ol class="tips-list">
+            <li>Windows 安装包与单文件网页版由 Gitee 国内线路直发。</li>
+            <li>两个 macOS 包走 GitHub，自动择优公益加速线路。</li>
+            <li>安装包未做代码签名：Windows 弹出 SmartScreen 请选「仍要运行」，macOS 首次打开请对图标右键 → 打开。</li>
+            <li>桌面端基于 Electron 33，需 macOS 11 及以上，更早的系统请使用网页版单文件。</li>
+          </ol>
         </div>
-      </div>
-    </section>
+      </article>
+    </div>
+  </section>
 
-    <!-- 场景 02 · 核心数据指标看板（极简多态白卡） -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="metrics">
-      <div class="pill-card p-8 sm:p-12 bg-white/90">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div class="lg:col-span-5 space-y-3">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold font-mono">
-              THE ESSENTIALS
-            </div>
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              一份极其轻巧的工具，<br>装下整段远方旅程。
-            </h2>
-            <p class="text-sm text-mutedText leading-relaxed">
-              从生成第一张复古火车票，到翻开整本珍藏册、再到年底回看一整年的年度报告。八个模块都收在一个文件里，过去繁重复杂的整理与绘图操作，全部化作轻柔流畅的指尖体验。
-            </p>
-          </div>
-
-          <!-- 四枚数据卡片（参考图圆角四格风格） -->
-          <div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-4">
-            
-            <div class="bg-slate-50/90 hover:bg-white p-5 rounded-3xl border border-slate-100 hover:border-brand-200 transition-all text-center group">
-              <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mx-auto mb-3 text-brand-600 group-hover:scale-110 transition-transform">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-              </div>
-              <div class="text-3xl font-black text-slate-800 font-mono group-hover:text-brand-600 transition-colors">0</div>
-              <div class="text-xs text-mutedText font-medium mt-1">运行时依赖</div>
-            </div>
-
-            <div class="bg-slate-50/90 hover:bg-white p-5 rounded-3xl border border-slate-100 hover:border-brand-200 transition-all text-center group">
-              <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mx-auto mb-3 text-brand-600 group-hover:scale-110 transition-transform">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
-              </div>
-              <div class="text-3xl font-black text-slate-800 font-mono group-hover:text-brand-600 transition-colors">10</div>
-              <div class="text-xs text-mutedText font-medium mt-1">种票面支持</div>
-            </div>
-
-            <div class="bg-slate-50/90 hover:bg-white p-5 rounded-3xl border border-slate-100 hover:border-brand-200 transition-all text-center group">
-              <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mx-auto mb-3 text-brand-600 group-hover:scale-110 transition-transform">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-              </div>
-              <div class="text-3xl font-black text-slate-800 font-mono group-hover:text-brand-600 transition-colors">8</div>
-              <div class="text-xs text-mutedText font-medium mt-1">大功能模块</div>
-            </div>
-
-            <div class="bg-slate-50/90 hover:bg-white p-5 rounded-3xl border border-slate-100 hover:border-brand-200 transition-all text-center group">
-              <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mx-auto mb-3 text-brand-600 group-hover:scale-110 transition-transform">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-              </div>
-              <div class="text-3xl font-black text-slate-800 font-mono group-hover:text-brand-600 transition-colors">100<span class="text-sm font-sans">%</span></div>
-              <div class="text-xs text-mutedText font-medium mt-1">数据本地化</div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 场景 03 · 七大功能工坊（现代圆角卡片陈列） -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="modules">
-      <div class="text-center max-w-2xl mx-auto mb-14 space-y-3">
-        <span class="px-3.5 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold font-mono tracking-wider">
-          THE WORKSPACE · 8 MODULES
-        </span>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-          八大功能模块，收录你的每一次抵达
-        </h2>
-        <p class="text-sm sm:text-base text-mutedText">
-          从一张泛黄的火车软纸票，到跨越重洋的登机牌、散落各地的城市地铁票，再到年末那份只讲你自己的年度回顾。
-        </p>
+  <!-- ══════════════ 致谢（新增） ══════════════ -->
+  <section class="wrap" id="credits">
+    <div class="glass-card pad">
+      <div class="sec-center">
+        <span class="chip">CREDITS &amp; ATTRIBUTIONS</span>
+        <h2>致谢：站在这些肩膀上</h2>
+        <p class="sec-lead wide">迹点点在开发过程中使用、内嵌或参考的第三方项目、开源数据库、云服务与字体。所有内嵌组件的许可声明同时保留在应用源码内。</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        
-        <!-- 01 行程地图 -->
-        <div class="pill-card p-6 flex flex-col justify-between group">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center font-mono font-bold text-lg group-hover:bg-brand-500 group-hover:text-white transition-all shadow-sm">
-                01
-              </div>
-              <span class="text-xs font-mono font-semibold text-mutedText">MAP &amp; ROUTES</span>
-            </div>
-            <h3 class="text-lg font-bold text-slate-800 mb-2">行程地图</h3>
-            <p class="text-xs text-mutedText leading-relaxed">
-              自动绘制全境底图，铁路实线弧线、航班虚线航路，到访城市逐一点亮；筛选即刻联动地图，直辖市按省域整片点亮。V5 起线路自带流动虚线与流光，票种落点按「一城一点」合并，不再被城市点盖住。
-            </p>
-          </div>
-          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-brand-700">
-            <span class="">全国站名 &amp; 机场坐标 · 筛选联动</span>
-            <span class="">→</span>
-          </div>
-        </div>
-
-        <!-- 02 我的旅游计划 -->
-        <div class="pill-card p-6 flex flex-col justify-between group">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center font-mono font-bold text-lg group-hover:bg-amber-500 group-hover:text-white transition-all shadow-sm">
-                02
-              </div>
-              <span class="text-xs font-mono font-semibold text-mutedText">AI PLANNER</span>
-            </div>
-            <h3 class="text-lg font-bold text-slate-800 mb-2">我的旅游计划</h3>
-            <p class="text-xs text-mutedText leading-relaxed">
-              对话式 AI 行程规划：实时分步查询真实景点、酒店、美食与天气，按天生成时间轴方案与行李清单，支持多轮自然语言调整。V5 起行程最长放宽到 15 天，并新增「按天行程 / 时间轴」双视图。
-            </p>
-          </div>
-          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-amber-600">
-            <span class="">高德 API + 智能推演 · 最长 15 天</span>
-            <span class="">→</span>
-          </div>
-        </div>
-
-        <!-- 03 火车票工坊 -->
-        <div class="pill-card p-6 flex flex-col justify-between group">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center font-mono font-bold text-lg group-hover:bg-brand-500 group-hover:text-white transition-all shadow-sm">
-                03
-              </div>
-              <span class="text-xs font-mono font-semibold text-mutedText">TRAIN TICKET</span>
-            </div>
-            <h3 class="text-lg font-bold text-slate-800 mb-2">火车票工坊</h3>
-            <p class="text-xs text-mutedText leading-relaxed">
-              12306 经典与现代双风格编辑器，八款底图（蓝磁/红磁/蓝雕等），支持电子客票发票与行程单 PDF / OCR 导入与高清导出；V5 新增粘贴短信正文即录入，票面二维码改成指向这张票自己。
-            </p>
-          </div>
-          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-brand-700">
-            <span class="">8 款版画底纸 · 粘贴即录入</span>
-            <span class="">→</span>
-          </div>
-        </div>
-
-        <!-- 04 登机牌工坊 -->
-        <div class="pill-card p-6 flex flex-col justify-between group">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center font-mono font-bold text-lg group-hover:bg-sky-500 group-hover:text-white transition-all shadow-sm">
-                04
-              </div>
-              <span class="text-xs font-mono font-semibold text-mutedText">BOARDING PASS</span>
-            </div>
-            <h3 class="text-lg font-bold text-slate-800 mb-2">登机牌工坊</h3>
-            <p class="text-xs text-mutedText leading-relaxed">
-              内置全球 8500+ 机场与航司二字码联想数据库，纸质扫描件 AI 视觉转录与自动回填，生成你的飞行航程卡；V5 起票面条码改用真票面码制 PDF417 + BCBP，可被扫码枪读出来。
-            </p>
-          </div>
-          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-sky-600">
-            <span class="">OurAirports 数据库 · PDF417</span>
-            <span class="">→</span>
-          </div>
-        </div>
-
-        <!-- 05 交通票工坊 -->
-        <div class="pill-card p-6 flex flex-col justify-between group">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-mono font-bold text-lg group-hover:bg-indigo-500 group-hover:text-white transition-all shadow-sm">
-                05
-              </div>
-              <span class="text-xs font-mono font-semibold text-mutedText">TRANSIT TICKETS</span>
-            </div>
-            <h3 class="text-lg font-bold text-slate-800 mb-2">交通票工坊</h3>
-            <p class="text-xs text-mutedText leading-relaxed">
-              公交、地铁（全国 48 城地铁库全收录）、出租车发票、长途公路客运与 V5 新增的船票，按固定像素规范精准还原城市交通记忆；表单字段跟着票种走，条码改用 bwip 真 Code128。
-            </p>
-          </div>
-          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-indigo-600">
-            <span class="">48 城地铁 · 8000+ 站点 · 含船票</span>
-            <span class="">→</span>
-          </div>
-        </div>
-
-        <!-- 06 影演票工坊 -->
-        <div class="pill-card p-6 flex flex-col justify-between group">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center font-mono font-bold text-lg group-hover:bg-rose-500 group-hover:text-white transition-all shadow-sm">
-                06
-              </div>
-              <span class="text-xs font-mono font-semibold text-mutedText">VENUE &amp; CINEMA</span>
-            </div>
-            <h3 class="text-lg font-bold text-slate-800 mb-2">影演票工坊</h3>
-            <p class="text-xs text-mutedText leading-relaxed">
-              电影票、景区门票、演唱会入场券。支持 OMDb 电影海报自动联动，景区全国 5400+ 4A/5A 联想库，支持自定义取景与裁剪；V5 叠加了 SVG 纸张颗粒质感，票面条码同样是真 Code128。
-            </p>
-          </div>
-          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-rose-600">
-            <span class="">海报智能匹配 · 纸张颗粒</span>
-            <span class="">→</span>
-          </div>
-        </div>
-
-        <!-- 07 珍藏册（跨列大卡） -->
-        <div class="pill-card p-6 md:col-span-2 lg:col-span-2 flex flex-col md:flex-row items-center justify-between gap-5 bg-gradient-to-r from-white via-white to-emerald-50/40">
-          <div class="flex items-center gap-5">
-            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-600 to-emerald-400 text-white flex items-center justify-center font-mono font-bold text-xl shadow-pill shrink-0">
-              07
-            </div>
-            <div>
-              <span class="text-xs font-mono font-semibold text-brand-600">CHRONICLE TIMELINE</span>
-              <h3 class="text-xl font-bold text-slate-800">珍藏册 · 行程编年史时间轴</h3>
-              <p class="text-xs text-mutedText mt-1 max-w-xl">
-                把所有票据按行程正序串接为精美编年史时间轴，按票种与城市智能筛选，一键导出高清原图、备份与归档；V5 起支持导出 CSV / ICS / 备份 JSON，并认得老版本导出的备份格式。
-              </p>
-            </div>
-          </div>
-          <div class="shrink-0">
-            <a href="https://jidiandian.top/release/TraceDot-V5.1.8.html" target="_blank" rel="noopener" class="soft-pill-btn inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold shadow-md hover:bg-slate-800">
-              <span class="">进入珍藏册</span>
-              <span class="">↗</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- 08 年度报告（V5 新增） -->
-        <div class="pill-card p-6 flex flex-col justify-between group relative overflow-hidden">
-          <div class="absolute top-0 right-0 px-3 py-1 rounded-bl-2xl bg-brand-500 text-white text-[11px] font-bold font-mono">V5 NEW</div>
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center font-mono font-bold text-lg group-hover:bg-teal-500 group-hover:text-white transition-all shadow-sm">
-                08
-              </div>
-              <span class="text-xs font-mono font-semibold text-mutedText">YEAR IN REVIEW</span>
-            </div>
-            <h3 class="text-lg font-bold text-slate-800 mb-2">年度报告</h3>
-            <p class="text-xs text-mutedText leading-relaxed">
-              按年份回看自己的一整年：总里程、到访城市、12 格月度热力、最远单程与准点率，以及合并其中的纵向时间轴。
-            </p>
-          </div>
-          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-teal-600">
-            <span class="">12 格月度热力 · 榜单 · 准点率</span>
-            <span class="">→</span>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- 场景 04 · 技术亮点与隐私保护（双列圆角卡片） -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="features">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-        
-        <!-- 左侧：九种票面规范与离线架构 -->
-        <div class="pill-card p-8 flex flex-col justify-between" id="privacy">
-          <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold font-mono mb-4">
-              ARCHITECTURE &amp; PRIVACY
-            </div>
-            <h3 class="text-2xl font-extrabold text-slate-900 tracking-tight mb-4">
-              你的数据，只属于你的浏览器
-            </h3>
-            <p class="text-sm text-mutedText leading-relaxed mb-6">
-              迹点点所有数据逻辑均在前端运行：无后台用户数据库、无账户绑定、无追踪。断网环境下所有制票与时间轴整理功能均可离线运行。
-            </p>
-
-            <div class="space-y-4">
-              <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                <div class="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center text-brand-600 shrink-0 font-bold text-xs">
-                  01
-                </div>
-                <div>
-                  <h4 class="text-xs font-bold text-slate-800">原生单文件，零构建负担</h4>
-                  <p class="text-xs text-mutedText mt-0.5">原生 HTML / CSS / JS，无需安装环境，双击即可直接在任何现代浏览器中运行。</p>
-                </div>
-              </div>
-
-              <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                <div class="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center text-brand-600 shrink-0 font-bold text-xs">
-                  02
-                </div>
-                <div>
-                  <h4 class="text-xs font-bold text-slate-800">IndexedDB 主存 + localStorage 镜像</h4>
-                  <p class="text-xs text-mutedText mt-0.5">V5 起账本以 IndexedDB 为主存、localStorage 为镜像，并用写入时间戳仲裁新旧；导出前的自动快照与一键回滚让误导入不再是单向操作。</p>
-                </div>
-              </div>
-
-              <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                <div class="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center text-brand-600 shrink-0 font-bold text-xs">
-                  03
-                </div>
-                <div>
-                  <h4 class="text-xs font-bold text-slate-800">本地多引擎 OCR 与 AI 转录</h4>
-                  <p class="text-xs text-mutedText mt-0.5">内置 PP-OCRv6 与 Tesseract.js 本地离线引擎，亦可按需使用多模态大模型一键提取纸质票面；V5 起选择联网引擎会明确提示照片将上传。</p>
-                </div>
-              </div>
-
-              <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                <div class="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center text-brand-600 shrink-0 font-bold text-xs">
-                  04
-                </div>
-                <div>
-                  <h4 class="text-xs font-bold text-slate-800">V5 安全评审与加固</h4>
-                  <p class="text-xs text-mutedText mt-0.5">修复一处可由恶意备份触发的存储型 XSS，加入导入体积与条数上限、三条低风险 CSP 指令，制票与时间轴整理依旧全程离线。</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-6 pt-4 border-t border-slate-100 text-[12px] text-mutedText font-mono">
-            * 仅在联网查询海报或选择云端 AI 时经由用户授权发起安全请求
-          </div>
-        </div>
-
-        <!-- 右侧：下载桌面端应用与版本直达 -->
-        <div class="pill-card p-8 flex flex-col justify-between bg-gradient-to-br from-white via-white to-slate-50" id="download">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold font-mono">
-                DESKTOP APPS
-              </span>
-              <span class="text-xs font-mono font-bold text-slate-400">V5.1.6 STABLE · 自动热更新</span>
-            </div>
-
-            <h3 class="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">
-              下载原生客户端，随时随地开启
-            </h3>
-            <p class="text-sm text-mutedText mb-6">
-              原生轻量打包，支持 Mac 与 Windows，自带自动更新与离线资源包。<strong class="text-brand-700 font-semibold">已安装旧客户端的用户无需重新下载：启动应用后会自动热更新到最新内核（V5.1.6）</strong>，网页版与桌面版数据格式完全一致，可随时互相导出导入。
-            </p>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-
-              <a href="https://github.com/ajietudou007/TraceDot/releases/download/v5.1.5/TraceDot-5.1.5-arm64.dmg" target="_blank" rel="noopener" class="js-gh-dl p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
-                <div>
-                  <div class="flex items-center justify-between">
-                    <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">macOS (Apple 芯片)</span>
-                    <span class="w-2 h-2 rounded-full bg-brand-500"></span>
-                  </div>
-                  <p class="text-[12px] text-mutedText mt-1 font-mono">.dmg · 约 103 MB · 需 macOS 11+</p>
-                </div>
-                <div class="mt-3 text-xs font-bold text-brand-600 flex items-center gap-1">
-                  <span class="">前往下载</span>
-                  <span class="">↓</span>
-                </div>
-              </a>
-
-              <a href="https://github.com/ajietudou007/TraceDot/releases/download/v5.1.5/TraceDot-5.1.5-x64.dmg" target="_blank" rel="noopener" class="js-gh-dl p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
-                <div>
-                  <div class="flex items-center justify-between">
-                    <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">macOS (Intel 芯片)</span>
-                  </div>
-                  <p class="text-[12px] text-mutedText mt-1 font-mono">.dmg · 约 107 MB · 需 macOS 11+</p>
-                </div>
-                <div class="mt-3 text-xs font-bold text-brand-600 flex items-center gap-1">
-                  <span class="">前往下载</span>
-                  <span class="">↓</span>
-                </div>
-              </a>
-
-              <a href="https://gitee.com/ajiepotato/TraceDot/releases/download/v5.1.5/TraceDot-Setup-5.1.5-x64.exe" target="_blank" rel="noopener" class="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
-                <div>
-                  <div class="flex items-center justify-between">
-                    <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">Windows (x64)</span>
-                    <span class="w-2 h-2 rounded-full bg-brand-500"></span>
-                  </div>
-                  <p class="text-[12px] text-mutedText mt-1 font-mono">.exe · 约 84 MB</p>
-                </div>
-                <div class="mt-3 text-xs font-bold text-brand-600 flex items-center gap-1">
-                  <span class="">前往下载</span>
-                  <span class="">↓</span>
-                </div>
-              </a>
-
-              <a href="https://github.com/ajietudou007/TraceDot/releases" target="_blank" rel="noopener" class="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-brand-500 hover:shadow-soft transition-all group flex flex-col justify-between">
-                <div>
-                  <span class="font-bold text-xs text-slate-800 group-hover:text-brand-600">全版本历史发布</span>
-                  <p class="text-[12px] text-mutedText mt-1 font-mono">GitHub Releases ↗</p>
-                </div>
-                <div class="mt-3 text-xs font-bold text-brand-600 flex items-center gap-1">
-                  <span class="">查看更新</span>
-                  <span class="">→</span>
-                </div>
-              </a>
-
-            </div>
-            <p class="text-[12px] text-mutedText mb-6">
-              Windows 安装包与单文件网页版由 Gitee 国内线路直发；两个 macOS 包仍走 GitHub，自动择优公益加速线路（国内直连，无需自备代理）<span class="text-brand-600" id="dlLineHint"></span>；如需历史版本或核验文件，可前往 GitHub 发布页。安装包未做代码签名：Windows 若弹出 SmartScreen 请选「仍要运行」，macOS 首次打开请对应用右键 → 打开；桌面端基于 Electron 33，需 macOS 11（Big Sur）及以上，更早的系统请使用网页版单文件。
-            </p>
-          </div>
-
-          <!-- 单文件网页版下载入口 -->
-          <div class="p-4 rounded-2xl bg-brand-50/70 border border-brand-200/60 flex items-center justify-between">
-            <div>
-              <div class="text-xs font-bold text-brand-900">需要单文件免安装 HTML？</div>
-              <div class="text-[12px] text-brand-700">约 11.9 MB · 包含所有离线数据库与字体库 · 下载即为 V5.1.6 最新版，浏览器直接打开即用</div>
-              <div class="text-[12px] text-brand-700 mt-0.5">旧版桌面客户端同样无需重新下载，启动应用后会自动更新内核</div>
-            </div>
-            <a href="https://gitee.com/ajiepotato/TraceDot/releases/download/v5.1.8/TraceDot-V5.1.8.html" target="_blank" rel="noopener" class="soft-pill-btn px-4 py-2 rounded-full bg-brand-600 text-white text-xs font-bold shadow-sm hover:bg-brand-700">
-              获取 HTML
-            </a>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- 场景 05 · 关于作者阿杰同学与开源理念 -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="creator">
-      <div class="pill-card p-8 sm:p-12">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          
-          <div class="lg:col-span-8 space-y-4">
-            <span class="px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold font-mono">
-              ABOUT THE CREATOR
-            </span>
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              一个人，也是一支充满温度的团队。
-            </h2>
-            <p class="text-sm text-mutedText leading-relaxed">
-              迹点点由<strong>阿杰同学</strong>全程独立构思、设计、前端开发与维护。从最早在 GitHub 上开源的 12306 火车票编辑器，一步步扩展为涵盖全国高铁、民航、城市轨道交通与演出门票的一体化旅行工坊。
-            </p>
-
-            <div class="flex flex-wrap gap-2.5 pt-2">
-              <a href="https://github.com/ajietudou007" target="_blank" rel="noopener" class="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 transition-colors">GitHub 主页 ↗</a>
-              <a href="https://b23.tv/nBL4aXt" target="_blank" rel="noopener" class="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 transition-colors">哔哩哔哩 ↗</a>
-              <a href="https://v.douyin.com/sMRNgbplBkQ/" target="_blank" rel="noopener" class="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 transition-colors">抖音 ↗</a>
-              <a href="https://xhslink.cn/o/9780LQiSR6U" target="_blank" rel="noopener" class="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 transition-colors">小红书 ↗</a>
-            </div>
-          </div>
-
-          <div class="lg:col-span-4 flex justify-center">
-            <div class="p-6 rounded-3xl bg-slate-50 border border-slate-100 text-center w-full max-w-xs">
-              <!-- 头像微质感容器 -->
-              <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-brand-500 via-emerald-400 to-teal-400 p-1 mx-auto mb-4 shadow-soft">
-                <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QBMRXhpZgAATU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAABQKADAAQAAAABAAABQAAAAAD/7QA4UGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAAAA4QklNBCUAAAAAABDUHYzZjwCyBOmACZjs+EJ+/8AAEQgBQAFAAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/bAEMAAgICAgICAwICAwUDAwMFBgUFBQUGCAYGBgYGCAoICAgICAgKCgoKCgoKCgwMDAwMDA4ODg4ODw8PDw8PDw8PD//bAEMBAgICBAQEBwQEBxALCQsQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEP/dAAQAFP/aAAwDAQACEQMRAD8A/fyiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//Q/fyiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKrXl7Z6fbtd388dtAn3pJWCIPqzEAUAWaKZHJHMgliYOjDIIOQR6g0+gAoqjf6ppulxGfU7uGziHJeaRY1/NiBXFH4u/ChZfIbxpogk6bTqNtuz9PMzQB6HRWfpuraVrNqL3R7yG+tycCSCRZUJ/3lJFaFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAf/R/fyiiigAooooAKKKKACiiigAooooAKKKKACiiigArzLwV4wf4i3Nz4k0Obb4XtJprW0lUA/2jLCxjlnVv+eCuGSPH3yC+du3PE/tS+LdU8H/AAO8Qz6BObXWNaNroljKv3o7nWLmOxjkX/aj87ePda+P/wBun9qmx/ZB+E+g/Bb4O+XH441axSz0uMAEaZp0CeUbxx03AKVjzwWDMchCCAb37Zf/AAUV8D/s2zzfD3wPap4w+I8if8eaPi00/cOHvJFOdw6+UuGI5YoCCfwru/EXxa/bG+I0Y+N3xJkttHtGF3rd9cTC10TQtPzkiKIERtPJ92KNV3O2PvckfLGpXl7LNc3LzS32oXsjTXd3Oxea6nkOWkkdstjcc4PXqeap2GneQjRXc7XgkfzWRmPlebjG/Z0LAEjJ/KsZV4oD93fHf/BWH4d/DTwpYfDf9l3whdeKLTw9aw6dbaprDtbWQitkESMFJ86Y4UcsYyetfnj8RP29v2yfifK8ep/EF/Dlk+f9F0CNbNVB7eamJT+Mhr5ClkLOA+TgYHPA+g7VeR8kA9D6VzvFt6JFOLKmv32u+ILmS68VaxqOu3Ehy8t7dyTMT6ncSf1rip10yA+XDp4mYdQDIf1zXfyxq2fSqxcIuzPArL6w4u8hcjPt39gX9sbwF+yN/wAJVqXi3RvEOsXPiQwxpYaeI10+3jhyfNxNKGaZicZwMKMZOeP1B03/AILMfs43Dqur+FvFGmq38RtbeQD/AL5nzX87nmqPel+0s2Fy2PQGtVjU+hm5pOx/UD4V/wCCq37GHiadLa58VXegyPx/xMtOuI1H1eJZEH519deB/wBoH4G/ErYvgLx7omuSSY2xW1/C8xz/ANMt2/8ASv4u5sN87AN7OA36HNYFxcaPFKHmiSGWPlWgDxuD6jb8ufwrohWTdh8yP7wqK/nC/wCCVfxc/ae8Q/F6DwfpWr3fiL4YQRy/2pHq90sv2HEbGJrUuxlDmTaNiDaVJ3AYBH9HtbFBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAH/9L9/KKKKACiiigAooooAKKKKACiiigArO1O6vbS2L6dZm+uDwkYdY1z6s7fdHqQCfQGr7MqKXchVUZJPAAFfkh+1Z/wVS8DfDG+vfh78ArSHx34ugLxT3pY/wBk2LrwcyKQZ2U9QjBAer54oA+/fFtv8WpbKbU7vxvo3gTToAWeRbL7YUHq9xdyxRDH/XH8a/O/4iftd+F/hvezxxftfWGqXsRINqnhW31WAMOxfT/LwPpJmvw6+K/xg+L3x41WXW/jT4xvdedmLx2cchisYMnO2KBcRqB0yFz7nrXkI0zSrcZitUwPX5j+tc88VGOgH69fFr/gprpXjnwXZ+CvFp07XZbPWdG1W01jQYru1Vm0u/gunS6sL5A8e+NGAaOaQbsDGOa/OD40/FrV/jt8YPF/xc1m5e4k12+lWzVs4g02JilvCgP3QEC5HsSeSa8oOnWTfO0EZB7bRU8VskK+XEAiAYAFYyxakvdBprcFIJLMOnSnszGTISk8rBzU1YSVwUrIjJYjmOmIzKT1qeoRCScZ60cnmUpE6FmU80gUbdzcmnJH5YK5zTASeMcVkkrmnRJi/L6Cm7QOQBUuwY96btfPSrsjNUmuhE8fmHbioZLNWXEqB0HUEA1c2MDnpSSbljJznjmplKz0NoUrrUqaOL/QNVt9f8JahdaDqto2+G6spnhljbsVZCGH4EV+pP7P/wDwVe+NvwvNvoXx1sP+Fh+Hk2p/aEJWHVYUHdjgJPj/AGwrH/npX5cxqwXKnrViIujZZsehrro1XbVnPyNa9D+x74F/tJ/Br9o7w9/wkPwn8Qw6oIgDc2jfur21Y/wzwN86+m7lT2Y17rX8Pmga14k8EeIbTxp8PNZufDPiGxbfDd2cjRNnrhtvY9xgg9CDX76/sT/8FPtN+Jl9YfCT9ovyPD/jKbbDZasMRWOpseFWQfdhmY9Mfu3PA2nCntTuHkfsdRQDmimAUUUUAFFFFABRRRQAUUUUAf/T/fyiiigAooooAKKKKACiiigAqOaaK3ieed1jijUszMQFVQMkkngADqakr5X/AGzPhv8AGH4vfAPW/ht8E9StNJ1vX5Iba5mu5XhU6ezf6QiyIjkM4wp45QsOpFAH46ft5ft/a58Zr3Vvg/8AAjVW0r4d6e5ttZ1+IlG1OTndb275BEBwRwQZeSSI/vfkpa3eiQKbDR/miT721c5Pq7nGSfbp2FfSn7WHwA8F/s5NoPwUbxdN4z+IcKLc6ktsBBpGjwyjcIkjwZJJ5Rh3diuEC/Llhj5jgsobOOO2t+Fj5J7s3cn/ADxXNiKqitRqN9DW3gpnpUa+X3pJXxDiqLPke9ebzXeiNGuXctyyBcYHGaeCCSAc4rMkmYkAZyOBVG61C7jkjtLT95cyc89FX1NdMKXY55TuzoqQMrfdINcs02up8yTRXXHKLx+WQM0201dDN5UwNvMOCr8c/jVOm90JnWU1twHy9aofbTnHHFTJdowy/B7e9ZX0CLLcTNgiTrTWGM9qEcOpYdKa7NsYxjew5xnGahxNXO4hBzncasKQBzzVBJY7mFZ4W3I3THr6H0PtR9oSaFmhOWj4Yd1I7EdqmnB68xXtLamkGXHJprFGUrnrWYkxJ3E5AqXzFJ3dBVaGntW9bFkhVXC+lR8tEAe1Ij7lYilTJUc04R0uczlaVgeNnQiN/LfscZ/MVjTalbXLf2Frto4csPJmtxvZWPRlXqc9wDz9a1y+HxSSQPcmKa1ma1vbZxLbzoxV4pEOVIYcjnHI6HntW1CfK7MG1KWh/QJ/wS0/bW1n4r2s37O3xMvDqfiLw7aGbSdTJLNe2EBVGimJ5MsQKkMeWT73zKSf2Yr8j/8AgmR8YPhN8btP1HVNU8J6Ro/xq8NW4s9W1C2s4be51KyYgLdZjUZZmULPj+PDdGAH64V6JQUUUUAFFFFABRRRQAUUUUAf/9T9/KKKKACiiigAooooAKKKKACvnD9rD9oDSf2Z/gZ4i+Kd+EmvbWMW+mW79LjUJ8rBGR/dBy7/AOwrGvo+v5xv+CwXxhfxh8ZfDHwKsZ86T4Otf7U1FAfla9vBlFYeqQhcenmmk3bUD8oL/Wtf8Ua9qfjTxhdPqHiDxBO95d3Mpy7vOxc59Mk5x2GB0FNDArljzVNpS0rSN3pssigda8vEPm1Cm29iee6gVTkn5RzxWLJNqV1lbNEhUfxSfe/BRmrkk8SRu8h2qoyT/nvX3R+zP+w94i+OOk2njfxxqcnhrwjejfawW6htQvogxXzBuysUZIO1mDFuoXHNRUqwox9pN2R14TB1sRU9nSXMz4F+zNGyve6ykUnQIkZkY/gv9a9b0L4E/Gjxwkcng3wTq2t7lAS+isJrVMH+F2lCxMpHcHj1r+hP4Xfsv/Ar4PJE/gvwlax3sYH+nXY+13jH182XcVz6IFHtXv7S7sB2JA6d8V4WI4ugnalC/mz7fB8ATaTrzt5I/m60X9hH9pXXAZr7R7TQWj4H229jR/wWLzD+fFdxF+wP8eZoWt9eTRL+M/dkS+MdxH/uMYtrf7rDB9R1r9+7/TrK/BEyYfGA68MPx/xrgtU8O6jaAyW5FxF6gfMPqP8ACvIrcVYtP3Iq39eZ9JheA8uatNyv6/8AAP52/Gf7J37Q/wAPZJGuPC1zrOnRZIn08rd4T1KxFnU46gjHvXgty1zZySeZA8bW5xcW8imOWPP8QVuQPUdM/Wv6cDuSTOSGHvg1xfjr4U/DD4qWn2L4g+HLTV2wVWeRNlymf7k6bZF/76x7V14bi9XSrw+aPPzHw2XxYWp8n/mfzs2N5DPDvhfcnf1B9x2qZJMSZX1r7+/aD/YIu/C9vL42+ALz6lb26brrRZj5tyFUfM9s3WUdzGfnH8JboPzwhu0nDYVopYjiSNhhkYHBB/H1+h5r6fD4mnVj7Wi7r8j81zPK8Rg6nsq8bM+k/gd+z7ffG/w145HgBwfGfhHyNQj06RsJq1jchhJHGTwlxE6jy+zhtpwcZyfgz8GtC+LnxCg8EaprM3hbUtZSa1srto9yxajCC6wXUJwxWQK8bAEMrheDnFe8f8E59XuLP9oTV7aKQot74dnLAHAJhnhYE/Svbf2x/h/J8MviZ4e/aK8JxC3stU1K0Op+WMLDq9s4lhuDjgC6RCjnu4yeWrmrZm1inh+trrz8j2cNkang447eKdpL9T4A+LPwX+IfwP8AEi+FfiNp6273OTZX8B8ywv0HeKXAw3qjAMD1A4z4/du6wzhTteNSVz2K8n+Vf0r/ABU8DeDvjF4S1L4feM7YXGm6hlo5AB5trL/yznhb+F0z+Iyp4Jr+c/4leDNc+G3jLxD4D8UEPqWgyyW8kgBCzJt3RTLn+GSMqw+tY5TmccUndWkt1+o+J+HJYCUZQd4S2f6M5uxvTeW3n7fLdNokXnjdyp+jDpVsT7SfWvtr42fBG20z9k/4O/H/AEe1EN6mmQ6br6qMedbzySGyuGH95BiMnuPLHavg/wA0JezWjON8bfoeQa9NTjJc1Pb/ACPnsZhZ037610fyZtZBwe9ODMhyOM1FCd/GOaRtxfH4VctlY4oNKbZ7D8CfjTrH7Ovxq8LfGrRCzRafcLb6pAp/4+bGb5ZkI7lkyV9HVTX9l+ha3pniXRLDxFolwt1p+qW8V1bTIcrJDModGHsVINfw3RxLqltc2YHzMGjZSOUkHK5HbkcHvX9QH/BKb4pXHxH/AGR9G0nUJTLfeCru40VyevkxbZrf/vmKVUH+7XbQk2rM6D9JqKKK2AKKKKACiiigAooooA//1f38ooooAKKKKACiiigAooooAZJIkUbSyEKiAkk9AB1NfxO/HD4gXPxH+LHjz4t6o5I8T61dyW5Pe2icrEq+oVAi+ny1/bBPBFcwSW067o5VKMPVWGCPyr+cL/gpB+yV8D/2V/glpEvw6sru51fxTr4hS51G4+0vZWUUU0721sMKI0aRlLHBdscsRUyjdWFJXVj8h7a5a6hErJsD5IHt2q9FGGBLVBHGtqoSVgqRKFJ6dBjirixvdqwKm2tyDl24cjvgH7v1P5VyeyWpEHZ3DwR4S1P4peP/AA94I0tWWPWtStrBXUZwZ3Cs+O+1ct7AV/WD4W8MaX4W0Wz0TSoRDa2EEVtAijiOGBBHGn4KB9TmvwR/4J++GbfxH+1JoMsMJFl4U02+1QHbhS7R/Z42H/ApRgnknP1r+hWLLNxXxvFlf34Ul0Vz9P4GoWpVKz6uxXa2zzUX2fHUVsrGwGSOtJ5eDmvmI4dtn3EatjGMAHtVGQFBnmt65gLFWAwazbiIMeeg70OHK7M3p1LnL3+kafqIzcRgP/fXhvz71yN74PvoCXsiLiPrgna4/Doa9ISOMykA1aVcH2rCVJM66eInE8Wh+0WcojnRonU9GyDXxL+1T+xpYfFqO4+Ivwogi07x1Epee0ULHBrAHJU9AtyezHiTo2Gw1fp5cWtrdDy7mNZB/tDOKym8K2L5a3Z4CfQ7h+Rrqy/FVMNNTpv18zjzjC4fHUXRrLXo+zPxE/4Jt6DfRftKa0mp2Ulnc6PoF9Dd206FJIJjcwxGORGAKsDkYIzX6/fGP4Uad8TfhX4s8ByKCut2MiQq3SO6j/eW7qexWVVP516Fpngvw9Ya5feL4dNtY/Eerww29/qMcQS4vI7fPlCVh94rnr1OBknAx1Ys2xxn8s16OZ45VcRGvTVmrHz2TZW8LhJYWq73b+48mvvDN1DY219axEzLbxCeAdd4QBiv454/KvyF/bN+EurfEX9ovwjoPhSyefWPHelQW2UX5YjaXTJJPKeyxwD5j2Ar92UtCB0JP5VjzaBpn9rLrz2MP9opAbZbny184QM28xiTG4KW+YgHBPWscqrvDVpVrbpm+cYFYzDxw7ezX3I8E+JnwbtPEPwB1j4LaZBvtH0T+zrAcDEtrEPspOeAfNjQk/Wvw/8A2u/2Zbz4EaX8Lr5QBqeuaO8equpyratA/mSgN0+5KqDsQme9f0kwMFBU+tfnj/wU98NJqn7Pmj+IwgMnh/xDaPu7iK7jkhcfi2z8hXqcP5hONZUm9JN/keLxTllOWGdZL3opL5Jn4L6VfmQPFcLsuI+GQ8H64rXiZCGDjhu9UPs1vct5cr7mi+6wO2VPofT8x6Uu+7tDmcGWIf8ALVVzj/fQdPqOK+3lT7H5I49Tv/hP4Cu/ib8c/DPgDTtXXQ77xRItrbXcib4RdMjCESqOSjyKqtjJGcgEjB/pT/4Jv/su/E/9mPwL4zsPip9jt9R8S6wLuK0sZvPhhiij2Bg+B/rCTheoVRnniv5rPhTq9xofx2+F+vWhxLa69psikcg7buM8fUGv7ca64L3UbBRRRVAFFFFABRRRQAUUUUAf/9b9/KKKKACiiigAooooAKKKKACvw+/4Ldlx8NvhgQfkGsXpP1+zrj+tfuDX40f8FrdBlvf2f/BmvxrkaZ4iWNz6Lc2s39UFAH8+XkxrPJcZ3yOSdx6gHnjsPwp/k/aJkDHcOgU/dz6n1/Gq8FzG0MfqyqfzANfSP7LvwC1T9o74pReDYi1t4e0xFvNdvEOHis92BDEf+es5+RfQZboDXnSrWu5aJGlKk5yUIbs+/wD/AIJj/CvU9L0fxb8ZtXtzFbeIvJ0vSiwwZba0YtcTL/sNKFVT3Kt6V+s1ssSK08rLFHGpZ2YhVVVGSWJ4AA5JPQVkaPoGl+HdKsfD+gWcen6XpcEdta20QxHDDENqIo9AB9T1PNfGP7adh+0D4/0ax+DfwV8O3VzpuswmbWdRVkhgaPftS0852UKDjfKOpG1ehavga1b6ziXOWi/Q/XcPR+o4JU46v9Wcb8aP+Clnw18Fajc+HvhVo7+Nby2LI988v2bTxIpwfLO1pJlB/iAVT2JHNfEniD/gpb+0jqsz/wBjR6LocZ6LBY+eyj/euHfP5V6P4K/4Jd/EfU4kuPHviyw0MMMmGyie+lHsXJijH4Fq9/0v/gl38ILWJW1jxLruoSj7xja3tlP0Ajcj/vo16PtsJDqn+J4cqeYVXorL1sfnfd/t3/tZXc3mN45MWf4Y7GzVR+Hkmu9+Gn/BRL47eHfFdhL8StQt/E3ht5US+hNpDBcJCTh5IZIVT51HzANkNjB65r7tb/gnj+znYMBLYatcMBjdJqLjP/fCrVd/2CP2aUYbtEvjggkHUZznB6Hnoe9ZSzbBfDJfgdlLIczTU4y/E+8bK4tdQihv7GQTW11Gk0Ug6PHIoZGH1BBrU8pfWuc0yaKKOK2t41hhgRY40UYVEQBVUD0AAAroUk35PavmKkk3eJ91CElH3tyBlGee1eXfHD4w6R8Cvhfq/wASNWtze/YQkVtaq203F1O2yGPd/CpPLHBwoJ616dLJjO3rXkXxg+Fvhj42+CZ/h74y88adcTQ3Ie2kEcySwNuQqxDD1ByDwT3rfDuHOvabdTmxtKq6b9j8Vj8UvFf7d/7UPjDUJJ7TxUPDtqxJS20q3ihRB2HmOryN9S1cQP2pf2mMmR/iZruepxdkfoBiv1l0j9gj9nXTQiDw9d35Xq1zqE7E/URsg/IV2n/DEv7Oipvm8D2yJjlnuLrH5mavolmuHWkI/gfHT4axu86i+8/JPQP22/2ndAmEkHjy7vwv/LPUI4LtD9fMQn8jX0j4D/4Kg+PdPvYbb4o+F7HW9POBJPpu60ulH94I7PEx9sLn1FfVOt/sOfsqzozTWkekd98WrSRY/wC/krD9K8T139hr9kl5nhsvik+jTnpv1SwuFU+6sFP/AI9VPFYafxJ/cZLL8bRXuTT+Z+inwz+J3gf4xeEYPHXw91Eahp0zFJFI2TW8oGWimjPKOPToRypIOa4b9qj4Ua18cP2f/E/w+8Nsg1idYLyyVzhZbiylEyw7jwplClATwCRnivAv2Uv2aLX4D+PtU8ReHfi3pnibw3q1m1vNYQeWjyzKwaGR8TOgMXzYI5O4joa/Q+C2lbDQKZE/vL8w/MV53J7KsqlDZHtQn9Zw0qWIVm9D+QzUdMmsbue0v7eS1ubSV4ZoZlKTW88bbXicHBV1IwaigdYiApOa/ZL/AIKW/s7+HLXQJP2kPD5TTdWWe2stat9pCagsziKG4AAws8ZwGJ++vXkfN+Mob5/pX3VLFKpBTj1PyDMMFPDVXTkejfBnQx4j/aK+F/h20Xa174g0sMBnHzXceTj6LzX9s9fyJf8ABO/wjL46/bh8BRoA0OgPPqUp9BZ27sv/AJFK1/XbXqx2RzoKKKKYwooooAKKKKACiiigD//X/fyiiigAooooAKKKKACiiobm5t7O3lu7uRYYIFZ5HchVRFGWZieAAOSaAJunJr8vP+CmvjL4L+NP2XvGfgGbxvog8U6f9n1Gy0/7fbm6ee0mUsixB925oy6gYyc4r89/2pP20fjP+2X8U5P2df2VnubXwkZHhkuLVzby6mkRxLcXE/Bhs16hcjcMFskhBreC/wDgk74NXSY5fiJ441C71WRcyrpcUUVujnqFecO7gepVc+grhxmY0cOl7WVrno4HKcRif4Mbn426XMsllGzMB5Yw2T0C+v4V+h37Efx7X4F3XjPT7Lwnc+JPEXix9KSyiR/KXYglCLtCPI7yO42qqjP4isr9pz/gnh4s+CGhTfEX4canJ4t8M6fiS9jkhCX1mgP+tdEyssQ/iZcFepXbzXUfs4fsq/EX42eH5/jb4K8T2OlreXbW9tFcG4hulmsWG2USxKwj+Y/KQSR14rkr4nDVKLm5e69DTC5biqWK5VF8y1Prr4qftR/tj+Bbayl1f4dWPg7+1xN9hW+tpJJJ3hUMyjfPkEblzuReorE0P4o/t7/FDSdP1Twzpsthb30KSO62trZwxOw+ZRLcgFsH+7nHQ81598CPC3iP4pfHm18K/F3VL/X/APhH/tk+oRahdzXTbLBtrW4aVmwkk+xW24yua/YOSWVmGcKQMKigKiKOFVQOAoHAA4Ar57MKuHowShC99j7fLMJiK071J7b/AKH55W3wv/b+1jEt545g05m6qdS6fhDCy1oN8Cf2/nj3W3xVsy3ob6f+tsa/RK0DZAAyTgV+Yv7RX7TXjn4geOviB8H/AIMfEbRfhhpXw2sJLjVdY1C48m71O8jO2SzsGCuwCN8hKDezd8ECpy1zxDtCCOnOcRTwkU5N6mpdfDH/AIKQ6R86eL9M1EL0D3EMgb/v9brXGah8RP2/vAQaXxT8PrHxVZxcu1pEkkhA9Pscob/xw1+XXw1/bY/aV+GXiCPW7HxvqOs25kD3Fjq1xJfWtwv8SskpYrkfxIVYdjX9Evwq+KGj/GL4feH/AIn6AjQWuv24lMBbc0EysY5oSR12SKwz3GDUZzh6lC0qkIuL7F8OZksZJ04TcWj5j+C37a3w9+IGvr4E8a6fP4D8UtIIVgvm/wBGllPHliVlRo3J6LIoz0DE8V92CKaJirgqR2NfEP7cfwK8OfEj4Q6x8RoLNIPFXg62N4l0ihXuLOI5mglI5cBMuhPKsMDgkV+eHhX9t39pTStC07wxY+IIr2O0iWCB7iyhuLoogwqmRlLSEDABOTjrmuD6hTrU/aUNO6Panj6tGq6VXXzP3vjt5ZGAQZZu1fAfxm/bds/D3iib4ZfALw4/xC8XK7QvJEry2kUqHDLGkPzzlT94gqg/vGvgjxX+2L+0hrml33hTWfEz2Ud5EYbhYrOG0uBG4wy71RZE3DgkEHFfpR+xH8GtM+HHwU0rxaLZBrvjSP7fczgAutoxItoQ3UIEG8gdWY56CohgI0IOtXV+yM6uNq4maoUny+Z4jpvgf/go78WQLvxB4otfAdpOM/Z1mS0dFPby7RJZB/wJ8+tdlbf8E6fHPiCB9S+KnxnublBguQksyA+8l1OB9PlFfotbPbWEMt9duILa3jaSRz0REBZmP0AJr+eH45/tBeD/ANp60+IPiv4jePdT8PvoTrF4J8LWds8lndRlmBlupBhFdgAXZvmBPy5UBa9jJozxN+VKKXZHzfEHJgkvecpPufpJY/8ABNX4VRwi7l8d6rq8XTfbLaBAf94CTn2zRdf8E5/hDIu2DxLriMO7G1Yfl5Ir8M/gb+0B8SP2f/GVp4t8C6lJGkbr9qsXdjaXkOfmimjztII6Njcp5BBr+qXwt4r0vxx4T0PxtoTH+zvEFjb38GeojuIw4U+652n3FRneHrYZJp3T8jbhvG0cSnGStJH5seNP+CcV/b6LfN8MfFLahqEkLpFb30KQSMT/AM85UPl7+wDhRn+IV8X/AA08PaToOt61o3xG+K2u/C7UtKaOGAW1heXheZC6zrOttKjRNGVHGDnJ54r+iSyO889K/Jn9t3wl4et/2lfCqm0zJ45hsDc7eC8oufskjZHILRhcnuRnrWeV4/mTU1cvOcrXMpRk0mfnhr3x3+LPjLQfGPwz8WeMNR8TeGJWtmi+3FpGzBcAwzp526SIuACVLdCQeea+c7m6WyujBd/IcblPUMvYj8ulf0y/Ej9jH9nTxfo+paHpPhC08PXMkTRQXWnmS1dZUUiGSXY2JdrEE7w2efWvzo/Z8/4Jx674s8QXHiP9pG2fSNL0mRrODS7WbbNqTQMVad5Rkx27dV24Z+o2ryfboZrhnCUtlE+Px3D2Lc4Rte+3/BPDv+Cd/wC0t8GP2Y/if4n+JPxYg1G4utQsV0/Txp9uk5jWaUSTu++SPGBGgGMk5Nf0r/Az9q34C/tG2hl+FPiu31K9jTfLp8ube/iXuWt5MOVH95QV96+O2/Yx/ZOl0v8Asd/hjpSw7dokXzluPr5wk8zPvur8xf2n/wBiPxR+zPeRftB/sy6xfR6ZoEq3U0Kyk6hpJU8TJIADNbjo+4blB+fcpJHXgs+w9aXJF2fmY47hzFYePPJXXkf1D0V8E/sBftj2n7WXwwlfXhFaeOvDPlQaxbxjakocHyruJeyS7TuX+FwR025+9q9o8IKKKKACiiigAooooA//0P38ooooAKKKKACiiigAr84v+Cp3xivPhP8Asn6zYaPcm11XxrcxaJCyHDiGYNJckY55hjZCf9qv0dr8M/8AguBLdD4ffC2FP+PZ9U1Bn9N6wRhP0LUAM/4Js/BbTvh78CYPiNd24Ov+Pma4eVl+ZNOhcpbxKeoV2VpW9cr/AHRX2h47+Lnwt+Fq2Z+I/imw8OG/JFuLyXY0u3glQATgZ5OMD1rL+BUOn23wL+HFvpWDZx+HNKEZXoR9ljJP4nNbnj3S9H17So9J17TbXVLK4LrJFd28dxGV29Nsikc/nX5JmOJhUxM5172u9j9uyfAzjhKdPD2Umlvtcb4w8b6DD8GvFPxI8M6naazpdnouo3UN1aTJcQSGK2dgA6FlPOMj86+eP+CdegJZ/sjeDLj7smoTaldMfUteSID+SCvl39oL4E/8KO+FPj/x38B9Vfw1o2q6bLa6/wCHZWebTbu2uiITLbKxJhnjLgryRjIBAyD9qfsIw/Z/2SPhlGOd9hcP/wB93k5r0uSl9SbpSvFyXrt1PEqLEQzHlrxtJRe2z16HzZ8GNDn8Lf8ABRD4k6TdMfL1C31WaFW6bbr7PeLgfQmv0ukhQNx1r4G+N2qWHwr/AG4fhj8TJ2Cab4mtRpl7JwFWTD2bFj04WaFj7Cvsq98Q6l9odIo0j2sRggk8Hua5M9rxjGnUezR6PDmGqSlUpxWzO+sWRJkYjgEfzr+Q/wDaL0DV/C3x6+IOha4jR3lvruoM+8HLCSdpEbnsysGB7g1/VvZ+JriIj7TCrjuUOCPwNfKP7VP7EXw4/amng8c2Wqv4X8YRwpA19HCJ4LuKPhFuYcqd6D5Q6sDjAIYAY7+Gs4owk4ydrnBxhkeInGMox1R/MdX9Nn7BnhDVfCf7K3gyy1uMxT6ibvUkjYEMsN3MzRcHpuQB/o1fOnwj/wCCUvg7wr4ig174seLP+ErtbNxImm2ds1rBMy8gTyu7OyeqKq56bsV+rsFrDEI4YEEccahERQFVVUYAUDgADgAcAV3cRZnTrQVGk763bOHhHJqtCo8RVVtLJHyt+118RNO8BfB7W/D7ost/4o0vVYQrdI7WG0kaaUj6lI1/2nB7GvjX9g7wjY6V8J7HxdFZI3iPxBLcM16UBuEtYZDFHFE55jQlGdiuCxPJIArP/wCCk+v6hY+JdVtlchV0HTNKtFHVpNTu5558D1MVsVPsRX33+z58Iovhr8K/DXh67j/021062jkH9xygeUc+sjMT+VeRjoTp4CMKejk/wSPosorwrZlOrVV1BbdL3Pkv9u34dnxL8D77xy1uG8QeFHhuo7wKPOa1aQRTxO/V0wwfBzgrkYyc+pfsT/HW1+IngDw/8ONRWOPU9E8O2NxbMny+fawO9lOCM/fimi5x1V144NfW/jj4f2fxA8B674GugoTW7C4s9x6KZo2RT+BIP4V+HP7D93r3hn48+DPDN4jQ6joOrat4fv4mOGWC7t5ZQpHos8Mp+uK3y6i62BnSm7uLucecV1RzKFamrRkrNdLn7y61ov8AwkfhvV/Dgk8j+1rK5sxJ/cNxE0Yb8N2a/j38XeFtc8D+KNV8HeJbZ7PVNGuZbW5hcEFJImKt17HGQe45Ff2SQ4U7Tzivk39oz9if4LftIagviXxALnQvEyosbanpxQPOiDCi4icFJNo4DfK+MDcQABvw5mkMO3TqbM4+K8nqYlxnS1a6H8udpaXN/dQ2VlE9xcXDrHHGgLO7ucKqgckknAA61/XL8E/At98Pvg54H8C6qf8ATtB0eztbgDtOsYMi/wDAXJH4V84fA79gT4G/s/6/b+PTcXvijXtPO+1uNREaw20nZ4reMY8wfws7NtPIAPNfW9x4gu5mxbgQp6kZb9az4oz6lU5acNUjTg/hrEU5SqzWr0O1tIgHAFfm7+1Bp0fif9t74J+H4sSPZR2c8qjnCLeS3ByP92HNfeWn6lqEl2itMzZOMcV+ffgLVYfid+3x41+IbH7TpfgO0ewgdDlfNjQWSY7cv9ocfSvNyiulGdR7JHs53hZqpTpdWz9KmkLys3qSayNf1/QPCujXfiTxRqNvpGlWCeZcXd1IIoYlHdmbj2A6k8DJrSgdJlEsR3I3IIrwb4tfCrw18SvFmi3XjnfrGi6HF51vospxYNeszZurhAf37qmFjR/kT5jgluOCioc3NUdonpVY1WuWiry8/wBTC8E/tafDD4leJ4fDvgXTfEWs2c8nlLrEGjXB0sNnGTOQCF/2yuAOTxX04ILS6SWxvokuba4RopYpAGSSNxtdGU8FWBII9K840mIW0tvbWiCGGEBEjQBI0QdlVcAAegFeiwBhLn8Kp16cp81KNkvPUVTAVadNxrzUm+ysfh/+y7JJ+yj/AMFOLj4Yaa7x6DrWoXGiCMtgG01BBcWWfUo/lDP19a/p9r+Yb4n48R/8FbfDFnpA3y22v+Ho5Mf3raCB5Scf3QDn6V/TzX65hZuVOMn1SPwjFwUasorZNhRRRW5zhRRRQAUUUUAf/9H9/KKKKACiiigAooooAK/Mv/grB8H7v4n/ALKl9r+kWxudS8CXkWsKq8t9lVWhusD0WN/MPslfppVW+sbPU7K403UYUubW7jeGaKQBkkjkBVlYHgggkEelAH4xf8E7Pi7p3xQ/Z20vwqZ1Ou+AR/Zl1CT8/wBlLM9pMB12FCY89mQjuK+3dU0z+0LJ4BjevzRk9nHT/CvxJ/aE+CHxc/4Jr/HtPjR8H45Lz4datOyQF9z26wznc+mX2ORjH7qQ9cKwO9SK/Sz4C/tjfAz9oDTbddE1qHw/4jZR5+janKkNwj9xDI21J1z0KfNjqqmvzzP8hmqkqtNXi9fQ/TeGOJI+zjRqO0o7HB/tgWF4/wCzD8RrbymEiaarkY6COeNmP4AGtv8AYi15bn9i/wCHt3bP+8t4byyPqHjvZwf/AB3Br6R+Mng+48XfBjx54bgtzPJqmganDGAudztbOUA/4EBivzw/4Jl+KYfEP7MGs+E9/wDpfhHxA7smeRBfxK6HHYeYsg/CvPjh5QyupbdSv+Fj08VmEa2cUZS2at+J71+038LJ/jH8J7vStJi3eItEf+0NMwcO8sakSQq3YzRkhf8AbCVZ/Z4+Ldr8ZPhxaaxNJjxDpKx2mswN8rx3KDaJip5Czbd3s+5TyK9ziDA5HFfN3jj9ne7k8YyfFj4L6+fBPjKTcbkbPM0/UN3LCeLBAL4+f5WVj8xXd81eJgsRCtR+r13a2qfY+tx2Dnh8R9awyvpZrufSQhc84rotGMiB4AcKece9fHw+MH7R3g9fs3jr4Rf8JEYxg3nh69BR8fxeSRKRn0+X6CtHTv2sby0dvtfwY8brcYwESyWRf++uP5VtRyOqqilBpryaMMXxDRlC04tPzTPteKNmXpk1dtrVncDGWJwB6mvkiz/aY+IGqLs8P/AfxbI7fdN35VrH+LMpxWdrt1+2F8V7N/D9tpmnfCPRbvKXF6boX+qeU3DLCIjhWI4z8hH94V66yyUXeo0kfO1c15rqlFt+h84/E3w9p/7VX7dWl+E9AjWfwh8KY4LnX7xDuiuby3fcIAeh+fEAA7LK3Sv1TNs0jFyOTz0615B8Gvg34K+BvhMeFfBUDDzpPPvLuXBub24PBlmYY+iqPlUcAdSfFPifafH/AOC3jjUPjF8IRc/ELwnrDrNr3hC6mZ7iBwAGudJc7inyjLQqCM9FYEbeyrKGImqcXZJaeZx0oVMFTdVq7k7u3Q+y2ltNMtpr/UJo7W1tkaSWaVxHHGi8szuxAVQOpJxX5O/tC+DLX9mn9rLwr+1nptkb34eeKruJdd+zjetnezIYzcfLxtkVhOh6Mwdc/MM+hNqvxD/br8U2dhe6BqXgb4D6HMk19BqCm21DxDeRYb7M6jpBG/DYyowTkuVCfoLq+g+HvEfh268Ia9plve6HewfZZbGRAYGgAAVNvYKANuMFcAjBFa0ZRwj5ZPV7rsjnqwnjlzwVktn3f+Ret2tL6yttU0y4jvLG9iSe3nibdHNFIAyOjDgqwOQasCNuwr41034KfHH4GpLY/s6eL7XUvCpZni8O+JVaZLUuclbe5X5lXPYlffJ5q9/wtX9tHTcpe/B7RNUZf47TV1jU+4Dyk15/1GnN3hNfeerHMaqjapB38j6V18StLFCVJUDd+PSsP7DI3OMfhXzlqHxZ/bHvcCD4I6TaSHgPca3GyD6hXB/WsM2v7cPjUC31XW/DPw5tHyHbTYmvbsD/AGWfzAD9HX6152Iydc7lOokvU9bDZ/NU1ClSk36HW/tH/Guw+BfgqU2DfaPGutobfRrGMb5zLJ8guGjGTsjJynH7x8KufmI5P9lj4OXvwh+GgTxHHs8T+IZv7Q1ME7njYgiGAt3Makl+f9Yz11Xw9/Zx8F+ANak8b6xf3fjHxlMdzavqz+bMrYwTChLBD/tEswHAYDivcApc1yY3F0o0fq1Dbq+56GU4CrOs8Vid+i7G/wCHJ3Amt2+6MMP60uradcXN4LiJd4KheO2P/wBdP0tILG0vNVvpVt7W1iaSWVzhEjjBd3Y9gqjJNM0Lxv4B8UaXFrfhzxVpOp2EqB1mt76B02kZGcNkfQgEU8LhpzpK6dhYvH0qWIfvJMtWOkeRtkkPz+g7fjUHjTxt4Y+FvgzV/iF41uRaaNoVu1xO5+82OEjQd3kbCIvckV438T/2u/2c/g5YzXHibxlZX97GDtsNLkW+u3YfwhYiVTPrIyj3r8ivHHxN/aG/4KYfErT/AIWfDDQ5NJ8H2M4m+zBi1tbL937ZqVwAFLhSdiAcfdRSxJP0mV5FOrJOatE+Qz7ieFODjB3kexf8EyvBXiT9of8AbG8VftO+JbQ/2foUt5fNIwyg1HUt6QQoe/lQs59tq+or+lKvBP2a/wBn3wd+zN8JtJ+Fvg4GVLQGW8vHULLe3kgHmzvjpuIAVcnagVe1e91+jRSSsj8llJt3YUUUUxBRRRQAUUUUAf/S/fyiiigAooooAKKKKACiiigDF8R+G/D/AIv0O98M+KtOt9W0nUYzDc2t1GssMsbdVdGBBFfjN8fv+CNPw+8VXs3iD4B+Im8HXMzFzpl+HurAE5OIpAfOiGex8wemK/bOigD+aX/h11+3vpBTS9G+IFj9hIK5h12/ijVemPL8ocEdgK4r9kCfxF+xt+2Rrn7O3xdkigh8URx6RcSxsxtmupAs+nzozhSUct5YYgY8znGDX9R9fjH/AMFbf2Vr/wAd+EbH9pHwBbu3iLwVD5eqJAMSzaajb1nXHJe1clieuxif4BWGIw0alOVOS0Z0UMTKnUjUT1R9eahpsmnzGORTszgNj9D71RXpivm79iX9q/Sv2lfh/HpHiG4SPx/4dgSPU4GIBvYkAVb6Idw/AlA+6/PRhX2a9pDncYlz7AV+M5hkcqNRxP3fK+IY16UalrnGwWk9wcxrwOp7V1Nkzxp5asRt9D3qx5aY2gYFKiKnSlhqSpLR6nTicT7RWY8zN0c8igyb8D0qJ15zQgOa6XUk1qzzFJ82wu3BzmnpJtIKnB9aCOKhAFOMWtTp3WpakkeRtzksfUmo6YpBp9Yzbb1M4xS2CigUUrNF2I5UEibTXMXVvLEx4yp7iuq6ioniVhg85qZ01Pc6cNXcGcUIDIR5i5q/b6a0n3FwtdOlsvTGfwrI8WeK/DHw78J6n448aX8el6Ho8LT3M8hxtVeiqOrOx+VFHLMQBWdDLuaSS1NMTmyhFy2R8S/8FFvjXa/CL9nm68F6XN5Ov+Pt2mwKp+dLJcG8l9QCpEQ93Poa+F/gb/wSR+K3xj+Fnhv4nz+MNP8ADMXiW3F3HZXVrNJPHbux8p22kA+YmHA9GGax/h7oHjL/AIKa/tkrrGr2s1r4B0No3uUydllo9u5MVvu6efdNw2OSWZh8qcf1OWNla6bZwafYRLb21rGkUUaDaqRoNqqoHQAAACv2DLMF7CioW1PwvOsweJrup06H4wfDH/gix8INCuor34peMtS8VbOTa2caadbsfRmzLKR/usp96/Wj4a/Cr4dfB7wzD4P+GXh+08O6TDz5NpGE3t/fkflpHPdnJY+teg0V36nkhRRRVAFFFFABRRRQAUUUUAf/0/38ooooAKKKKACiiigAooooAKKKKACobiCC6gktrmNZoZVKOjgMrKwwVYHggjgg1NRQB/Nv+2b+xP8AEb9kX4gJ+09+y21zF4atbg3c8FsDJNosjElwUwfMsnBKnIIQHa/y4NfUX7Lf/BQj4ZfHaK08K+P5IPBvjllVPLmfy9Pv5OmbaVziN26+VIR6KzdK/aGaGK4jeGdBJHIpVlYAqykYIIPBBHUV+PX7V/8AwSV+HfxTub3xr8B7iDwP4knLSy6e6k6TdSHklVUFrZif7gKf7A61wY/LaWJjae/c9HL80q4aXNTfyPuW4tpInwykH/HpVYqw6jFfz8w/FX9vz9g+7j8NfEPTLy88MWzeXFDq0bahpjopwBbXqEmMHsqyDHdO1fYfw3/4KvfBnxGkNr8TPD2o+EbsgB5rbGoWe7142TKPbY31r4rF8NV4O8PeR9/geLKE0lV91n6g0jdK8Y8HftJ/s+fEFY/+EQ+IOjXksuNsL3S20+T28qfy3z7Yr2u2RbxBNass8R5DxkOp/FcivCnhakHaUT6Oli6U1eMk0QdqQD2q6bUA4IqT7Oorq5ly2Zv7aJQA9aVmCg4rQFsppDZ7jwpP05rkVByloQqsUZgaQjPFSKc5p10kNihmu3W2iHJaVgigfVsCvJ/Efx9+BXgtXbxV8QdC09k6o1/DJJx/0zjZnz+FaLDzlpGLv6GVXE0oq8pJHrIUnpU8cLHqK/PPx1/wU8/Zk8ILLD4Zk1LxjdpkAWVsbeAn3muShx7hGr4l8Xf8FFf2o/jrqLeDP2e/CT6G90SijTIJNU1MhuB+9KbI/crGCP71erheHq9T4o29Tw8ZxRhqatF8z8j9ivjR8fvhP+z34fbXviZrKWcroWtrCLEl9dsOiwwggkZ6u21B3avxK8UeN/2jf+Cm/wAWLb4d/D7TW0rwfpswmW2LH7FYQn5ftmoTAYklIyFUD/ZjXqT9B/Az/gk38Z/i3rkfxD/ax8R3Gjw3bLLNZi4+26xcjrtlnYvHAO3V2HTatfvT8Jvg58Nfgd4PtvA3wv0K30LSbcAlIVzJM+MGSaRsvJIe7MSfw4r7LL8np0Pe3kfC5pntXE6bR7HA/sw/s0+Af2WvhjafDvwRGZ5WIn1HUJFAnv7sqA0r46KOiJ0ReOTkn6LpAMUteueGFFFFABRRRQAUUUUAFFFFABRRRQB//9T9/KKKKACiiigAooooAKKKKACiiigAooooAK8n+Mnxw+GHwC8HT+OfiprkOi6ZHlYw/wA01xJjIigiXLyOfRRx1OBzWN+0P8f/AAJ+zX8L9T+J3jyfFvaDy7W1QgT3t24Pl28IP8TEcnoqgseBX86Hw6+Gf7QX/BVX43ah8QfHupSaL4K0iXy5blQWtdPt2O5bGwjb5XmK4Lsf9+Q8qpAPTPjx/wAFUvjV8d9Qu/hn+zh4Q/s/S9R3QoZLNdW1W7j6Z8gpJDGD/d2OR/fr5l8F/wDBN39qD4hznWvFNnY+D47xzK7apOqTfMck/ZbZZHX/AHWVMe1f0w/BX9nj4O/s7eG08M/Cfw9BpilAtxeOolvrtgMFp7gje+euOFH8KgcV1uq+B9OvS0tmxtJTzheUP4dvwrysZjpx0pK534fCxes2fzv3X/BJrX7bTJbsfE2wM8EbSSK2nTCJQilm+fzC2AB12fhXmt3+wr+1T8NfA03xH8M+MbW10+z01tVmjs9Tu7S4jt0h89htCKpYL2DdeK/of13wRqrWF5pc8Z8m9hlgMsY3ACVCmTjkYzmvPPCOmw+NPhfZ6F4jtSFutNbR9VtzwyTQxmzu4j6EMrY9iD0IryoZtWt+8S+49aOXUn8Dex/N58IPjb+2V8QPE0Pgr4b/ABE1q51JoZZo4rjUiFKQrub5rhiuQOxPNfWKN/wVSjGxPFF2wHc32mt+p5rirbwfrv8AwTy+M92fib4NfxB4V1B5F0fxJbxkSrBINpMbnEZcxnbLA+CDyhAOW+8vCn7U/wCz74utUuNO8b2FozAExag/2KVfYibaPyJHvXNnuYYijNOhQUo23tf8j6XhfKMFiqTeKxTjNPa9tPmfIbWv/BU6+HlzeLrqAHjI1CwT9U5rMu/gl/wUS8Tjyte+JtxBG/3g2vTKB+EANfdWr/tF/AfQ4Wn1Hx/owCjpDdpcOfosO9j+VfLXxA/4KFfDrTG/sv4W6TeeLtVmOyJnRra2LngYGDNJnsAq59a8zCZnmNV2p4eK/wC3f1PZx+QZNh481XFSb7KSf5Hzj8RP2PPiD4X8Kah45+M/xatl0+xjJbdJd30s0hHyQxLKU3u54Az7ngGuF/ZC/Y11D9pCTVvEPiO8udA8I6Z+5S8hiV5Lq8JB8mIOQuETLSNztyo6mvrDwL+yh+0J+1f4isviF+09fT+GPCsBElro6DyLp4252RW5z9mVh96WUGQjop6j9XBaeE/hL4R0rwr4S0dIIIR9j0fR7MBWmkA3FVJzhRy88znCjLuScA/QPMKtOnyOSc32WiPiJ4KhVrc1OLVNd3qz8tvEP/BLXwHd3r6N4N8eajaX8NqLiQ31pFcQrvcpErGJomUybWIADYCk9xXiq/su/t3/ALJ97d+Kfgvqlze2ifPNN4auml81E5BnsZAryAehicD1r93vBngbWo7WUv8A6fqmoSG5v7pQUhedgF2x7vuxRoqxxL1CqCfmJJ9s0T4exwFZdVnLMMEJHwM+7dfyxVUczqp66nFiMBQteOh+LnwA/wCCx3ivQdRi8IftQ+G/tKRP5MurabD9nu4WBwTcWbYViP4vL2EdkJ4r91/hr8Ufh/8AGDwpa+Nvhrrtt4g0a7HyT2z7trDqkinDRuO6OAw7ivmb9or9iT4CftLaRLH4t0VNL8RCPbba5YKI76JgPl8w9J0HdZM8dCp5r8BtQsv2m/8Agld8dYp7O4N7oOotuRxv/snXbND8yOvPlzKDg/8ALSInIJU/N71GvGaujxKlNxZ/WhRXg/7OX7Q/gD9pr4ZWHxK8Aznypv3V5ZyEfaLG7UAyQSgdxnKsOGUhh1r3itjMKKKKACiiigAooooAKKKKACiiigD/1f38ooooAKKKKACiiigAooooAKKKKACoLq6trG2mvbyVYLe3RpJJHIVURBlmYngAAZJqevyU/wCCtn7TE3wm+DFv8IfDF15PiL4iCSKdkOHg0mPAnPHIMzERD1XzO4oA/ND47fEHxv8A8FMv2xNK+Fvw8uGi8GaXPLa6a+D5UNjE2bvU5V/vSBcqDg48tOpOf6N/hb8LfBfwS+H2jfDD4e2S2Oi6LCIkHHmTSdZJpWGN0kjZZmPUn0wK/O7/AIJSfs0RfCH4Kt8YvElsF8T/ABFjSaDcPnt9JXmBBnoZj+9b1GwHkV+pvzMfWvOxmI+wjsw1L7THBCcc9a8c+IPxbsfht8RPh/4S8Q23l6T4/uLrTINQ3ECDVY0WW1gcdNtyokVTnIdQOh4+Lf24f+Cg9l+zhqMXwr+F2nxeJviVeKjNE4aS204S/wCr81IyGlncHKRAjAwzdQD+Wsun/tKftTXB1f8Aas+Jut/D3TdPukurGG90DUxZpKo+WeJbWGO3hKZIV3cOOT05rGnRXLzTehc6rbtE/qB8mUclSMd8V5trGh6z4X1y68ZeDbNdRi1Ha+q6UCqPcuihFurZmIVbhUUKyMQsqhQWVlBP4RW/7IH7WPhTSl8e/sy/tCDxpb5LoLTVJ7fzWXnaN0s1uzeqyMvoRXX/AAf/AOCovxo+DfjIfC39tHwzPILcrHLqEdqLbUrcHgSSQrtiuI++6MKSOQW6VnThCo37OSfkVVU0lzq3mft5b6p8PvippN54fuobXWYCNl7pWoW4MsR/u3FnOu5D6blx3BI5r5F8Z/8ABM/9jfxpePfy+Bm0SeQkt/ZV5PaR5PpEGaMfQKBX1XpMvwq+OHhnS/HOitZeJtKvY/MstSt2/eKp6iOdCssbA8Mu5WU8EA0p+GZt18vSPF3iLTowchBfrdgewN7HOwH/AAKnC8HbmsRe+6ufDtj/AMEnf2OrKYSSaNq17g5C3GqSlOOxEQjJH419EeD/ANl74I/BO1fU/A/h7RfCkcK/PfGBVnVR3a7nZpB/32BXr6/DXUJhtvPGviK6Tuv2mCD/AMet7eN//Hqwbzw/8EPCM0d74rvdNN3CSy3Gu6iLqVSO6tfSvtPuuKU+aatKTZUZKLulqcQlxP4jkNt8NbM6+Xzu1SdWttIi/wBrziPMuT6LbqQe8ida9D8IfCzR/Dcs+s6vcN4g8QXqBLi/uECAR53eRbQjKwQBudi5LH5pGduaZH8fPgTcTfZYfiR4ceVeNi6taZHbGPMr0PSNY0PxDb/avD+pW2qQdd9rNHOv5xsRXNOkoL3InV9YlLWUi4scaIqIoVV6AcCpFzTzCQcdq+TbL49Xnj39rCX4C/D6VG0bwDpsuo+K7wKHL3c+IrTT42OQpUuZZSOcrsBGGzjGhKbbSFUqpH1xXj/x7+BvgT9oz4Yap8L/AB9bB7W9UtbXKqDPZXSg+XcQk9GQ9R0ZcqeCa9e3e1J5mD0rWlV5GncznDm0P5TvgF8UfiR/wTd/av1HwV4/WQaF9pSw162UMYbqxdswX8C9yisJYz1KlkPJOP6xdK1TTtc0y01rSLhLyxv4Y7i3mjO5JYpVDI6kdQykEGvx9/4K3fsywfEj4UQfHzwzag+IvAibL/YPmuNIdvmJx1Nu7bx6Iz+1Rf8ABID9pmb4g/DO/wDgH4puzLrXgZRNprOctLpMrYCZ6n7PIdvsjIO1fRwmpLmR5ko2dj9lqKKKokKKKKACiiigAooooAKKKKAP/9b9/KKKKACiiigAooooAKKKKACiiigBrsqKXchVUEkk4AA7mv5SPE0uo/8ABQv/AIKKDS7dnuPC8mpC2QgnbDoGlEmRx/d85VZh/tyiv3+/bu+K8nwa/ZT+IHi6zm8nUZ7E6bZMOouNQYW6svugcuP92vyj/wCCOPwV1PU9J8efF1Zn01buWHQYLtF/fiBQLi8W3Y/ddyYV387RnA3YIGwP2+1Txl4e0CeHwd4T0+XWdQ06NIV07TEUraxqu1FmlYrDbqFAwHcMR91TWZPJ8X5rS51GT+xvD0MMbS+Vsn1SfagLEFg9rHuwOgDDPc18KftL/wDBRv4D/sqwT/DP4XadF4t8VWBZHs7OTZYWc3O43dyNxeXPLqu5yc72U1+eI+LX/BTn9rQjVtD1ObwL4ZvSfJ+zEaNalD/cc7ruYY/iBYGuCrCnD36jS9Tsw9OpU9ynFt+R5L+xhrPxt+JP7TvjX4x+C/Cml+MvEEn2q6ub3Xbl7W206S/n+WZWTe4lKq0caqrELnGAM1+z+meNP2pNIHneL/hvpGt2/wDH/wAI3rjG7A/2YNQihSQj0Eqk9q/CO48LftF/sN/FmyXwH4qsNb8V61CDd6ZpXm6hJLGzbhHe2jRA4ZuUP3u6kda+rLvS/wDgqf8AtDR79SuX+Hui3f8Ayz8yPRUCn1SPdeEf72a8nMcOqrVS8eS27bPZy+tKnF01GXNfZL8z9Tbi9+DHhmSP4l629n4D1C+jP2ltQdNHupOoKXluzIJWU9CwYjqjYOT8Q/tVftD/ALAfxa8Hz+D/AIh+Ijr99bK32C+0OzkuL2yl7NDO6pGy5+9GzlGHocEeOeGf+CUGp61d/wBrfGH4ny3l1L80q6fA88hOec3F0wJ+vl19Q+D/APgm5+yr4TKSahol94nnj/i1O+fYfrHbiFfzzXlQng6M+f2rk12PadHHV6fslRST7n49/swfto/Er9kbxHrMHw8lXxJ4Y1QyKdM1EPHBJIOIbpY43YxS4xuCsdw+Uk4BH1rcftz/APBSv43hoPhp4cuNKtZ+FfRNDYgA/wDTxcrLj6hhX67eEfg78IfASxp4K8E6Nohj+69vYwiX6+aylyfctXp/2iULsDsV9CePyrpq8Twb9ynf1M6PBdX/AJeVLeh+D837NX/BTL4xgTfEHxXqOnQvkmPVteMSgN1/cWzvj6bRWrpP/BJb4g6i63PjT4kadBI/Li2t7i8cH/ekMQNfuGxPWm5rgq8TV7+6kvketR4Nw6+Ntn45N/wSE04wfuvihJ52O+kjbn/wJzXnmrf8E0P2mPhbOPEfwT8d2+o3lud6CzuZ9IvSV5G0lvLJ9jKK/dhW2jNO3t61z0+KMSn7zuvQurwnhWrRTT9T8Sfhr/wU2/ae/Z11HUfht+0voNx4hurK3lW3e/iFtqlvcbD5DPJgJcQF8ZJBYrkhz0P3X/wST8Gaq3wX8V/G7xM7XOvfEzXri4luJBl5YbQsu7P+1O8xr5K/4K5a/oyeEvh94bltIJNZuru7ukuSgNxFawIqGNX6hJHkBK9CVBr9RPgZ8M/CPwe/Z3+Hvhj4m+MW0a00/RrQyWsuoppNqs06edOCY2ikkJkdtxeQj0Ar7PCYj29BVLWufn2YYX6vXlSvex9mGN1OCDUTRurfOpFfKsfif9h2a68g+JvB1zcsTzNqttNJn/fklY/rXruheC/hjrNoLv4fas8Ea8rNo2qyNGM99iyvEfoyEVi8LG97maxFj0bUNL0/XtLvND1i3W80/UYZLa4gkGUlhlUo6MO4ZSQa/k+8MXWqfsAft/CyuJJE0fw9rJtJicj7RoeoY2sc9SIJFf8A309q/qOa3+JfhZhLa3EXjKwT70Myx2epKv8AsSoFt5j/ALLJFn+/mvwR/wCCxHg7Rta8ReCvjn4cRozewy6Bq0MsZiuLe7tf38CzxtyrtG7gdmVAVJXBruwUeVWuc9R3Z/SNDLFcRJPA4eORQyspyCpGQQfQipK+Q/2Dvih/wtz9k74eeKJ5jNe22nrpl2T977RpxNsxPuwQN+NfXldpgFFFFABRRRQAUUUUAFFFFAH/1/38ooooAKKKKACiiigAooooAKKKKAPxc/4LX+MJtM+CPgfwVC5Ua7rj3MgH8UdjbsMH/gUyn8K+JvGv7U2rfs3/ALH3w3/Zc+DEzWfjTxXpS6vr9/bn9/aprLNPFbxFeVuJYnTLD5kTaF5YFftP/gtX8Otc1/4Q+CfiJpkLT2XhXUp4L7aM+VHqCIscjei+ZEEJ9XHrX4R/BbxLc6v+0R4B1/xPN9rdtc0lJHcAjZFLFEgx0wqqoHsKipLli5djSlDmmovqfrD+yH+w/pXg5LPxt8S7GLVvGM6rcLb3K+bbaWG5G5GyJLj1LZCnhRkFq/VfTtNttNUCMF5ccu3Lf/WqLSdMGl2pjPM0hLSN3J9PwrSX5hwa/G8Xj6teftKr17dj97wmBo4amqNBWX4vzZlaJ4c8PeGri9u/D2mW2nXGpTPcXU0EKRzXE0hyzyyAb3Yn+8TW7JK0gweKrcg4pSxzWMq85fEy4YeEfhViYOw6Gjc3rUC8nmrIAxmlG9y2khV5wafUdOBr1KNVLchoR1PanBTmpEQnmvLvi98cvhT8BdCOu/E/XYdMDqWt7Rf3l7dEdoIAd7c8bjhR3YVlGnKrPlpq9zkxGLhSi5TdkeqrGzEKvJNePePf2gPgd8MGeLx5460nSriPObc3Ky3PHbyYt8mf+A1+Tfi39rT9pf8AbI164+Gv7OWjzeEfDUh8q6vVfbceS5xuurwDbApH/LOL5z0BavoT4Y/8Evfgr4dtIr34o6jfeNNYbDzKsrWVlvPJAVP3zDPdpBn0Fer/AGTRoK+LnZ9lufPvNsRiHbB07ru9Efnl/wAFA/2hfAnx2+Kvh3WfhfqUuoaR4f0xbYTSwPAPtJnklcokgBIwU5I5xXp3wi/Y7g/afVPGHj746W2veIbyEXVzYWcx1K/t1fB2zPPIm0rkBgisqnjNfsT4U/Zw/Z78FRqvhr4caFaunAkkso7mX8ZLgSP+teu2mnaXpyeXpun21moGAIII4uPT5FFd1biSnCiqWGurdXY4cNwpVnXdbF2ae61PyMvv+CUfgKOA/ZPGOs+Zj7xtreRc/wC6Cp/WvI9S/wCCdvxm+Htydd+CvxFX7fAd6Lun0i6JXkBZI2dM/wC8yiv3bHBqrd2NreptuEz79/zryqfEuMWvMn5NHvz4Wy+Ss6bXmm/1Pxl+Hv8AwUP/AGwf2VfEdv4O/aa0O58WaKSFB1BVivtg6vbXyAxz4HZ9+f7y9a+tv23fGfwX/bI/YZ1z4z/Ci8S9v/CNxY3c8bDyr60AlEUkF1EDnhJWZSdynBKEgmvor4ifDXwp4z8OXfhTx7psOtaBdKxeOZfuEDO9GHMbr1V1IIr+XLQPiLr3w51PxZY+C7t4dH8SWl5pF5bOxaO5sZyQqyDgMyHa6N1DAEd8/Z5Hm6xcW3G0lv2Pz/iXIVgakeSfNGW3f5n9Bn/BFLxjLqnwP8b+CppN39g64lzGv92O+gX9N8LGv2gr8Kv+CIvhDXrLwf8AEvxxdQvFpGq3lhZ2rsCBLLaJK8xXsQolQEjucdq/dWvfZ8wwooopCCiiigAooooAKKKKAP/Q/fyiiigAooooAKKKKACiiigAooooA5zxf4R8N+PfC+qeDPF9hFqmi6zbvbXdtMMpLFIMMD3HqCOQcEEEV/JZ+3d+ydH+xd8YdCk8G6nNqHh/XA2p6U864mtntphut3ccSGPKEPgEhhkZya/r2r4C/wCCjP7L9x+0x8A7m38NW/neMPCLvqekqB885VcT2o95kHyjvIqUMaZp+AvGumfEjwL4f+IOjMHsvEdhBfR4OdpmQF0Puj7lYdiDXThiOlfhj/wT6/bA0r4Vmb4CfGO6bTNEmuXbS765yqabdO2Jre4zykMj87jxG+d3DEr+5ww0Uc8bLJDOoeORGDI6NyGVlyGB7EHBr8nzjKp4erLT3XsftXD+cQxNFa+8t0J15ooA7U7Ya8ex9BdDc4qRXboc4qeO1Z1LAEheSew+teEfEv8Aae+AHwihkPjfxrYxXUYP+h2sn2y7YjsIYNxB/wB7aPeu7D4OdR2hqceIxtGmrzkke8LlqwPGHjHwf8PNBl8T+O9atNB0uEfNcXkqxISP4Vzy7eiqCT2Ffjt8X/8Agq/eSrNpPwM8Li0UgqNT1nEkn+9HaxnYD6b3b3WvlnwB8EP2kf22ta/4Tvxn4kebSRIVfUtRuBL5YB+ZLa0jORjsAqJ/tV9Dh+H5Rhz4mXLFHyeJ4pU5qjg480mfYHx4/wCColxdzS+Df2adJknubhvJTWL2He7MTgfZLPkkn+Fpcn/Yryf4U/sS/E/4ya9/wtH9qDWL6H7cwleznlL6pdL1AlZsi2jP93G8DgKvBr72+Cf7K3wm+BEMV14a0/8AtDXwMSavfBZLrJGGEQxthU+iDPqxr6w0LSPOl+3TjMa/dB/ib1PsP1NediuIIU17HL42/vPf5Hp4ThSdS2IzSV+0Vt8zM+GPw58MfDrw9baN4W0q30fT7cfuLWBdqICMF2P3mkbuzEse5r0+oNp6dqlzjrXhSk3rJ3Z9FypWUVZdhxIHWk3L61GzA8CmVCQE+4GlB5qvjNTxjgYppWEzyT9orxlb/Dv4DePfGcxCvp2kXIgLf8/M6+RCB7mR1r8IP2DP2HL39sHxLq1/q+tf2H4S8LyW41CSJN91cNOHZYYM/IpIQ7nbO0EYVq+yP+Cqvxzg03w5o37Puh3Kveak8eq6yqHJigj/AOPSFvQu2ZSOuFQ96/Rf/gl58D7v4N/ssaRe63bm21nxvM2uXCMMOkM6qlqh7/6lVfB6FzX6hw1hPZ4fme8tT8g4rxyrYnlT0jofcPw5+Hng/wCFHgvSvh74C06PStC0WEQ20EfYDkszHlnYkszHlmJJ5rt6QDFLX0J8uFFFFABRRRQAUUUUAFFFFAH/0f38ooooAKKKKACiiigAooooAKKKKACiiigD8jv24v8AgmH4e+Pl/efFH4Ny2/hrx1Pue8tpBssNUfrvcqCYZz3cAq/8Qzlq/Eg/E79sL9ivxXN8LNR1i+8OXVgEk/sm7aK/s/Lk+48SP5sYV8ZBQjP1r+yiv5Nf24bqX4hf8FI9W0MHeG1zQ9JQegVLaMj/AL6Y1nVpxlG01dGlKrODvB2ZTj/4Kk/tQWafZrm30CWROGMmmsr5HqFlUZ/AVm3f/BRT9sfxkRaeHJ7a1kk4A0vSI5JD9N6yn8q/ox1jw/oF1qFxLd6VZTP5j/NJaxM3XuWXNU4ba1sDixhjtR6RIsQ/JQK+YlicItqKPpKccXJa1n97P5zv+EG/4KL/ALQsYGrReKrywn4P9oTtplmQe+yVoIyPopr3H4a/8EnvG2otHffFvxfZ6JCeXtdLU3tyfYyv5cSn3G+v3HW3urqX90jys3oCxP5Vu2ng7xBc4Ig8lT3lIX9OT+lOWbStalFIwlgY3vVk2fmXf/8ABMH9mu88KDw/p8mr2OrISy6sLsSzs2MYkhZBCUzztVVP+1XxN4r/AOCcv7UXwi1SXxF8EdeXxCkHzJJpl02m6jgc4aGRlVj7JI2fSv6P7DwBEMPqNyXP92MYH5nn9BW1c+DNGmTEW61cDAKHI/EHOaKeMrr4mmvMmpRop+47Puj+Xaz/AGyv2wvgVfponxY0Z7/yW2+T4h0+SCZgP7s6CJm+pLV9aeAv+CsPw9vEitviL4Iv9HcAAzaZNHdxf9+5fKcD6M1fs7r/AMN/7Ws207Ube11qybIMF1GkkZB9UlDIa+LPiJ+wP+zJ4ueSTXPAEWh3UpP7/SnksDuPcLGfJP8A3xWEoYSf8Sjb0PSpZtj4JKFa6XfUx/Cn7eH7KHi1U+zeOodKlf8A5Z6nBNaEH0Lshj/8er6I0H4lfDXxXGknhjxdo+qq/I+zahbyH8g+f0r8z/Ff/BJX4Z3zNJ4H8eappZblUvraG9jX23RmBv0NfOviL/glB8Y9Pdm8LeL9C1ZV6CY3FlIcexjdR/31WDyLBT1hNr1/pHbDirGw+OCZ+98dsZxvtyJVPdCGH5jNT/2bdYz5TY+hr+ch/wDgnv8AtnaGSuk28Mijvaa1EgP03SIf0po/Yf8A27LseVPaXOw/89Neg2/+lBrJ8L0ulb+vvOhcaVetH+vuP6F9a13w54bt3u/EWr2WlQRjLSXd1FAqgepkZa/P34/f8FI/hF8NdJvNI+EtzH438VMpSGSIN/Zls548ySY487b1CR5Dd3Ar4R0r/gl3+0prUN1qPi3VdH0qK2hlnbzb2S8mfy0L7VWFHBJxgZcc1wX/AATe+C3ww+PH7Slt4G+LFhJqelQ6ddX0VqkrQpNcWrRkJKUwzR7S2VBGeMnGRXoYHhnDqXM5c1vuPOzDi/Ezi4Rjy3+89Z/Yd/ZP+IH7aHxluPjZ8Y/tF34Ltb43uqX1yCDq14pDC0h7FM4EpX5UQbBgkY/qighit4UggRYoo1CoigBVVRgAAcAAdBWdoOgaL4X0az8PeHbCDTNM0+NYbe2to1ihijXoqIoAUD0Fa9fWJJaI+Lbu7hRRRTEFFFFABRRRQAUUUUAFFFFAH//S/fyiiigAooooAKKKKACiiigAooooAKKKKACv5OAU8ef8FYCZB5kcnxGPB5+Syu+PyEVf1dalqFnpOnXWq6hIIbWyieaZz0SONSzMfYAE1/Jr+xo138Yv+Cj+k+M/D8TG0ufEOra+5fgx2n7+YFvf5lX6kVMtmNH9Vd5ZWF0xNzaxTEk8soJqkuk6TEcx2MAPr5Yo1bUbzTWWSLSLrUICAS1r5TMp75jd0Y/8Bz9K52b4geGLZSdUN3pWOSb2yuYFA93aPZ/49XzVajfWMT1Y1Ftc7BNsYxGioPQDFPDkmuX0rxn4O107NF16wvn67YbmJ2H1UNkflXVKpZQy89/wqYU31NHJCbj0zTdtTCJjyKm2NjpVuF+hLmkU9opGVXXawyD2PNWvIY1H5TdqPYrsUpo5nUPDei3Q3vbKjn+KP5D+nH6Vy918P4XJazu2TPQSAEfmMfyrvbu9tbQhLqZIyegJ5P0HU1QbWwcLaWFzcZ7iPYv5visVST3NVVaW55lP4I122f8AdKlwo7q2P0OKz5tI1K2ObizkTH+wSPzFertc+JbgYt7OG195ZN5H4KAKhOla9c83ereX/swoAPz4NZSprobwxDS1PMdPs2knFs67Vm/dkEY4f5TkfjX86P8AwTZnbwl+39oOjH5N0ut6eQf9m3n4/NK/qGs/DlhbXCXMzSXEiENl27g57V/LF4evo/2aP+CmRufEIJs9G8aXEcrDjFrqUjosn0EU4f3xXs5MrKR5uZVFJpo/rjooor2DywooooAKKKKACiiigAooooAKKKKAP//Z" alt="阿杰同学头像" class="w-full h-full rounded-full object-cover bg-white">
-              </div>
-              <h3 class="text-base font-bold text-slate-900">阿杰同学</h3>
-              <p class="text-xs text-brand-600 font-medium mt-0.5">迹点点 · 全程独立开发</p>
-              <p class="text-xs text-mutedText mt-3 leading-relaxed">
-                “如果你也攒了一抽屉的旧票根，愿它们在这里变成一张会讲故事的时光地图。”
-              </p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- 底部页脚：清爽极简圆润收尾 -->
-  <footer class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200/80 py-8">
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="credit-cols">
+        <h4 class="credit-head"><span class="cb-no">一</span>开源项目（内嵌 / 演化 / 参考）</h4>
+        <ul class="credit-list">
+            <li><div class="cl-h"><b>12306 火车票票根编辑器</b><i>MIT</i></div><span>本项目前身，火车票工坊模块由其 V6.2.x 内核演化而来（Canvas 绘制管线、六款底图、PDF 导入、OCR 等）</span></li>
+            <li><div class="cl-h"><b>pdf.js</b><i>Apache-2.0</i></div><span>内嵌于火车票工坊，解析 12306 官方「行程信息提示」PDF</span></li>
+            <li><div class="cl-h"><b>LZ-String</b><i>MIT</i></div><span>行程数据压缩进 URL，支持携带数据的分享链接与旧格式回退</span></li>
+            <li><div class="cl-h"><b>html2canvas 1.4.1</b><i>MIT</i></div><span>登机牌 / 交通票 / 影演票工坊的票面导出管线（离屏克隆 + 固定 2x 高清）</span></li>
+            <li><div class="cl-h"><b>qrcode-generator</b><i>MIT</i></div><span>登机牌及票面二维码生成（Copyright (c) 2009 Kazuhiko Arase / d-project.com）</span></li>
+            <li><div class="cl-h"><b>PaddleOCR PP-OCRv5 / v6</b><i>Apache-2.0</i></div><span>火车票工坊本地 OCR 高精度 / 超精度引擎：浏览器端 ONNX Runtime Web 推理</span></li>
+            <li><div class="cl-h"><b>Tesseract.js 5.0.4</b><i>Apache-2.0</i></div><span>火车票工坊本地 OCR 轻量引擎（回退档）</span></li>
+            <li><div class="cl-h"><b>ONNX Runtime Web</b><i>MIT</i></div><span>本地 OCR 引擎的浏览器端推理运行时</span></li>
+            <li><div class="cl-h"><b>Material Symbols（flight 等）</b><i>Apache-2.0</i></div><span>行程地图航班图标与登机牌预览同款 Material flight 轮廓</span></li>
+            <li><div class="cl-h"><b>bwip-js</b><i>MIT</i></div><span>V5 交通票与影演票的真条码渲染（Code128 / Code39）</span></li>
+            <li><div class="cl-h"><b>ReactBits 风格动效</b><i>参考</i></div><span>外壳侧栏「磁吸聚光 · 扫光 · 流光边框 · 波纹涟漪」动效注入（jdd-fx）</span></li>
+            <li><div class="cl-h"><b>Wave Grid / 06 SPATIAL CARD 设计稿</b><i>设计参考</i></div><span>珍藏册波浪网格 / 3D 视角展示模式的参考图</span></li>
+          </ul>
+        <h4 class="credit-head"><span class="cb-no">二</span>开源数据库</h4>
+        <ul class="credit-list">
+            <li><div class="cl-h"><b>OpenStreetMap</b><i>ODbL 1.0</i></div><span>车站坐标主源（STATION_XY，2,870 / 3,267 站，约 87.8%）© OpenStreetMap contributors</span></li>
+            <li><div class="cl-h"><b>China-Railway-Station-Database</b><i>CC0-1.0</i></div><span>车站坐标补缺（394 / 3,267 站，约 12.1%）· undef-i</span></li>
+            <li><div class="cl-h"><b>OurAirports</b><i>Unlicense</i></div><span>机场坐标数据源（JDD_APT_XY，airports.csv）· David Megginson</span></li>
+            <li><div class="cl-h"><b>维基百科 zh.wikipedia MediaWiki API</b><i>CC BY-SA</i></div><span>全国 4A / 5A 旅游景区数据源，去重后 5463 条 gzip+base64 内联</span></li>
+            <li><div class="cl-h"><b>全国火车站名与坐标库</b><i>ODbL 1.0</i></div><span>火车票智能联想（拼音反查 + 编辑距离 ≤2 模糊兜底）与行程地图铁路弧线</span></li>
+            <li><div class="cl-h"><b>全国地铁线路站点数据</b><i>—</i></div><span>地铁票面与行程地图（IndexedDB jdd-metro 坐标缓存）</span></li>
+          </ul>
+        <h4 class="credit-head"><span class="cb-no">三</span>字体</h4>
+        <ul class="credit-list">
+            <li><div class="cl-h"><b>MiSans（小米兰亭）</b><i>《MiSans 字体知识产权许可协议》</i></div><span>全站显示字体（标题 / 正文 / 标签）；本项目内嵌其子集（GB2312 常用全集 + ASCII，Regular 400 / Demibold 600）。小米主导，联合蒙纳、汉仪共同制作</span></li>
+            <li><div class="cl-h"><b>PingFang SC / Microsoft YaHei</b><i>系统字体</i></div><span>MiSans 未覆盖时的回退，随操作系统分发，无需署名</span></li>
+          </ul>
+        <h4 class="credit-head"><span class="cb-no">四</span>AI 与云服务（均需用户明确确认后才联网）</h4>
+        <ul class="credit-list">
+            <li><div class="cl-h"><b>Agnes AI</b><i>OpenAI 兼容接口</i></div><span>Agnes 3.0 Flash / 2.5 Flash 视觉大模型 OCR，火车票 / 登机牌工坊默认 AI 识别引擎；另负责中文片名 → 英文片名转换</span></li>
+            <li><div class="cl-h"><b>OMDb API</b><i>免费接口</i></div><span>影演票工坊电影海报自动匹配</span></li>
+            <li><div class="cl-h"><b>OCR.space</b><i>免费云识别</i></div><span>火车票工坊联网 OCR 备选引擎（Key 仅存本机）</span></li>
+            <li><div class="cl-h"><b>百度智能云 OCR</b><i>免费额度</i></div><span>火车票工坊联网 OCR 备选引擎（文字识别标准版，凭证仅存本机，缓存 30 天）</span></li>
+            <li><div class="cl-h"><b>12306 官网</b><i>—</i></div><span>行程 PDF 官方下载入口；车站 / 车次数据参考</span></li>
+            <li><div class="cl-h"><b>豆瓣 / 携程 / 大麦 / 必应图片</b><i>—</i></div><span>影演票工坊海报 / 景区图检索参考链路（提示与降级来源）</span></li>
+          </ul>
       
-      <div class="flex items-center gap-3">
-        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232E7E6B'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23FCF6E5'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23FCF6E5'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23FCF6E5'/%3E%3C/svg%3E" alt="迹点点 Logo" class="w-8 h-8 rounded-xl object-cover shadow-sm shrink-0">
-        <div>
-          <span class="font-extrabold text-sm text-slate-800">迹点点 TraceDot</span>
-          <span class="text-xs text-mutedText block">旅行纪念票根工作室</span>
-        </div>
       </div>
 
-      <nav class="flex flex-wrap items-center gap-5 text-xs font-medium text-mutedText">
-        <a href="#home" class="hover:text-brand-600 transition-colors">官网首页</a>
-        <a href="#download" class="hover:text-brand-600 transition-colors">下载应用</a>
-        <a href="https://jidiandian.top/release/TraceDot-V5.1.8.html" target="_blank" rel="noopener" class="hover:text-brand-600 transition-colors">在线应用</a>
-        <a href="changelog.html" class="hover:text-brand-600 transition-colors">更新日志</a>
-        <a href="https://github.com/ajietudou007/TraceDot" target="_blank" rel="noopener" class="hover:text-brand-600 transition-colors">GitHub ↗</a>
-        <a href="#privacy" class="hover:text-brand-600 transition-colors">隐私声明</a>
-      </nav>
+      <div class="license-note">
+        <b>许可义务速览：</b>pdf.js / html2canvas / qrcode-generator / LZ-String / bwip-js 保留版权与许可声明；OpenStreetMap 署名 © OpenStreetMap contributors（分发含本表的修改版需以 ODbL 共享该数据库部分）；China-Railway-Station-Database（CC0）与 OurAirports（Unlicense）零义务；MiSans 需注明使用了 MiSans 字体。
+      </div>
 
+      <div class="credit-more">
+        <a href="https://github.com/ajietudou007/TraceDot/blob/main/CREDITS.md" target="_blank" rel="noopener" class="glass-btn">查看完整 CREDITS.md ↗</a>
+      </div>
     </div>
+  </section>
 
-    <!-- 免责声明小标签卡 -->
-    <div class="mt-8 p-4 rounded-2xl bg-white border border-slate-200/60 text-[12px] text-mutedText leading-relaxed">
-      <span class="font-semibold text-slate-700">免责声明：</span>本项目仅供个人纪念、手账与娱乐创作使用，与中国国家铁路集团（12306）、各航空公司及文旅机构均无隶属或合作关系。严禁将生成的票面用于报销、退票、逃票、诈骗或其他违法用途。
+  <!-- ══════════════ 关于作者 ══════════════ -->
+  <section class="wrap" id="creator">
+    <div class="glass-card pad">
+      <div class="creator-grid">
+        <div>
+          <span class="chip">ABOUT THE CREATOR</span>
+          <h2>一个人，也是一支充满温度的团队。</h2>
+          <p class="sec-lead">迹点点由<b>阿杰同学</b>全程独立构思、设计、前端开发与维护。从最早在 GitHub 上开源的 12306 火车票编辑器，一步步扩展为涵盖全国高铁、民航、城市轨道交通与演出门票的一体化旅行工坊。</p>
+          <div class="socials">
+            <a href="https://github.com/ajietudou007" target="_blank" rel="noopener">GitHub 主页 ↗</a>
+            <a href="https://b23.tv/nBL4aXt" target="_blank" rel="noopener">哔哩哔哩 ↗</a>
+            <a href="https://v.douyin.com/sMRNgbplBkQ/" target="_blank" rel="noopener">抖音 ↗</a>
+            <a href="https://xhslink.cn/o/9780LQiSR6U" target="_blank" rel="noopener">小红书 ↗</a>
+          </div>
+        </div>
+        <aside class="creator-card">
+          <div class="avatar"><img src="avatar.jpg" alt="阿杰同学的头像" width="320" height="320" decoding="async"></div>
+          <b>阿杰同学</b>
+          <p class="cc-role">迹点点 · 全程独立开发</p>
+          <p class="cc-quote">“如果你也攒了一抽屉的旧票根，愿它们在这里变成一张会讲故事的时光地图。”</p>
+        </aside>
+      </div>
     </div>
+  </section>
 
-    <div class="mt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-mutedText pt-4 border-t border-slate-100">
-      <span class="">© 2026 迹点点 TraceDot · MIT License</span>
-      <span class="font-mono text-brand-600 font-medium">点点足迹，票记远方。</span>
+
+
+</main>
+
+<footer class="wrap foot">
+  <div class="foot-top">
+    <div class="foot-brand">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232E7E6B'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23FCF6E5'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23FCF6E5'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23FCF6E5'/%3E%3C/svg%3E" alt="迹点点 Logo" class="brand-logo">
+      <div><b>迹点点 TraceDot</b><i>旅行纪念票根工作室</i></div>
     </div>
-  </footer>
+    <nav class="foot-nav">
+      <a href="#home">官网首页</a>
+      <a href="#download">下载应用</a>
+      <a href="https://jidiandian.top/release/TraceDot-V5.1.8.html" target="_blank" rel="noopener">在线应用</a>
+      <a href="changelog.html">更新日志</a>
+      <a href="https://github.com/ajietudou007/TraceDot" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="#credits">致谢</a>
+      <a href="#privacy">隐私声明</a>
+    </nav>
+  </div>
 
+  <div class="foot-note">
+    <b>免责声明：</b>本项目仅供个人纪念、手账与娱乐创作使用，与中国国家铁路集团（12306）、各航空公司及文旅机构均无隶属或合作关系。严禁将生成的票面用于报销、退票、逃票、诈骗或其他违法用途。
+  </div>
 
+  <div class="foot-base">
+    <span>© 2026 迹点点 TraceDot · MIT License</span>
+    <span class="mono">点点足迹，票记远方。</span>
+  </div>
+</footer>
 
-
-
-
-
-
-
-
-
-<script>
-/* ===== 下载加速线路自动择优（仅 macOS 两个包；Windows 与单文件版走 Gitee 国内直连，无需代理） =====
-   思路：href 里始终写 GitHub 原始地址（JS 被禁也能用），页面加载后按 mirrors.json
-   里的优先级探测，命中第一条可用线路就把 href 改写成「前缀 + 原地址」。
-   - 线路清单位于 mirrors.json，改那个文件即可全站生效，不必改本页
-   - 选中结果写 localStorage 缓存 24 小时，避免每次开页都探测
-   - 全部线路不可用时回落 GitHub 直连，不阻断下载 */
-(function () {
-  var nodes = [].slice.call(document.querySelectorAll('a.js-gh-dl'));
-  if (!nodes.length) return;
-
-  var KEY = 'jdd-gh-line.v1';
-  var TTL = 24 * 3600 * 1000;
-  var PROBE_TIMEOUT = 6000;
-  /* mirrors.json 拉不到时的兜底清单（与文件内容保持一致） */
-  var BUILTIN = ['https://ghproxy.net/', 'https://gh-proxy.com/', 'https://ghfast.top/'];
-
-  var hint = document.getElementById('dlLineHint');
-  nodes.forEach(function (a) { a.setAttribute('data-gh', a.href); });
-
-  function label(prefix) {
-    try { return new URL(prefix).host; } catch (e) { return prefix; }
-  }
-
-  function apply(prefix) {
-    nodes.forEach(function (a) {
-      var raw = a.getAttribute('data-gh');
-      a.href = prefix ? prefix + raw : raw;
-    });
-    if (hint) hint.textContent = prefix ? '（当前线路：' + label(prefix) + '）' : '（当前线路：GitHub 直连）';
-    window.jddDownloadLine = prefix || '';
-  }
-
-  /* 探测目标用同一次发布里的 latest.yml（几百字节），
-     这样即使 release 里没有该文件，返回 404 也证明线路是通的 */
-  function testUrl(prefix) {
-    var u = nodes[0].getAttribute('data-gh');
-    return prefix + u.slice(0, u.lastIndexOf('/') + 1) + 'latest.yml';
-  }
-
-  function once(url, mode) {
-    return new Promise(function (resolve, reject) {
-      var ctl = typeof AbortController === 'function' ? new AbortController() : null;
-      var timer = setTimeout(function () {
-        if (ctl) { try { ctl.abort(); } catch (e) {} }
-        reject(new Error('timeout'));
-      }, PROBE_TIMEOUT);
-      fetch(url, { mode: mode, cache: 'no-store', signal: ctl ? ctl.signal : undefined })
-        .then(function (res) {
-          clearTimeout(timer);
-          try { if (res.body && res.body.cancel) res.body.cancel(); } catch (e) {}
-          if (res.type === 'opaque') return resolve('weak');       /* 读不到状态，但连接是通的 */
-          if (res.status === 429 || res.status >= 500) return reject(new Error('status ' + res.status));
-          resolve('ok');                                            /* 200 / 206 / 404 都算可用 */
-        })
-        .catch(function (err) { clearTimeout(timer); reject(err); });
-    });
-  }
-
-  function probe(prefix) {
-    var url = testUrl(prefix);
-    return once(url, 'cors')
-      .catch(function () { return once(url, 'no-cors'); })          /* 线路没开 CORS 时退一步探测 */
-      .then(function (level) { return { prefix: prefix, level: level }; })
-      .catch(function () { return null; });
-  }
-
-  function cached() {
-    try {
-      var c = JSON.parse(localStorage.getItem(KEY) || '0');
-      if (c && c.prefix && Date.now() - c.ts < TTL) return c.prefix;
-    } catch (e) {}
-    return '';
-  }
-
-  function remember(prefix) {
-    try { localStorage.setItem(KEY, JSON.stringify({ prefix: prefix, ts: Date.now() })); } catch (e) {}
-  }
-
-  function loadList() {
-    return fetch('mirrors.json', { cache: 'no-store' })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (j) {
-        var list = (j && Array.isArray(j.proxies) ? j.proxies : []).filter(function (p) {
-          return typeof p === 'string' && /^https?:\/\//i.test(p);
-        });
-        return list.length ? list : BUILTIN;
-      })
-      .catch(function () { return BUILTIN; });
-  }
-
-  var hit = cached();
-  if (hit) apply(hit);
-
-  loadList().then(function (list) {
-    if (hit && list.indexOf(hit) !== -1) return;   /* 缓存仍在清单里，沿用即可 */
-    Promise.all(list.map(probe)).then(function (rs) {
-      var good = rs.filter(Boolean);
-      /* 顺序即优先级：取 mirrors.json 里第一条可用的，level 只用于诊断 */
-      var best = good[0];
-      apply(best ? best.prefix : '');
-      remember(best ? best.prefix : '');
-    });
-  });
-})();
-</script>
-</body></html>
+<script src="glass.js"></script>
+</body>
+</html>

@@ -1,0 +1,878 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   迹点点 TraceDot · 官网液态玻璃样式层
+   设计令牌来源：迹点点 V5.1.6 应用内 :root（--lf-* 液态玻璃令牌组）
+   参考实现：lightc.app 三层液态玻璃模型（玻璃本体 / 镜面高光 / 环境辉光）
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 应用内嵌 MiSans 子集（可变字重 100-500 / 600-900），与最新版应用字体完全一致 */
+@font-face{font-family:"MiSans";src:url("fonts/MiSans-w100-500.woff2") format("woff2");font-weight:100 500;font-style:normal;font-display:swap}
+@font-face{font-family:"MiSans";src:url("fonts/MiSans-w600-900.woff2") format("woff2");font-weight:600 900;font-style:normal;font-display:swap}
+
+/* ── 1. 设计令牌 ───────────────────────────────────────────────────── */
+:root{
+  /* 画布 / 纸面 —— 由「暖灰」改为「亮白冷调」，抬高纸面亮度上限，
+     让玻璃卡片能真正透出光而不是一片灰 */
+  /* 纸面：中性冷白（原 #FBFCF9 带绿黄偏色，会让玻璃层显脏） */
+  --paper:#EDF4F1;
+  --paper-2:#E4EEEA;
+  --paper-3:#D8E6E0;
+  --ink:#0F1A16;
+  --ink-2:#31443C;
+  --ink-3:#4C5F57;
+  --ink-4:#75887F;
+  --line:rgba(12,44,34,.15);
+  --line-2:rgba(12,44,34,.26);
+
+  /* 品牌强调 —— 青瓷绿，饱和度上调一档以保证在白底上的存在感 */
+  --accent:#15705A;
+  --accent-2:#C2410C;
+  --warm:#9C6214;
+  --accent-soft:rgba(31,122,98,.12);
+  --accent-logo:#1B7350;
+  --venue:#8B6BC4;
+  --scenic:#6E9A4E;
+  --transit:#C07E1E;
+
+  /* 曲线 —— 物理感的关键：分段贝塞尔模拟「缓慢启动 → 过冲 → 回稳」 */
+  --ease:cubic-bezier(.4,0,.2,1);                    /* 常规：平滑进出，无过冲 */
+  --ease-out:cubic-bezier(.16,1,.3,1);               /* 入场：快速启动、长尾收尾（expo-out） */
+  --spring:cubic-bezier(.34,1.42,.52,1);             /* 弹性：轻微过冲 1.42，克制不晃 */
+  --spring-soft:cubic-bezier(.3,1.2,.4,1);           /* 更软的回弹，用于 hover */
+  --liquid:cubic-bezier(.65,.05,.23,1);             /* 液态：先慢后快再收，模拟黏滞流动 */
+
+  /* ── 液态玻璃令牌（取自应用 V5.0.46+ 的 --lf-* 组，透明度重校准） ── */
+  --lf-rim:rgba(255,255,255,.88);        /* 玻璃上边缘的受光面 */
+  --lf-rim-strong:rgba(255,255,255,1);   /* 小控件上的强边缘光 */
+  --lf-edge:rgba(16,26,32,.12);          /* 下边缘收光（加深 → 玻璃有厚度） */
+  --lf-glow-near:rgba(31,122,98,.40);    /* 近层环境辉光 */
+  --lf-glow-mid:rgba(31,122,98,.22);     /* 远层环境辉光 */
+  --lf-sheen:linear-gradient(155deg,rgba(255,255,255,.52) 0%,rgba(255,255,255,.16) 34%,rgba(255,255,255,0) 58%);
+
+  /* ── 玻璃材质（三层模型）───────────────────────────────────────────
+     原实现只有 blur(40px) saturate(1.9)：这是标准 glassmorphism（毛玻璃）。
+     backdrop-filter 的 10 个函数（blur/brightness/contrast/drop-shadow/
+     grayscale/hue-rotate/invert/opacity/sepia/saturate）没有一个能移动像素，
+     所以永远做不出折射。修复三件事：
+     1. 通透：alpha 从 .74/.60/.72 降到 .34/.24/.32 —— 让背景真正透出来
+     2. 折射：接入 SVG feDisplacementMap（见 index.html 的 #lg-refract）
+     3. 色偏：玻璃本体带极淡品牌绿 + 冷白，从背景「取色」而非盖一层白
+     blur 从 40px 降到 18px（过大 blur 就是磨砂感来源），saturate 提到 180%
+     （WWDC25 确认的 Apple recipe：20-24px blur + 180% saturate） */
+  --glass-body:
+    linear-gradient(178deg,rgba(255,255,255,.78) 0%,rgba(240,253,247,.58) 46%,rgba(255,255,255,.70) 100%);
+  --glass-body-soft:
+    linear-gradient(178deg,rgba(255,255,255,.50) 0%,rgba(240,253,247,.34) 46%,rgba(255,255,255,.44) 100%);
+  --glass-nav:
+    linear-gradient(178deg,rgba(255,255,255,.70) 0%,rgba(242,253,248,.48) 46%,rgba(255,255,255,.62) 100%);
+  /* frosted 基底层：Safari/Firefox 回退用（Chromium 走下面的折射版） */
+  --glass-blur:blur(14px) saturate(1.9) brightness(1.03);
+  --glass-blur-nav:blur(14px) saturate(1.85) brightness(1.03);
+  /* 折射版：Chromium 专用。blur 收窄到 10px（折射本身已柔化边缘），
+     saturate 180% 补回 blur 吃掉的彩度，再接 feDisplacementMap 推像素。 */
+  --glass-blur-refract:blur(9px) saturate(1.9) brightness(1.03) url("#lg-refract");
+  --glass-blur-nav-refract:blur(8px) saturate(1.85) brightness(1.03) url("#lg-refract");
+
+  /* 玻璃厚度（内缘受光 + 下缘收光 + 折射边） */
+  --glass-depth:
+    inset 0 1.5px 0 var(--lf-rim-strong),
+    inset 0 -1.5px 0 rgba(16,26,32,.14),
+    inset 0 0 0 1px rgba(255,255,255,.55),
+    inset 0 0 18px rgba(255,255,255,.42);
+  --glass-depth-card:
+    inset 0 1px 0 var(--lf-rim),
+    inset 0 -1px 0 var(--lf-edge),
+    inset 0 0 0 1px rgba(255,255,255,.72),
+    inset 0 0 24px rgba(255,255,255,.30);
+  /* 外投影 + 品牌辉光（分层：接触阴影 / 环境阴影 / 品牌辉光） */
+  --glass-shadow:
+    0 1px 2px rgba(12,44,34,.07),
+    0 8px 20px -12px rgba(12,44,34,.18),
+    0 14px 32px -18px rgba(21,112,90,.20);
+  --glass-shadow-card:
+    0 0 0 1px rgba(12,44,34,.075),
+    0 1px 2px rgba(12,44,34,.05),
+    0 5px 12px -9px rgba(12,44,34,.20),
+    0 18px 34px -28px rgba(12,44,34,.26),
+    0 26px 52px -36px rgba(21,112,90,.24);
+
+  /* 圆角 */
+  --r-card:2.25rem;
+  --r-ctl:1.25rem;
+  --r-pill:999px;
+}
+
+/* ── 2. 基础 ───────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background-color:var(--paper);
+  color:var(--ink);
+  font-family:"MiSans","PingFang SC","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  font-size:16px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ── 2b. 流动极光背景 ──────────────────────────────────────────────
+   三层语义：底色铺陈 → 极光流动 → 暗角收边
+   极光只用 transform 动画（GPU 合成，不触发重绘/重排），
+   三层叠加 filter:blur 会产生大量像素着色，故改为「大尺寸 + 低透明 + 无 blur」
+   的软渐变方案：用多层 background 直接画极光带，省掉 3 个 blur 层。
+   ─────────────────────────────────────────────────────────────── */
+.aurora{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background-color:var(--paper);
+  /* 垂直淡出遮罩：极光在顶部/底部自然隐没，消除色带堆积
+     （实测顶部 G-R 曾达 +19，遮罩后回落到 +1~+5） */
+  -webkit-mask-image:linear-gradient(180deg,
+    transparent 0%,rgba(0,0,0,.35) 12%,#000 34%,#000 66%,rgba(0,0,0,.35) 88%,transparent 100%);
+  mask-image:linear-gradient(180deg,
+    transparent 0%,rgba(0,0,0,.35) 12%,#000 34%,#000 66%,rgba(0,0,0,.35) 88%,transparent 100%);
+}
+/* ⚠️ 原暗角层已删除：它按「视口」铺满，滚动到任何位置四角都被压暗
+   （实测角落亮度比中心低 3.8%），并且在青瓷纸面上会立刻显脏。
+   极光的收边改由 mask 的上下淡出完成，不再额外压暗。 */
+.aurora-band{
+  position:absolute;border-radius:50%;will-change:transform;
+  transform:translateZ(0);   /* 提升为独立合成层，动画只走 GPU */
+  /* 不用 filter:blur —— 1440p 下 3 层 blur(60px) 每帧要着色约 250 万像素，
+     改为「内层实 + 外层散」双层 radial-gradient 模拟柔和边缘 */
+}
+/* 三条极光带：各自不同的色相/位置/周期/振幅，叠加后形成流动的极光 */
+.aurora-band.ab-1{
+  top:-22%;left:-12%;width:74vw;height:56vh;
+  /* 白化底层压到 .62：只在中心留一点光池，不让它盖掉色相 */
+  background:
+    radial-gradient(closest-side,rgba(238,252,246,.62),rgba(238,252,246,0) 64%),
+    radial-gradient(closest-side,rgba(38,168,132,.24),rgba(38,168,132,.08) 54%,transparent 76%),
+    radial-gradient(closest-side,rgba(38,168,132,.16),transparent 70%);
+  animation:auroraFlow1 26s ease-in-out infinite;
+}
+.aurora-band.ab-2{
+  top:-16%;right:-14%;width:62vw;height:50vh;
+  background:
+    radial-gradient(closest-side,rgba(232,248,254,.62),rgba(232,248,254,0) 64%),
+    radial-gradient(closest-side,rgba(32,150,190,.20),rgba(32,150,190,.07) 54%,transparent 76%),
+    radial-gradient(closest-side,rgba(32,150,190,.14),transparent 70%);
+  animation:auroraFlow2 34s ease-in-out infinite;
+}
+.aurora-band.ab-3{
+  bottom:-26%;left:22%;width:66vw;height:46vh;
+  background:
+    radial-gradient(closest-side,rgba(238,242,254,.62),rgba(238,242,254,0) 64%),
+    radial-gradient(closest-side,rgba(104,124,200,.16),rgba(104,124,200,.05) 54%,transparent 76%),
+    radial-gradient(closest-side,rgba(104,124,200,.11),transparent 70%);
+  animation:auroraFlow3 30s ease-in-out infinite;
+}
+@keyframes auroraFlow1{
+  0%,100%{transform:translate3d(0,0,0) scale(1) rotate(0deg)}
+  33%{transform:translate3d(9vw,4vh,0) scale(1.14) rotate(7deg)}
+  66%{transform:translate3d(-6vw,-3vh,0) scale(.94) rotate(-5deg)}
+}
+@keyframes auroraFlow2{
+  0%,100%{transform:translate3d(0,0,0) scale(1) rotate(0deg)}
+  40%{transform:translate3d(-11vw,5vh,0) scale(1.10) rotate(-8deg)}
+  75%{transform:translate3d(5vw,-4vh,0) scale(.96) rotate(6deg)}
+}
+@keyframes auroraFlow3{
+  0%,100%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(-8vw,-6vh,0) scale(1.18)}
+}
+
+/* 静态光池：冷调高光铺底，把「暖灰」感彻底去掉。
+   ⚠️ 用 top:0/bottom:0（而非 inset:0）→ 背景以「页面」为坐标系，
+   光池固定在页面顶部/底部，滚动时不随视口漂移；
+   同时不再对底部施加任何暗色（原 90% 98% 处的 .06 暗青是灰感来源之一）。 */
+body::before{
+  content:"";position:absolute;top:0;bottom:0;left:0;right:0;z-index:1;pointer-events:none;
+  background:
+    /* 顶部纯白抬升：页面顶部最亮，向下自然过渡 */
+    radial-gradient(80% 34% at 50% 0%,rgba(255,255,255,.72) 0%,rgba(255,255,255,.34) 34%,transparent 66%),
+    /* 品牌绿光池（仅顶部两角），给纸面一点冷绿呼吸 */
+    radial-gradient(46% 22% at 6% 1%,rgba(21,112,90,.10) 0%,rgba(21,112,90,.02) 48%,transparent 74%),
+    radial-gradient(40% 20% at 94% 1%,rgba(255,255,255,.60) 0%,rgba(255,255,255,0) 62%),
+    /* 页脚方向：只留极淡的冷调，不再压暗 */
+    radial-gradient(66% 22% at 50% 100%,rgba(255,255,255,.42) 0%,rgba(255,255,255,0) 70%);
+}
+main{position:relative;z-index:2}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{margin:0;font-weight:700;letter-spacing:-.02em;color:var(--ink);line-height:1.28}
+p{margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.02em}
+/* ⚠️ 只能用 padding-inline：HTML 里 <section class="wrap"> 同时带两个类，
+   .wrap 的 class 特异性（0,1,0）高于 section 类型选择器（0,0,1），
+   若在这里写 padding:0 2rem 会把 section{padding:7rem 0} 的上下内边距归零
+   —— 曾导致所有区块之间的间距彻底失效、彼此贴死。 */
+.wrap{max-width:76rem;margin:0 auto;padding-inline:2rem;position:relative}
+/* ── 区块间距系统 ───────────────────────────────────────────────────
+   统一用一种机制：每个 section 自带上下 padding，相邻 section 的 padding 自然叠加。
+   原实现用 section+section{padding-top:0} 把叠加量砍一半，导致间距忽大忽小
+   （whatsnew→metrics 与 metrics→modules 观感不一致）。
+   现在全部统一为 5.5rem 上下内边距，任何两个相邻区块间距恒等。 */
+section{padding:3.75rem 0}
+section+section{padding-top:3.75rem}
+::selection{background:var(--accent-soft);color:var(--ink)}
+
+/* ── 3. 液态玻璃：导航层（浮于内容之上，不与内容层叠） ───────────── */
+.navwrap{position:fixed;top:1.25rem;inset-inline:0;z-index:60;display:flex;justify-content:center;padding:0 1rem;pointer-events:none}
+.glass-nav{
+  pointer-events:auto;
+  width:100%;max-width:62rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.625rem .875rem;
+  border-radius:var(--r-pill);
+  background:var(--glass-nav);
+  -webkit-backdrop-filter:var(--glass-blur-nav);
+  backdrop-filter:var(--glass-blur-nav);
+  box-shadow:var(--glass-depth),var(--glass-shadow);
+  /* 镜面高光：静态一层 */
+  position:relative;overflow:hidden;
+  transition:box-shadow .35s var(--ease),transform .35s var(--ease);
+}
+/* 极慢流光：只动 transform，走合成层，不逐帧重算 backdrop 模糊 */
+/* 黏滞流动高光：三段式位移（快入 → 缓行 → 拖尾），比匀速横扫更"液体"。
+   宽度放大到 70% 且带 skew，模拟光在弧形玻璃面上的折射扫过。 */
+.glass-nav::before{
+  content:"";position:absolute;top:-50%;left:-34%;width:70%;height:200%;
+  background:linear-gradient(100deg,
+    transparent 12%,
+    rgba(255,255,255,.10) 30%,
+    rgba(255,255,255,.62) 50%,
+    rgba(255,255,255,.14) 68%,
+    transparent 88%);
+  transform:translateX(-160%) skewX(-16deg);
+  pointer-events:none;
+  animation:sheenMove 16s var(--liquid) infinite;
+  will-change:transform;
+}
+.glass-nav::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);
+}
+@keyframes sheenMove{
+  0%,58%{transform:translateX(-160%) skewX(-16deg)}
+  70%{transform:translateX(-40%) skewX(-16deg)}   /* 缓入：黏滞启动 */
+  86%{transform:translateX(240%) skewX(-16deg)}   /* 主扫过 */
+  94%,100%{transform:translateX(360%) skewX(-16deg)} /* 拖尾收住 */
+}
+.glass-nav.is-scrolled{box-shadow:var(--glass-depth),0 10px 20px -6px rgba(16,26,32,.18),0 4px 8px rgba(16,26,32,.06)}
+
+.brand{display:flex;align-items:center;gap:.625rem;flex-shrink:0}
+.brand-logo{width:2rem;height:2rem;border-radius:.625rem;box-shadow:0 2px 6px rgba(16,26,32,.18)}
+.brand-name{font-weight:800;font-size:.9375rem;letter-spacing:-.01em;color:var(--ink)}
+.brand-ver{
+  font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.6875rem;font-weight:600;
+  padding:.1875rem .5rem;border-radius:var(--r-pill);
+  color:var(--accent);background:rgba(46,125,107,.10);
+  box-shadow:inset 0 0 0 1px rgba(46,125,107,.18);
+}
+
+.nav-links{display:flex;align-items:center;gap:.125rem;padding:.3125rem;border-radius:var(--r-pill);
+  background:rgba(255,255,255,.42);box-shadow:inset 0 0 0 1px rgba(255,255,255,.55)}
+.nav-links a{
+  font-size:.8125rem;font-weight:500;color:var(--ink-2);
+  padding:.4375rem .8125rem;border-radius:var(--r-pill);white-space:nowrap;
+  transition:color .22s var(--ease),background .22s var(--ease),transform .22s var(--spring);
+}
+.nav-links a:hover{color:var(--ink);background:rgba(255,255,255,.78);transform:translateY(-1px)}
+.nav-links a.on{color:var(--accent);font-weight:600;background:rgba(255,255,255,.92)}
+
+.nav-actions{display:flex;align-items:center;gap:.625rem;flex-shrink:0}
+.icon-btn{
+  width:2.25rem;height:2.25rem;border-radius:var(--r-pill);display:grid;place-items:center;
+  color:var(--ink-2);background:rgba(255,255,255,.52);
+  box-shadow:inset 0 1px 0 var(--lf-rim),inset 0 -1px 0 var(--lf-edge),0 1px 2px rgba(16,26,32,.06);
+  transition:color .2s var(--ease),transform .22s var(--spring),background .2s var(--ease);
+}
+.icon-btn svg{width:1rem;height:1rem}
+.icon-btn:hover{color:var(--ink);background:#fff;transform:translateY(-1px)}
+
+/* 按钮：液态玻璃质感 */
+.glass-btn,.glass-btn-primary{
+  display:inline-flex;align-items:center;gap:.5rem;white-space:nowrap;
+  font-size:.8125rem;font-weight:600;line-height:1;
+  padding:.75rem 1.25rem;border-radius:var(--r-pill);
+  color:var(--ink);background:var(--glass-body);
+  -webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);
+  box-shadow:var(--glass-depth),0 6px 14px -6px rgba(16,26,32,.16);
+  transition:transform .5s var(--spring),box-shadow .55s var(--liquid),background .4s var(--ease);
+}
+.glass-btn:hover,.glass-btn-primary:hover{transform:translateY(-3px);box-shadow:var(--glass-depth),0 14px 28px -8px var(--lf-glow-near)}
+.glass-btn:active,.glass-btn-primary:active{transform:translateY(0)}
+.glass-btn-primary{
+  color:#fff;
+  background-image:var(--lf-sheen),linear-gradient(160deg,#3C9A84,var(--accent));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.46),inset 0 -1px 0 rgba(0,0,0,.12),
+             0 6px 18px var(--lf-glow-near),0 22px 46px -10px var(--lf-glow-mid);
+}
+.glass-btn-primary:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.62),inset 0 -1px 0 rgba(0,0,0,.10),
+             0 8px 22px var(--lf-glow-near),0 24px 54px -10px var(--lf-glow-mid)}
+.glass-btn-primary svg{width:.9375rem;height:.9375rem}
+.glass-btn.lg,.glass-btn-primary.lg{font-size:.875rem;padding:.9375rem 1.625rem}
+.glass-btn.dark{color:#fff;background-image:var(--lf-sheen),linear-gradient(160deg,#22302B,var(--ink));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 6px 16px -6px rgba(16,26,32,.42)}
+.arr{font-size:.875rem;line-height:1;opacity:.8}
+
+.burger{display:none;flex-direction:column;justify-content:center;gap:.25rem;width:2.25rem;height:2.25rem;
+  border:0;border-radius:var(--r-pill);cursor:pointer;background:rgba(255,255,255,.52);
+  box-shadow:inset 0 1px 0 var(--lf-rim);padding:0 .5rem}
+.burger span{display:block;height:1.5px;border-radius:2px;background:var(--ink-2);transition:transform .25s var(--spring)}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
+.burger[aria-expanded="true"] span:nth-child(2){transform:translateY(-3.5px) rotate(-45deg)}
+
+.mobile-menu{
+  position:fixed;top:4.75rem;left:1rem;right:1rem;z-index:59;
+  display:flex;flex-direction:column;gap:.125rem;padding:.5rem;
+  border-radius:var(--r-card);
+  background:var(--glass-nav);
+  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+  box-shadow:var(--glass-depth),var(--glass-shadow);
+  opacity:0;transform:translateY(-10px) scale(.98);transform-origin:top center;
+  pointer-events:none;transition:opacity .26s var(--ease),transform .32s var(--spring);
+}
+.mobile-menu.open{opacity:1;transform:none;pointer-events:auto}
+.mobile-menu a{font-size:.875rem;font-weight:500;color:var(--ink-2);padding:.625rem 1rem;border-radius:1rem;
+  transition:color .2s var(--ease),background .2s var(--ease)}
+.mobile-menu a:hover{color:var(--ink);background:rgba(255,255,255,.8)}
+.mobile-menu .mm-primary{color:var(--accent);font-weight:600;text-align:center;margin-top:.25rem;
+  background:rgba(255,255,255,.7)}
+
+/* ── 4. 通用玻璃卡片 ──────────────────────────────────────────────── */
+.glass-card{
+  position:relative;
+  border-radius:var(--r-card);
+  background:var(--glass-body);
+  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+  /* 四边 specular rim：真玻璃边缘在最受光处最亮（惯例是顶部），
+     且四边都有折射亮线——比均匀 border 更接近物理光学。
+     上缘最强 → 左右渐弱 → 下缘只留一点反弹光。 */
+  box-shadow:
+    inset 0 1.5px 0 var(--lf-rim-strong),        /* 上缘主受光 */
+    inset 0 -1px 0 rgba(255,255,255,.30),        /* 下缘反弹光 */
+    inset 1px 0 0 rgba(255,255,255,.20),         /* 左缘折射 */
+    inset -1px 0 0 rgba(255,255,255,.20),        /* 右缘折射 */
+    inset 0 0 0 1px rgba(255,255,255,.34),       /* 整体内描边 */
+    inset 0 0 22px rgba(255,255,255,.26),        /* 内部环境辉光 */
+    var(--glass-shadow-card);
+  overflow:hidden;
+  /* contain:paint：告诉浏览器此元素的绘制不会溢出盒模型，
+     合成器可更激进地缓存 backdrop 纹理——feDisplacementMap 折射
+     比纯 blur 贵得多，这是最有效的一档优化。 */
+  contain:paint;
+  transition:transform .7s var(--liquid),box-shadow .7s var(--ease);
+}
+/* 镜面高光层：独立于玻璃本体，hover 时横向位移 → 光在弧面上滑动。
+   z-index:0 保持在内容之下（内容默认 z-index:auto/0，但 ::before 先于内容绘制），
+   实际通过 pointer-events:none 保证不拦截点击。 */
+.glass-card::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;
+  background:var(--lf-sheen);opacity:.55;
+  transform:translateX(-8%);
+  transition:transform .8s var(--liquid),opacity .8s var(--ease);
+}
+.glass-card::after{       /* 折射边：弧形玻璃的边缘亮线，物理感的关键。
+   pointer-events:none 且不参与堆叠，纯装饰层 */
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(135deg,
+    rgba(255,255,255,.85) 0%,rgba(255,255,255,.22) 18%,transparent 42%,
+    transparent 68%,rgba(255,255,255,.18) 88%,rgba(255,255,255,.55) 100%);
+  opacity:.35;
+}
+.glass-card:hover{transform:translateY(-6px);
+  box-shadow:
+    inset 0 1.5px 0 var(--lf-rim-strong),
+    inset 0 -1px 0 rgba(255,255,255,.32),
+    inset 1px 0 0 rgba(255,255,255,.22),
+    inset -1px 0 0 rgba(255,255,255,.22),
+    inset 0 0 0 1px rgba(255,255,255,.40),
+    inset 0 0 28px rgba(255,255,255,.32),
+    0 14px 30px -18px rgba(12,44,34,.22),
+    0 26px 52px -30px rgba(21,112,90,.26)}
+.glass-card:hover::before{transform:translateX(10%);opacity:.85}
+.glass-card.pad{padding:2.5rem}
+/* 整块面板是版面骨架而非可点对象，hover 位移会让整页跳动 */
+.glass-card.pad:hover{transform:none}
+.glass-card.tint{background:linear-gradient(160deg,rgba(255,255,255,.42) 0%,rgba(240,250,248,.30) 55%,rgba(31,122,98,.12) 100%)}
+
+/* 折射接入门控：Chromium 才认 backdrop-filter:url()。
+   ⚠️ 两个坑：
+   1. 必须放在 .glass-card / .glass-nav 主规则之后 —— 同特异性下后者胜出，
+      放前面会被主规则的 frosted 版覆盖，折射永远不生效。
+   2. 必须单独用 @supports 包住 —— Safari 遇到无效的 backdrop-filter 值会
+      丢弃整条声明（连 blur 一起丢），所以不能与 frosted 版写进同一条。 */
+@supports (backdrop-filter:url("#lg-refract")) or (-webkit-backdrop-filter:url("#lg-refract")){
+  .glass-card{
+    -webkit-backdrop-filter:var(--glass-blur-refract);
+    backdrop-filter:var(--glass-blur-refract);
+  }
+  .glass-nav{
+    -webkit-backdrop-filter:var(--glass-blur-nav-refract);
+    backdrop-filter:var(--glass-blur-nav-refract);
+  }
+}
+
+.chip{
+  display:inline-flex;align-items:center;gap:.375rem;
+  font-size:.6875rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  padding:.3125rem .75rem;border-radius:var(--r-pill);
+  color:var(--accent);background:rgba(244,252,248,.90);
+  box-shadow:inset 0 1px 0 var(--lf-rim),inset 0 0 0 1px rgba(46,125,107,.16),0 1px 2px rgba(16,26,32,.05);
+}
+.sec-lead{font-size:.9375rem;color:var(--ink-3);line-height:1.75;max-width:42rem;text-wrap:pretty}
+
+.sec-lead.wide{max-width:50rem;margin-inline:auto}
+.sec-center{text-align:center;margin-bottom:2.75rem}
+.sec-center h2{font-size:clamp(1.5rem,3vw,2.125rem);margin-top:.875rem}
+.sec-center .sec-lead{margin-top:.75rem}
+#whatsnew .sec-head,.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1.5rem;margin-bottom:2rem;flex-wrap:wrap}
+#whatsnew h2,.glass-card h2{font-size:clamp(1.25rem,2.4vw,1.75rem);margin-top:.875rem}
+.fine{font-size:.75rem;color:var(--ink-3);line-height:1.7;margin-top:1rem}
+
+/* 温馨提示：原来是一整段 130 字连排，扫读成本高。
+   改为浅绿提示板 + 编号条目，四件事各自独立成行。 */
+.tips{margin-top:1.25rem;padding:1.0625rem 1.1875rem 1.1875rem;border-radius:1.25rem;
+  background:linear-gradient(158deg,rgba(21,112,90,.062) 0%,rgba(21,112,90,.022) 100%);
+  box-shadow:inset 0 0 0 1px rgba(21,112,90,.15),inset 0 1px 0 rgba(255,255,255,.62)}
+.tips-head{display:flex;align-items:center;gap:.4375rem;margin-bottom:.75rem;
+  font-size:.75rem;font-weight:700;letter-spacing:.04em;color:var(--accent)}
+.tips-ico{display:grid;place-items:center;width:1.25rem;height:1.25rem;border-radius:50%;
+  color:var(--accent);background:rgba(21,112,90,.13)}
+.tips-ico svg{width:.8125rem;height:.8125rem}
+.tips-list{list-style:none;margin:0;padding:0;counter-reset:tip;
+  display:flex;flex-direction:column;gap:.5rem}
+.tips-list li{position:relative;counter-increment:tip;padding-left:1.4375rem;
+  font-size:.75rem;color:var(--ink-2);line-height:1.72;text-wrap:pretty}
+.tips-list li::before{content:counter(tip);position:absolute;left:0;top:.1563rem;
+  display:grid;place-items:center;width:1rem;height:1rem;border-radius:.3438rem;
+  font-size:.5625rem;font-weight:800;line-height:1;
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  color:var(--accent);background:rgba(21,112,90,.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55)}
+
+/* 键盘可达性：所有可交互卡片统一焦点环 */
+.dl-card:focus-visible,.socials a:focus-visible,.glass-btn:focus-visible,.glass-btn-primary:focus-visible{
+  outline:2px solid rgba(21,112,90,.55);outline-offset:3px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+/* 4×2 网格：whatsnew 与 modules 的 8 个卡片各占一格，两行严丝合缝。
+   原 grid-3 的 8 项会排成 3+3+2（末行缺一格），且 modules 的第 7 项
+   span 3 独占一行 → 变成「3×3 + 1 + 1」的碎布局。 */
+/* grid-auto-rows:1fr 让所有行等高（取最高行）——两行卡片底部严格齐平，
+   原实现各行按自身内容定高，第一行比第二行高 49px，视觉上参差。 */
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:1fr;gap:2rem}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start}
+
+/* ── 5. Hero ──────────────────────────────────────────────────────── */
+.hero{padding-top:9rem;padding-bottom:2rem}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;max-width:76rem;margin:0 auto;padding:0 1.5rem;position:relative;z-index:1}
+.hero-copy{display:flex;flex-direction:column;align-items:flex-start;gap:1.25rem}
+
+.chip-live{
+  display:inline-flex;align-items:center;gap:.5rem;flex-wrap:wrap;
+  font-size:.75rem;font-weight:500;color:var(--ink-2);
+  padding:.4375rem .9375rem;border-radius:var(--r-pill);
+  background:var(--glass-body-soft);
+  -webkit-backdrop-filter:blur(20px) saturate(1.7);backdrop-filter:blur(20px) saturate(1.7);
+  box-shadow:var(--glass-depth-card),0 6px 14px -6px rgba(16,26,32,.14);
+}
+.chip-live .dot{width:.5rem;height:.5rem;border-radius:50%;background:var(--accent);position:relative}
+.chip-live .dot::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:1px solid var(--accent);opacity:.5;animation:ping 1.8s var(--ease) infinite}
+@keyframes ping{0%{transform:scale(.6);opacity:.7}80%,100%{transform:scale(1.8);opacity:0}}
+.chip-live .sep{width:1px;height:.875rem;background:var(--line-2)}
+
+.hero-title{font-size:clamp(1.875rem,3.6vw,2.75rem);line-height:1.22;letter-spacing:-.03em}
+.grad{font-style:normal;background:linear-gradient(105deg,#2E7D6B 8%,#4FA88C 48%,#0E7490 92%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-lead{font-size:1rem;color:var(--ink-3);line-height:1.8;max-width:34rem}
+
+.hero-tags{display:flex;flex-wrap:wrap;gap:.75rem}
+.tag{
+  font-size:.75rem;font-weight:500;color:var(--ink-2);
+  padding:.5rem .9375rem;border-radius:var(--r-pill);
+  background:rgba(244,252,248,.86);
+  box-shadow:inset 0 1px 0 var(--lf-rim),inset 0 0 0 1px rgba(16,26,32,.07),0 1px 2px rgba(16,26,32,.05);
+}
+.tag-hl{color:var(--accent);background:rgba(255,255,255,.94);box-shadow:inset 0 1px 0 var(--lf-rim-strong),inset 0 0 0 1px rgba(46,125,107,.20)}
+
+.hero-cta{display:flex;flex-wrap:wrap;gap:1rem;padding-top:.75rem}
+.hero-assure{display:flex;flex-wrap:wrap;gap:1.5rem;font-size:.75rem;color:var(--ink-3)}
+.hero-assure span{display:flex;align-items:center;gap:.375rem}
+.hero-assure span::before{content:"✓";color:var(--accent);font-weight:700}
+
+/* ── 6. Hero 液态玻璃票面展台 ────────────────────────────────────── */
+.hero-stage{position:relative}
+.glass-card.stage{padding:1.5rem;min-height:26rem;display:flex;flex-direction:column}
+.stage-aura{
+  position:absolute;top:-14%;right:-6%;width:64%;height:60%;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(46,125,107,.20),transparent 72%);
+  filter:blur(8px);pointer-events:none;
+}
+.stage-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding-bottom:1rem;border-bottom:1px solid var(--line);position:relative;z-index:2}
+.stage-head-l{display:flex;align-items:center;gap:.75rem}
+.stage-ico{width:2.5rem;height:2.5rem;border-radius:.875rem;display:grid;place-items:center;flex-shrink:0;
+  color:#fff;background-image:var(--lf-sheen),linear-gradient(160deg,#3C9A84,var(--accent));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 6px 16px -4px var(--lf-glow-near)}
+.stage-ico svg{width:1.125rem;height:1.125rem}
+.stage-kicker{font-size:.6875rem;font-weight:700;letter-spacing:.08em;color:var(--ink);display:flex;align-items:center;gap:.5rem}
+.mini-ver{font-size:.625rem;font-family:"JetBrains Mono",ui-monospace,monospace;font-weight:600;padding:.125rem .375rem;
+  border-radius:.375rem;color:var(--accent);background:rgba(46,125,107,.10)}
+.stage-sub{font-size:.6875rem;color:var(--ink-3);margin-top:.125rem}
+.live-pill{display:flex;align-items:center;gap:.375rem;padding:.375rem .75rem;border-radius:var(--r-pill);
+  font-size:.625rem;font-weight:800;letter-spacing:.1em;color:#fff;flex-shrink:0;
+  background-image:var(--lf-sheen),linear-gradient(160deg,#3C9A84,var(--accent));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 5px 14px -4px var(--lf-glow-near)}
+.live-pill .dot{width:.375rem;height:.375rem;border-radius:50%;background:#fff;animation:ping 1.8s var(--ease) infinite}
+
+/* 立体层叠 */
+.stage-planes{
+  position:relative;flex:1;min-height:15.5rem;margin:.875rem 0;
+  border-radius:1.5rem;padding:.5rem;
+  /* ⚠️ 原是 rgba(255,255,255,.9) —— 整片近不透明白，把玻璃的折射完全糊死，
+     展台变成「贴纸」而非「玻璃后的实物」。降到 .34 让背景的折射与极光透上来，
+     玻璃的"通透感"才成立。票面自身仍保持高可读。 */
+  background:radial-gradient(120% 120% at 50% 0%,rgba(209,250,229,.20) 0%,rgba(240,253,244,.28) 52%,rgba(255,255,255,.34) 100%);
+  box-shadow:inset 0 0 0 1px rgba(46,125,107,.10),inset 0 1px 0 rgba(255,255,255,.55);
+}
+.plane-bg{position:absolute;left:50%;transform:translateX(-50%);border-radius:1.25rem;pointer-events:none;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.plane-bg.p1{top:-.25rem;width:88%;height:6rem;transform:translateX(-50%) rotate(-1deg);
+  background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(209,250,229,.16));opacity:.5;box-shadow:0 1px 0 rgba(255,255,255,.5)}
+.plane-bg.p2{top:.5rem;width:92%;height:7rem;transform:translateX(-50%) rotate(1deg);
+  background:linear-gradient(180deg,rgba(255,255,255,.42),rgba(167,243,208,.14));opacity:.7;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 2px 8px -2px rgba(16,26,32,.07)}
+
+/* 票面通用 */
+.tk{position:relative;max-width:24rem;margin-inline:auto;border-radius:1.25rem;overflow:hidden;
+  background:rgba(255,255,255,.86);color:var(--ink);
+  box-shadow:inset 0 1px 0 var(--lf-rim-strong),inset 0 -1px 0 rgba(16,26,32,.05),0 8px 20px -8px rgba(16,26,32,.20);
+  transition:transform .35s var(--spring)}
+.tk:hover{transform:translateY(-4px) rotate(0deg)!important;z-index:6}
+.tk .tk-row{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
+.tk .tk-row.top{padding-bottom:.625rem;border-bottom:1px dashed rgba(16,26,32,.18);
+  font-size:.625rem;font-family:"JetBrains Mono",ui-monospace,monospace;color:var(--ink-2)}
+
+/* 登机牌 */
+.tk.plane{margin-top:1.25rem;transform:rotate(-2deg);z-index:2}
+.tk-band{height:.375rem;background-image:var(--lf-sheen),linear-gradient(90deg,var(--tk-a,#2E7D6B),var(--tk-b,#0E7490))}
+.tk.plane .tk-body{padding:.75rem .875rem 1.75rem}
+.tk-air{font-weight:800;letter-spacing:.1em;color:var(--tk-a,#2E7D6B)}
+.tk-air b{margin-left:.375rem;padding:.125rem .375rem;border-radius:.25rem;font-size:.5625rem;font-weight:700;
+  color:var(--tk-a,#2E7D6B);background:rgba(46,125,107,.10)}
+.tk-en{font-size:.5rem;letter-spacing:.04em;color:var(--ink-3)}
+.tk-route{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.625rem 0}
+.tk-port{text-align:left;min-width:3.5rem}
+.tk-port.r{text-align:right}
+.tk-port b{display:block;font-size:1.25rem;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.tk-port i{display:block;font-style:normal;font-size:.5625rem;color:var(--ink-3);margin-top:.125rem}
+.tk-flight{display:flex;flex-direction:column;align-items:center;gap:.25rem;flex:1}
+.tk-flight span{font-size:.5625rem;font-weight:700;padding:.125rem .5rem;border-radius:var(--r-pill);
+  color:var(--accent);background:rgba(46,125,107,.10)}
+.tk-flight svg{width:.8125rem;height:.8125rem;color:var(--accent);transform:rotate(90deg)}
+.tk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.375rem;padding-top:.625rem;border-top:1px solid rgba(16,26,32,.10)}
+.tk-grid div{padding:.3125rem;border-radius:.5rem;text-align:center;background:rgba(16,26,32,.045)}
+.tk-grid i{display:block;font-style:normal;font-size:.4375rem;letter-spacing:.04em;color:var(--ink-3)}
+.tk-grid b{display:block;font-size:.6875rem;font-weight:700;margin-top:.0625rem}
+.tk-grid b.warm{color:var(--accent-2)}
+
+/* 火车票 */
+.tk.train{margin-top:-1.75rem;padding:.875rem .9375rem;transform:rotate(2deg);z-index:3;
+  background:linear-gradient(135deg,rgba(240,253,244,.95) 0%,rgba(220,252,231,.90) 46%,rgba(204,251,241,.94) 100%);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  box-shadow:inset 0 1px 1px 0 rgba(255,255,255,.92),0 18px 34px -12px rgba(5,150,105,.20)}
+.tk-sheen{position:absolute;top:-3rem;left:-3rem;width:12rem;height:12rem;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(255,255,255,.85),rgba(255,255,255,0) 72%);filter:blur(6px)}
+.tk-grain{position:absolute;inset:0;pointer-events:none;opacity:.14;
+  background-image:radial-gradient(var(--tk-a,#2E7D6B) 1px,transparent 1px);background-size:8px 8px}
+.tk-no{font-weight:800;color:#C2410C;letter-spacing:.04em}
+.tk-no i{margin-left:.375rem;padding:.125rem .375rem;border-radius:.25rem;font-style:normal;font-size:.5rem;font-weight:600;
+  color:var(--accent);background:rgba(46,125,107,.12)}
+.tk-rail{font-weight:600;color:#0F5E50}
+.tk-rail i{font-style:normal;font-size:.5rem;font-weight:500;color:var(--ink-3);margin-left:.25rem}
+.tk-route.big{padding:.75rem 0}
+.tk-route.big .tk-port b{font-size:1.375rem;font-weight:800}
+.tk-route.big .tk-port i{font-size:.625rem}
+.tk-train{display:flex;flex-direction:column;align-items:center;gap:.1875rem;flex:1}
+.tk-train b{font-size:.75rem;font-weight:800;font-family:"JetBrains Mono",ui-monospace,monospace;
+  padding:.1875rem .625rem;border-radius:var(--r-pill);color:#0F5E50;background:rgba(255,255,255,.86);
+  box-shadow:inset 0 0 0 1px rgba(46,125,107,.24),0 1px 3px rgba(16,26,32,.07)}
+.tk-arrow{font-size:.5625rem;color:var(--accent);letter-spacing:-.04em}
+.tk-train i{font-style:normal;font-size:.5625rem;color:var(--accent);font-family:"JetBrains Mono",ui-monospace,monospace}
+.tk-meta{display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap;
+  padding:.5rem .75rem;border-radius:.75rem;font-size:.6875rem;font-family:"JetBrains Mono",ui-monospace,monospace;
+  background:rgba(244,252,248,.90);box-shadow:inset 0 0 0 1px rgba(46,125,107,.18)}
+.tk-meta b{color:#0F5E50}
+.tk-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:.75rem;padding-top:.625rem;margin-top:.625rem}
+.tk-foot>div i{display:block;font-style:normal;font-size:.5rem;color:var(--ink-3);font-family:"JetBrains Mono",ui-monospace,monospace}
+.price{font-size:.9375rem;font-weight:800;color:#C2410C}
+.price span{font-size:.5625rem;font-weight:500;color:var(--ink-2);margin-left:.125rem}
+.tk-code{display:flex;align-items:center;gap:.5rem;text-align:right}
+.tk-code i{display:block;font-style:normal;font-size:.5rem;color:var(--ink-2)}
+.tk-code svg{width:2.25rem;height:2.25rem;padding:.25rem;border-radius:.375rem;color:var(--ink);
+  background:#fff;box-shadow:inset 0 0 0 1px rgba(46,125,107,.24)}
+
+/* 展台统计 */
+.stage-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.875rem;position:relative;z-index:2}
+.stage-stats>div{padding:.875rem .75rem;border-radius:1rem;text-align:center;
+  background:rgba(244,252,248,.86);box-shadow:inset 0 1px 0 var(--lf-rim),inset 0 0 0 1px rgba(12,44,34,.07);
+  transition:transform .25s var(--spring),background .25s var(--ease)}
+.stage-stats>div:hover{transform:translateY(-2px);background:#fff}
+.stage-stats b{display:block;font-size:1.125rem;font-weight:800;letter-spacing:-.02em}
+.stage-stats b span{font-size:.6875rem;font-weight:600;margin-left:.125rem}
+.stage-stats i{display:block;font-style:normal;font-size:.625rem;color:var(--ink-3);margin-top:.125rem}
+.stage-foot{display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+  padding-top:1rem;margin-top:1rem;border-top:1px solid var(--line);
+  font-size:.6875rem;font-weight:600;color:var(--ink-2)}
+.stage-foot b{display:inline-grid;place-items:center;width:1rem;height:1rem;margin-right:.375rem;
+  border-radius:50%;font-size:.5625rem;color:#fff;background:var(--accent)}
+.mono-chip{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.625rem;font-weight:600;
+  padding:.25rem .625rem;border-radius:var(--r-pill);color:var(--accent);background:rgba(46,125,107,.10)}
+
+
+/* ── 7. V5 能力卡片 ───────────────────────────────────────────────── */
+.mini{padding:1.75rem 1.5rem;border-radius:1.375rem;background:rgba(240,250,246,.62);
+  box-shadow:0 0 0 1px rgba(12,44,34,.07),inset 0 1px 0 var(--lf-rim),0 3px 8px -6px rgba(12,44,34,.16);
+  transition:transform .55s var(--spring),background .4s var(--ease),box-shadow .5s var(--ease)}
+/* 交互反馈统一语言（4 类卡片共用）：
+   ① 抬升 5px  ② 强调色描边浮现  ③ 图标底块翻成实心强调色  ④ 绿色接触影 */
+.mini:hover{transform:translateY(-5px);background:rgba(255,255,255,.90);
+  box-shadow:0 0 0 1px rgba(21,112,90,.22),inset 0 1px 0 var(--lf-rim-strong),0 14px 28px -16px rgba(21,112,90,.34)}
+.mini-ico{display:inline-grid;place-items:center;width:2.5rem;height:2.5rem;margin-bottom:.75rem;
+  border-radius:.75rem;font-size:1rem;color:var(--accent);background:rgba(255,255,255,.86);
+  box-shadow:inset 0 1px 0 var(--lf-rim),0 1px 3px rgba(16,26,32,.07);
+  transition:color .3s var(--ease),background .3s var(--ease),box-shadow .3s var(--ease),transform .5s var(--spring)}
+.mini-ico svg,.m-ico svg{width:1.125rem;height:1.125rem}
+.mini:hover .mini-ico,.metric:hover .m-ico{color:#fff;background:var(--accent);transform:translateY(-1px) scale(1.06);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.30),0 8px 16px -10px rgba(21,112,90,.55)}
+.mini-t{font-size:.9375rem;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;line-height:1.45}
+.mini p{font-size:.8125rem;color:var(--ink-3);line-height:1.85;margin-top:.75rem}
+.badge{font-size:.5625rem;font-weight:700;font-family:"JetBrains Mono",ui-monospace,monospace;
+  padding:.125rem .4375rem;border-radius:.375rem;letter-spacing:.02em;
+  color:var(--ink-2);background:rgba(16,26,32,.08)}
+.badge.new{color:#fff;background:var(--accent)}
+.badge.fix{color:#fff;background:#3E8E7A}
+
+/* ── 8. 数据看板 ──────────────────────────────────────────────────── */
+.metrics-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:3rem;align-items:center}
+.metrics-l h2{margin-top:.875rem;font-size:clamp(1.375rem,2.4vw,1.75rem)}
+.metrics-l .sec-lead{margin-top:.75rem}
+.metrics-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:1.125rem}
+.metric{padding:1.5rem 1.125rem;border-radius:1.375rem;text-align:center;
+  background:rgba(240,250,246,.62);box-shadow:0 0 0 1px rgba(12,44,34,.07),inset 0 1px 0 var(--lf-rim),0 3px 8px -6px rgba(12,44,34,.16);
+  transition:transform .5s var(--spring),background .35s var(--ease),box-shadow .45s var(--ease)}
+.metric:hover{transform:translateY(-5px);background:rgba(255,255,255,.92);
+  box-shadow:0 0 0 1px rgba(21,112,90,.22),inset 0 1px 0 var(--lf-rim-strong),0 14px 28px -16px rgba(21,112,90,.34)}
+.metric:hover b{color:var(--accent)}
+.m-ico{display:inline-grid;place-items:center;width:2.5rem;height:2.5rem;margin-bottom:.625rem;
+  border-radius:.75rem;font-size:1rem;color:var(--accent);background:rgba(255,255,255,.88);
+  box-shadow:inset 0 1px 0 var(--lf-rim),0 1px 3px rgba(16,26,32,.07);
+  transition:color .3s var(--ease),background .3s var(--ease),box-shadow .3s var(--ease),transform .5s var(--spring)}
+.metric b{display:block;font-size:1.875rem;font-weight:800;letter-spacing:-.03em;line-height:1;
+  transition:color .3s var(--ease)}
+.metric i{display:block;font-style:normal;font-size:.75rem;color:var(--ink-3);margin-top:.375rem}
+
+/* ── 9. 功能模块（4×2 布局）───────────────────────────────────────── */
+/* 4 列下每列约 300px，原 2rem 内边距 + 2.75rem 编号块会显得臃肿，整体收紧一档 */
+.mod{padding:1.75rem 1.5rem;display:flex;flex-direction:column;gap:1.125rem}
+.mod-top{display:flex;align-items:center;justify-content:space-between;gap:.625rem}
+.mod-no{width:2.25rem;height:2.25rem;border-radius:.6875rem;display:grid;place-items:center;
+  font-size:.875rem;font-weight:800;font-family:"JetBrains Mono",ui-monospace,monospace;
+  color:var(--accent);background:rgba(21,112,90,.10);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.65),inset 0 0 0 1px rgba(21,112,90,.14)}
+.mod-en{font-size:.5625rem;font-weight:600;letter-spacing:.06em;color:var(--ink-3);font-family:"JetBrains Mono",ui-monospace,monospace}
+.mod h3{font-size:1.0625rem;font-weight:700;line-height:1.4}
+.mod p{font-size:.8125rem;color:var(--ink-3);line-height:1.85;flex:1}
+.mod-foot{display:flex;align-items:center;justify-content:space-between;gap:.625rem;
+  padding-top:1rem;margin-top:.5rem;border-top:1px solid var(--line);
+  font-size:.6875rem;font-weight:600;color:var(--accent)}
+/* V5 NEW 角标：必须用独立 <span>，不能复用 .glass-card::after ——
+   伪元素同名会继承父规则的 inset:0，导致绿色背景铺满整张卡片（曾出过此 bug）。 */
+.mod:hover{transform:translateY(-5px);
+  box-shadow:
+    inset 0 1.5px 0 var(--lf-rim-strong),
+    inset 0 -1px 0 rgba(255,255,255,.32),
+    inset 0 0 0 1px rgba(255,255,255,.42),
+    0 0 0 1px rgba(21,112,90,.22),
+    0 16px 32px -20px rgba(12,44,34,.26),
+    0 30px 56px -34px rgba(21,112,90,.42)}
+.mod:hover .mod-no{color:#fff;background:var(--accent);box-shadow:inset 0 1px 0 rgba(255,255,255,.30),0 6px 14px -8px rgba(21,112,90,.55)}
+.mod:hover .mod-foot>span:last-child{transform:translateX(3px)}
+.mod-no{transition:color .3s var(--ease),background .3s var(--ease),box-shadow .3s var(--ease)}
+.mod-foot>span:last-child{transition:transform .4s var(--spring)}
+.mod-badge{position:absolute;top:0;right:0;z-index:3;
+  padding:.375rem .6875rem;border-radius:0 var(--r-card) 0 .875rem;
+  font-size:.625rem;font-weight:800;letter-spacing:.06em;line-height:1;color:#fff;
+  background:var(--accent);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 10px -3px var(--lf-glow-near)}
+
+/* ── 10. 技术亮点 / 下载 ──────────────────────────────────────────── */
+.stack{display:flex;flex-direction:column;gap:.875rem;margin-top:1.75rem}
+.stack-item{display:flex;align-items:flex-start;gap:1.125rem;padding:1.25rem 1.375rem;border-radius:1.25rem;
+  background:rgba(240,250,246,.62);box-shadow:0 0 0 1px rgba(12,44,34,.065),inset 0 1px 0 var(--lf-rim),0 3px 8px -6px rgba(12,44,34,.15);
+  transition:transform .55s var(--spring),background .4s var(--ease),box-shadow .45s var(--ease)}
+.stack-item:hover{transform:translateX(4px);background:rgba(255,255,255,.90);
+  box-shadow:0 0 0 1px rgba(21,112,90,.22),inset 0 1px 0 var(--lf-rim-strong),0 12px 24px -16px rgba(21,112,90,.30)}
+.stack-item:hover .s-no{color:#fff;background:var(--accent)}
+.s-no{width:2rem;height:2rem;border-radius:.625rem;display:grid;place-items:center;flex-shrink:0;
+  font-size:.6875rem;font-weight:800;color:var(--accent);background:rgba(255,255,255,.88);
+  box-shadow:inset 0 1px 0 var(--lf-rim),0 1px 3px rgba(16,26,32,.07);
+  transition:color .3s var(--ease),background .3s var(--ease)}
+.stack-item b{font-size:.875rem;color:var(--ink)}
+.stack-item p{font-size:.8125rem;color:var(--ink-3);line-height:1.8;margin-top:.4375rem}
+
+.dl-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+  font-size:.6875rem;color:var(--ink-3);font-family:"JetBrains Mono",ui-monospace,monospace}
+/* 单列 5 行：网页离线版 → Windows → macOS Apple → macOS Intel → 历史版本。
+   行式布局（图标 / 文案 / 动作三段）让 5 个条目在窄列里也不会被挤成多行。 */
+.dl-grid{display:flex;flex-direction:column;gap:.5rem;margin:1.375rem 0 0}
+.dl-card{display:flex;align-items:center;gap:.875rem;padding:.8125rem .9375rem;border-radius:1rem;
+  background:rgba(255,255,255,.52);
+  box-shadow:inset 0 1px 0 var(--lf-rim),inset 0 0 0 1px rgba(12,44,34,.075);
+  transition:transform .3s var(--spring),box-shadow .3s var(--ease),background .3s var(--ease)}
+.dl-card:hover{transform:translateX(4px);background:#fff;
+  box-shadow:0 0 0 1px rgba(21,112,90,.26),inset 0 1px 0 var(--lf-rim-strong),0 12px 24px -16px rgba(21,112,90,.34)}
+.dl-card:hover .dl-ico{color:#fff;background:var(--accent);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 6px 12px -8px rgba(21,112,90,.55)}
+.dl-ico{display:grid;place-items:center;width:2.125rem;height:2.125rem;flex-shrink:0;
+  border-radius:.6875rem;color:var(--accent);background:rgba(21,112,90,.09);
+  box-shadow:inset 0 0 0 1px rgba(21,112,90,.14);
+  transition:color .28s var(--ease),background .28s var(--ease),box-shadow .28s var(--ease)}
+.dl-ico svg{width:1.0625rem;height:1.0625rem}
+.dl-txt{display:flex;flex-direction:column;gap:.1875rem;flex:1;min-width:0}
+.dl-card b{font-size:.8125rem;font-weight:700;color:var(--ink);line-height:1.3}
+.dl-card i{font-style:normal;font-size:.6875rem;color:var(--ink-3);line-height:1.4;
+  font-family:"JetBrains Mono",ui-monospace,monospace}
+.dl-act{font-size:.6875rem;font-weight:700;color:var(--accent);white-space:nowrap;flex-shrink:0;
+  padding:.3125rem .5625rem;border-radius:var(--r-pill);background:rgba(21,112,90,.10);
+  transition:background .25s var(--ease),color .25s var(--ease)}
+.dl-card:hover .dl-act{color:#fff;background:var(--accent)}
+
+/* ── 11. 关于作者 ──────────────────────────────────────────────────── */
+.creator-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:3rem;align-items:center}
+.creator-grid h2{font-size:clamp(1.25rem,2.4vw,1.75rem);margin-top:.875rem}
+.socials{display:flex;flex-wrap:wrap;gap:.625rem;margin-top:1.25rem}
+.socials a{font-size:.75rem;font-weight:600;color:var(--ink-2);padding:.5625rem 1rem;border-radius:var(--r-pill);
+  background:rgba(241,249,250,.86);box-shadow:inset 0 1px 0 var(--lf-rim),inset 0 0 0 1px rgba(12,44,34,.07);
+  transition:transform .25s var(--spring),color .25s var(--ease),background .25s var(--ease)}
+.socials a:hover{transform:translateY(-2px);color:var(--accent);background:#fff}
+.creator-card{padding:2.25rem 1.75rem;border-radius:1.75rem;text-align:center;
+  background:rgba(255,255,255,.62);box-shadow:inset 0 1px 0 var(--lf-rim),inset 0 0 0 1px rgba(12,44,34,.07)}
+.avatar{width:5.5rem;height:5.5rem;margin:0 auto 1rem;border-radius:50%;padding:.1875rem;
+  background-image:var(--lf-sheen),linear-gradient(160deg,#4FB79B,var(--accent));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 10px 22px -10px var(--lf-glow-near)}
+.avatar img{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover}
+.creator-card>b{font-size:1rem;color:var(--ink)}
+.cc-role{font-size:.75rem;font-weight:600;color:var(--accent);margin-top:.25rem}
+.cc-quote{font-size:.75rem;color:var(--ink-3);line-height:1.7;margin-top:.875rem}
+
+/* ── 12. 致谢 ─────────────────────────────────────────────────────── */
+/* 3 列等宽：5 个分组按 2/2/1 均分到三列，顶部对齐。
+   原 2 列装 3 个 block → 第 3 个独占一行且各 block 高度不一 → 高低错落。 */
+/* 结构：分组标题横跨整行，条目在 3 列里逐条流动（.credit-list{display:contents}）。
+   为什么不用「每组一列」或多列自动均衡：
+   第一组有 12 条、其余三组各 2~6 条，而 break-inside:avoid 不允许拆分组，
+   浏览器只能把 12 条整块塞进一列 → 三列高度差 400px，又回到高低错落。
+   改为条目级流动后每行 3 张等高卡片，行行齐平，段落也一目了然。 */
+.credit-cols{display:grid;grid-template-columns:repeat(3,1fr);column-gap:1rem;row-gap:.5rem}
+.credit-head{grid-column:1/-1;display:flex;align-items:center;gap:.5rem;
+  font-size:.8125rem;font-weight:700;color:var(--ink);
+  margin:1.5rem 0 .375rem;padding-bottom:.5rem;border-bottom:1px solid rgba(12,44,34,.10)}
+.credit-head:first-child{margin-top:0}
+.cb-no{display:inline-grid;place-items:center;width:1.375rem;height:1.375rem;flex-shrink:0;
+  border-radius:.4375rem;font-size:.625rem;font-weight:800;color:#fff;
+  background-image:var(--lf-sheen),linear-gradient(160deg,#3C9A84,var(--accent))}
+/* display:contents：让 <li> 直接成为外层 grid 的格子，从而三列逐条排布 */
+.credit-list{list-style:none;margin:0;padding:0;display:contents}
+/* 两行结构：第一行「名称 + 许可」左对齐固定，第二行描述另起。
+   原 grid-template-columns:auto auto 1fr + baseline 会让描述长短决定行高，
+   条目之间高低错落。改为 flex column 后所有条目头部严格对齐。 */
+.credit-list li{display:flex;flex-direction:column;gap:.5rem;
+  padding:.8125rem .875rem;border-radius:.875rem;font-size:.75rem;
+  background:rgba(240,250,246,.62);box-shadow:0 0 0 1px rgba(12,44,34,.065),inset 0 1px 0 var(--lf-rim),0 3px 8px -5px rgba(16,26,32,.12);
+  transition:transform .3s var(--spring),background .25s var(--ease),box-shadow .25s var(--ease)}
+.credit-list li:hover{transform:translateX(4px);background:rgba(255,255,255,.90);
+  box-shadow:0 0 0 1px rgba(21,112,90,.20),inset 0 1px 0 var(--lf-rim-strong)}
+.cl-h{display:flex;align-items:center;gap:.4375rem;flex-wrap:wrap;min-height:1.25rem}
+.credit-list b{font-weight:700;color:var(--ink);font-size:.75rem;line-height:1.45}
+.credit-list i{font-style:normal;font-size:.5625rem;font-weight:600;padding:.125rem .375rem;border-radius:.3125rem;
+  color:var(--accent);background:rgba(46,125,107,.12);white-space:nowrap;flex-shrink:0}
+.credit-list span{color:var(--ink-3);line-height:1.7;font-size:.75rem}
+.license-note{margin-top:1.75rem;padding:1rem 1.25rem;border-radius:1.125rem;font-size:.75rem;
+  color:var(--ink-2);line-height:1.75;
+  background:rgba(238,247,249,.46);box-shadow:inset 0 1px 0 var(--lf-rim),inset 0 0 0 1px rgba(12,44,34,.07)}
+.credit-more{margin-top:1.5rem;display:flex;justify-content:center}
+
+/* ── 13. 页脚 ─────────────────────────────────────────────────────── */
+.foot{border-top:1px solid var(--line);padding:3.25rem 2rem 2.5rem;margin-top:1rem}
+.foot-top{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap}
+.foot-brand{display:flex;align-items:center;gap:.75rem}
+.foot-brand b{display:block;font-size:.875rem}
+.foot-brand i{display:block;font-style:normal;font-size:.6875rem;color:var(--ink-3)}
+.foot-nav{display:flex;flex-wrap:wrap;gap:1.25rem;font-size:.75rem;font-weight:500;color:var(--ink-3)}
+.foot-nav a{transition:color .2s var(--ease)}
+.foot-nav a:hover{color:var(--accent)}
+.foot-note{margin-top:1.5rem;padding:1rem 1.25rem;border-radius:1.125rem;font-size:.75rem;
+  color:var(--ink-3);line-height:1.75;background:rgba(238,247,249,.74);
+  box-shadow:inset 0 1px 0 var(--lf-rim),inset 0 0 0 1px rgba(12,44,34,.065)}
+.foot-note b{color:var(--ink-2)}
+.foot-base{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+  margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--line);
+  font-size:.75rem;color:var(--ink-3)}
+.foot-base .mono{color:var(--accent);font-weight:600}
+
+/* ── 14. 响应式 ───────────────────────────────────────────────────── */
+@media (max-width:68rem){
+  .grid-3{grid-template-columns:repeat(2,1fr)}
+  /* 4 列在窄桌面退化为 2 列，仍保持两行整齐 */
+  .grid-4{grid-template-columns:repeat(2,1fr)}
+  .grid-2{grid-template-columns:1fr}
+  .hero-grid{grid-template-columns:1fr;gap:2.5rem}
+  .hero{padding-top:7.5rem}
+  .hero-stage{max-width:30rem;margin-inline:auto;width:100%}
+  .metrics-grid{grid-template-columns:1fr;gap:1.5rem}
+  .creator-grid{grid-template-columns:1fr;gap:1.5rem}
+  .credit-cols{grid-template-columns:repeat(2,1fr);column-gap:.875rem}
+}
+/* 导航内容实测宽 992px（品牌 + 8 项 + 图标 + 主按钮），
+   收得太晚会在 832~992px 之间被 overflow:hidden 裁掉右侧按钮。 */
+@media (max-width:62rem){
+  .nav-links{display:none}
+  .burger{display:flex}
+}
+@media (max-width:52rem){
+  .grid-3{grid-template-columns:1fr}
+  .stage-stats{grid-template-columns:repeat(2,1fr)}
+  .hero-title{font-size:1.75rem}
+  .tk.plane{margin-top:.75rem}
+  .tk.train{margin-top:-1.5rem}
+}
+@media (max-width:34rem){
+  .brand-ver{display:none}
+  .hero-cta .glass-btn,.hero-cta .glass-btn-primary{width:100%;justify-content:center}
+  .stage-planes{min-height:17rem}
+  .tk-grid{grid-template-columns:repeat(2,1fr)}
+  section{padding:2.5rem 0}
+  section+section{padding-top:2.5rem}
+  .glass-card.pad{padding:1.375rem}
+  .dl-card{gap:.6875rem;padding:.75rem .8125rem}
+  .dl-ico{width:1.875rem;height:1.875rem;border-radius:.5625rem}
+  .dl-card i{font-size:.625rem}
+  .mod{padding:1.25rem}
+  /* 单列时取消等高：grid-auto-rows:1fr 会把每张卡都撑到最高卡的高度，
+     单列 8 行会累积出大量无意义空白。多列时保留等高以对齐行。 */
+  .grid-4{grid-template-columns:1fr;grid-auto-rows:auto}
+  .credit-cols{grid-template-columns:1fr}
+}
+
+/* ── 15. 无障碍：降低动态 / 降低透明度 ────────────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .glass-nav::before{animation:none;display:none}
+}
+@media (prefers-contrast:more){
+  .glass-card,.glass-nav,.glass-btn{box-shadow:inset 0 0 0 2px var(--ink),0 8px 20px rgba(16,26,32,.18)}
+  .glass-card,.glass-nav{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(255,255,255,.97)}
+}
