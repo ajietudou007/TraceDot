@@ -274,7 +274,7 @@
       <div class="cl-hls">
         <div class="cl-hl ">
           <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 19.5 21 12 2.5 4.5l3 7z"/><path d="M5.5 11.5 21 12" opacity=".0"/></svg></span>珍藏册「重新编辑」跳转按票种路由</div>
-          <p>珍藏册点「重新编辑」会按记录票种跳回对应工坊：<strong>船票</strong>此前因路由表漏判被误送至火车票工坊，现修正为<strong>交通票工坊</strong>，且跳转后表单自动切回<strong>船票</strong>票种（船名/航次/出发港/到达港等字段一并预填，航次框不再被船名前缀污染）。公交/地铁/出租车/客运/火车/航班/影演票种路由回归不变。</p>
+          <p>珍藏册点「重新编辑」会按记录票种跳回对应工坊：<strong>船票</strong>此前因路由表漏判被误送至火车票工坊，现修正为<strong>交通票工坊</strong>，且跳转后表单自动切回<strong>船票</strong>票种（船名/航次/出发港/到达港等字段一并预填，航次框不再被船名前缀污染）。同时补上船票在珍藏册里的<strong>独立筛选 chip</strong>、<strong>专属船形图标</strong>与配色——此前筛选条里没有「船」，卡片只能落到「其他」图标。公交/地铁/出租车/客运/火车/航班/影演票种路由与呈现不变。</p>
         </div>
         <div class="cl-hl alt">
           <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 7.4h15.2a1 1 0 0 1 1 1v1.9a1.85 1.85 0 0 0 0 3.7v1.9a1 1 0 0 1-1 1H4.4a1 1 0 0 1-1-1v-1.9a1.85 1.85 0 0 0 0-3.7V8.4a1 1 0 0 1 1-1z"/><path d="M14.6 7.4v9.6" stroke-dasharray="2 2.2"/></svg></span>自动化回归验证</div>
@@ -282,11 +282,13 @@
         </div>
       </div>
       <details class="cl-more" open>
-        <summary><span class="cl-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 9V4.4H9"/><path d="M14 4.4h5.6V10"/><path d="M19.6 15v4.6H14"/><path d="M10 19.6H4.4V15"/></svg></span>详细条目 (Features &amp; Fixes) <b>3</b></summary>
+        <summary><span class="cl-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 9V4.4H9"/><path d="M14 4.4h5.6V10"/><path d="M19.6 15v4.6H14"/><path d="M10 19.6H4.4V15"/></svg></span>详细条目 (Features &amp; Fixes) <b>5</b></summary>
         <ul class="cl-items">
           <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p>珍藏册「重新编辑」路由表补充<strong>船</strong>票种，与外壳侧票种映射保持一致，船票不再落入火车票默认分支。</p></li>
-          <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p>交通票工坊预填优先按账本 <code>kind</code> 字段精确定位票种（船 → ferry），修掉「跳转正确但表单停留公交」的次生问题。</p></li>
-          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></span><p>本版为<strong>纯内容热更新</strong>：已安装桌面客户端自动更新内核；热更新清单版本号 5.2.3。</p></li>
+          <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p>珍藏册筛选条票种顺序补入<strong>船</strong>，船票拥有独立筛选 chip；同步补上船形图标与专属配色（#4A7FA5），卡片不再显示「其他」图标。</p></li>
+          <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p>珍藏册单点路线行的交通类判定补入<strong>船</strong>：缺到达站的船票改为显示出发港，不再把「船名 + 航次」当主标题。</p></li>
+          <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p>交通票工坊预填优先按账本 <code>kind</code> 字段精确定位票种（船 → ferry），修掉「跳转正确但表单停留公交」的次生问题；航次框填值前剥掉船名前缀，船名单独回填。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></span><p>本版为<strong>纯内容热更新</strong>：已安装桌面客户端自动更新内核；热更新清单版本号 5.2.3。playwright 端到端验收 15 项全通过。</p></li>
         </ul>
       </details>
     </article>
