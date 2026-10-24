@@ -290,6 +290,21 @@
 
 ---
 
+## [V5.2.4] - 2026-10-25
+
+### Fixed
+
+- **火车票工坊智能联想无匹配**：站点补全面板调用的 `stationsData` 从未被定义（真正的数据在 `JDD_STATION_CITY` 对象里，从未被转换成 `|||` 分隔的 `0|站名|城市|~|~` 格式），输入车站时下拉菜单永远为空；现由 `jddBootInto()` 在加载火车票载荷时同步构建 `stationsData` 并注入 iframe head，中 / 拼音 / 首字母三种匹配全部恢复。
+- **火车票车次查询自动填充**：`trainNo` 变更时调用的 `__autoFillTrain()` 在 `file://` 协议下请求外部 API 被浏览器 CORS 拦截，用户看到的仅是一次静默失败；现改为双域名容错（`rail.moefactory.com` → `sharyou.moefactory.com`），请求带 `credentials: 'omit'` 与 `Accept: application/json`，兼容 `data.data / data.list / data.result` 三种返回包裹，字段名同时兼容 `beginStationName / startStation / departureStation` 等常见别名。
+- **火车票自动填充缺用户反馈**：接口不通时静默失败、成功时也无提示；现新增 toast 三态（"正在查询车次信息…" / "车次信息已自动填充" / "车次查询失败"），失败时 console 输出域名、状态码与响应体便于排查。
+- **base85 载荷编码长度异常**：`fix_v524_v3.py` 早期版本的截断逻辑 `out[:-(5-pad)]` 多砍一位，导致压缩后的载荷长度比源少 1 个字符、解压时报 gzip EOFError；现改为按 `(4-pad)*5 + 3` 计算保留位数，编码长度与 RFC 1924 完全一致，V5.2.4 载荷往返校验通过。
+
+### Notes
+
+- 纯内容热更新：已安装桌面客户端下次启动自动拉取新内核（latest.json version=5.2.4）。
+- 体积 12,490,080 字节，与 V5.2.3（12,489,224 字节）基本持平（+856 B）。
+- 8 项自动化探针全部通过：stationsData 注入 / 双域名 fetch / toast 三态 / base85 编码长度 / gzip 解压 / APP_VER=5.2.4 / title=V5.2.4 / 车牌联想首字母补全。
+
 ## [V5.2.3] - 2026-10-24
 
 ### Fixed

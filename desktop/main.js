@@ -7,7 +7,7 @@ const https = require('https');
    macOS 两个包仍走 GitHub（页面自动择优公益加速线路）。
    GitHub 发布页仍从「项目主页」进入，用于查历史版本。 */
 const RELEASES_URL = 'https://jidiandian.top/#download';
-const APP_VERSION = '5.1.5';
+const APP_VERSION = '5.2.4';
 let win = null;
 
 /* ---------- 壳与网页分离 ----------
