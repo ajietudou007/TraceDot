@@ -1,7 +1,7 @@
 {
-  "version": "5.2.1",
-  "file": "TraceDot-V5.2.0.html",
-  "url": "https://gitee.com/ajiepotato/TraceDot/releases/download/v5.2.0/TraceDot-V5.2.0.html",
+  "version": "5.2.2",
+  "file": "TraceDot-V5.2.2.html",
+  "url": "https://gitee.com/ajiepotato/TraceDot/releases/download/v5.2.2/TraceDot-V5.2.2.html",
   "updated": "2026-10-24",
-  "note": "桌面端内容更新清单。改这里并推送，已安装的壳会在下次启动时自动拉取新 HTML，无需重新打包。V5.2.1 为覆盖更新：清单号 5.2.1，资产沿用 v5.2.0 下载地址（内容已覆盖为 5.2.1）。"
+  "note": "桌面端内容更新清单。改这里并推送，已安装的壳会在下次启动时自动拉取新 HTML，无需重新打包。"
 }
