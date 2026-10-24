@@ -1,7 +1,7 @@
 {
-  "version": "5.1.9",
-  "file": "TraceDot-V5.1.8.html",
-  "url": "https://gitee.com/ajiepotato/TraceDot/releases/download/v5.1.8/TraceDot-V5.1.8.html",
-  "updated": "2026-10-23",
-  "note": "桌面端内容更新清单。改这里并推送，已安装的壳会在下次启动时自动拉取新 HTML，无需重新打包。version 是壳内部比较用的跳板号（须大于历史已推送版本），实际界面版本号以 HTML 内 APP_VER 为准（当前显示 V5.1.6）。"
+  "version": "5.2.0",
+  "file": "TraceDot-V5.2.0.html",
+  "url": "https://gitee.com/ajiepotato/TraceDot/releases/download/v5.2.0/TraceDot-V5.2.0.html",
+  "updated": "2026-10-24",
+  "note": "桌面端内容更新清单。改这里并推送，已安装的壳会在下次启动时自动拉取新 HTML，无需重新打包。"
 }
