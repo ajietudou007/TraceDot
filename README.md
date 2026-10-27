@@ -152,7 +152,7 @@ V5.0.1 → V5.1.5 共 **53 次迭代**，六个阶段：打底（性能与报错
 
 ### 方式三 · 安卓客户端（APK）
 
-从官网下载 [`app/jidiandian-5.3.0.apk`](https://jidiandian.top/app/jidiandian-5.3.0.apk)（versionCode 537，Android 7.0+）。
+从官网下载 [`app/jidiandian-5.3.0.apk`](https://jidiandian.top/app/jidiandian-5.3.0.apk)（versionCode 538，Android 7.0+）。
 
 安卓端是**底包 + 内容包**双轨：APK 只装一次，之后的内容更新走热更新——启动时后台拉
 `https://jidiandian.top/app/latest.json`，有新版就下载内容包并在**下次冷启动**生效。
@@ -240,7 +240,11 @@ node scripts/pack-hot-bundle.mjs \
 # 把 hot/hot-bundle-5.3.2.zip 与 hot/latest.json 覆盖到本仓库 app/
 ```
 
-推送后约 1 分钟生效；已安装用户**下次冷启动**切到新内容，无需重装。
+推送后约 1 分钟生效；已安装用户**下次启动会收到「立即更新 / 稍后」提示**，不点就停在当前版本。
+
+> 📦 内容包下载走 **Gitee raw**（`raw.giteeusercontent.com/.../raw/main/app/hot-bundle-<ver>.zip`），
+> 国内直连、9 MB 左右不会被「大文件需登录」拦；`jidiandian.top` 作为清单里的 `urlAlt` 兜底。
+> 所以 **Gitee 远端必须先推**，否则清单指向的文件 404。
 
 > ⚠️ **内容改了就必须抬 `--version`**：底包只认「大于本机已装内容包版本」的清单。
 > 内容没变版本号不变（历史上前几版都写着 5.3.0），装过旧内容包的机器就再也拉不到新内容了。
@@ -273,8 +277,8 @@ TraceDot/
 │   └── TraceDot-V5.2.4.html     # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
 ├── app/                          # 安卓端发布物（热更新清单 + 内容包 + 底包 APK）
 │   ├── latest.json               # 热更新清单（App 启动时拉取）
-│   ├── hot-bundle-5.3.1.zip      # 内容包（dist 全量，zip 根即 index.html）
-│   └── jidiandian-5.3.0.apk      # 底包 APK（versionCode 537，内置内容包 5.3.1）
+│   ├── hot-bundle-5.3.2.zip      # 内容包（dist 全量，zip 根即 index.html）
+│   └── jidiandian-5.3.0.apk      # 底包 APK（versionCode 538，内置内容包 5.3.2）
 ├── docs/
 │   ├── FEATURES.md               # 模块功能详表
 │   └── screenshots/              # 演示截图（含 16:9 头图与八模块总览图）
