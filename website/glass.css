@@ -740,6 +740,12 @@ section+section{padding-top:3.75rem}
 /* 单列 5 行：网页离线版 → Windows → macOS Apple → macOS Intel → 历史版本。
    行式布局（图标 / 文案 / 动作三段）让 5 个条目在窄列里也不会被挤成多行。 */
 .dl-grid{display:flex;flex-direction:column;gap:.5rem;margin:1.375rem 0 0}
+/* 下载区分组小标题（安卓 / 桌面） */
+.dl-sub{display:flex;align-items:center;gap:.625rem;margin:1.5rem 0 0;
+  font-size:.6875rem;font-weight:800;letter-spacing:.12em;color:var(--ink-3);
+  text-transform:uppercase}
+.dl-sub::after{content:'';flex:1;height:1px;background:rgba(21,112,90,.14)}
+.dl-sub + .dl-grid{margin-top:.75rem}
 .dl-card{display:flex;align-items:center;gap:.875rem;padding:.8125rem .9375rem;border-radius:1rem;
   background:rgba(255,255,255,.52);
   box-shadow:inset 0 1px 0 var(--lf-rim),inset 0 0 0 1px rgba(12,44,34,.075);

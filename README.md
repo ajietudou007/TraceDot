@@ -150,7 +150,15 @@ V5.0.1 → V5.1.5 共 **53 次迭代**，六个阶段：打底（性能与报错
 - 备用线路：<https://ajietudou007.github.io/TraceDot/website/>
 - 直接进应用：<https://jidiandian.top/release/TraceDot-V5.2.4.html>
 
-### 方式三 · 桌面端（Windows 安装包）
+### 方式三 · 安卓客户端（APK）
+
+从官网下载 [`app/jidiandian-5.3.0.apk`](https://jidiandian.top/app/jidiandian-5.3.0.apk)（versionCode 535，Android 7.0+）。
+
+安卓端是**底包 + 内容包**双轨：APK 只装一次，之后的内容更新走热更新——启动时后台拉
+`https://jidiandian.top/app/latest.json`，有新版就下载内容包并在**下次冷启动**生效。
+只有底包能力变更（例如新增「导出图片进系统相册」这类原生插件）时才需要重新下载 APK。
+
+### 方式四 · 桌面端（Windows 安装包）
 
 从 [Releases](https://github.com/ajietudou007/TraceDot/releases) 下载对应平台的安装包：
 
@@ -163,7 +171,7 @@ V5.0.1 → V5.1.5 共 **53 次迭代**，六个阶段：打底（性能与报错
 安装后即为独立原生窗口（内嵌同一份单文件应用，支持 `electron-updater` 自动检查更新）。
 **Windows 安装包随 Release 提供；macOS 的 dmg / zip 由 GitHub Actions（macos-latest）自动构建并附在 Release 里。**
 
-### 方式四 · 本地服务
+### 方式五 · 本地服务
 
 ```bash
 python3 -m http.server 8080
@@ -212,6 +220,39 @@ npm run dist:mac         # 产出 macOS dmg + zip
 
 ---
 
+## 📦 发布 · 安卓底包与内容热更新
+
+安卓端的发布物全部放在仓库根的 **`app/`**（GitHub Pages 直出，带 CNAME，地址永远是
+`https://jidiandian.top/app/`）。三个文件缺一不可：
+
+| 文件 | 作用 | 谁在拉 |
+|------|------|--------|
+| `app/latest.json` | 热更新清单：`bundle{version,url,sha256,bytes}` + `apk{versionCode,versionName,url}` | 已安装的 App 启动时 |
+| `app/hot-bundle-<ver>.zip` | 内容包：`dist/` 的全部内容，zip 根即 `index.html` | 有新版时下载 |
+| `app/jidiandian-<verName>.apk` | 底包（一次性安装；能力变更时才需要换） | 新用户 |
+
+**发一版内容更新（最常见，不换底包）**，在安卓工程目录（`02_安卓端适配`）执行：
+
+```bash
+npm run build                                  # 产出 dist/
+node scripts/pack-hot-bundle.mjs \
+  --version 5.3.1 --out hot --apk-name jidiandian-5.3.0.apk
+# 把 hot/hot-bundle-5.3.1.zip 与 hot/latest.json 覆盖到本仓库 app/
+```
+
+推送后约 1 分钟生效；已安装用户**下次冷启动**切到新内容，无需重装。
+
+**换底包（改了原生 Java / 权限 / 插件）**：在安卓工程里 `versionCode +1` → 出 APK →
+复制为 `app/jidiandian-<versionName>.apk` → 重新跑一次 `pack-hot-bundle.mjs` 让清单里的
+`apk.versionCode` 跟上 → 一起推到 `app/`。App 里「我的 → 软件更新」会读清单里的
+`apk.versionName` 提示新底包。
+
+> 回滚：内容包按 `filesDir/web/b<version>/` 保留「当前 + 上一版」，APK 升级时 Capacitor
+> 会自动清空 `serverBasePath` 回到内置内容；清单只认「大于」本机版本的 `bundle.version`，
+> 所以把 `latest.json` 的版本号写小不会把人拉回旧版。
+
+---
+
 ## 📁 项目结构
 
 ```text
@@ -227,6 +268,10 @@ TraceDot/
 │   └── changelog.html            # 官方网站 · 更新日志页
 ├── release/
 │   └── TraceDot-V5.2.4.html     # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
+├── app/                          # 安卓端发布物（热更新清单 + 内容包 + 底包 APK）
+│   ├── latest.json               # 热更新清单（App 启动时拉取）
+│   ├── hot-bundle-5.3.0.zip      # 内容包（dist 全量，zip 根即 index.html）
+│   └── jidiandian-5.3.0.apk      # 底包 APK（versionCode 535）
 ├── docs/
 │   ├── FEATURES.md               # 模块功能详表
 │   └── screenshots/              # 演示截图（含 16:9 头图与八模块总览图）

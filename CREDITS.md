@@ -106,3 +106,38 @@
 | China-Railway-Station-Database | CC0-1.0 | 零义务 |
 | OurAirports | Unlicense | 零义务 |
 | MiSans | MiSans 字体知识产权许可协议 | 注明使用了 MiSans 字体 |
+
+---
+
+## 七、安卓端运行环境（V5.3.0 起）
+
+> 安卓底包（`com.jidiandian.app`）以 Capacitor 作为 WebView 原生壳，界面与业务逻辑仍是同一份 Web 代码；以下为壳层直接依赖的开源项目。
+
+### 7.1 开源框架与插件
+
+| 项目 | 许可证 | 用途 |
+|------|--------|------|
+| [Capacitor](https://capacitorjs.com/) 8（`@capacitor/core` / `@capacitor/android`） | MIT | 安卓原生壳：WebView 容器、插件桥、`serverBasePath` 内容目录映射（热更新基础） |
+| [@capacitor/filesystem](https://github.com/ionic-team/capacitor-plugins) | MIT | 导出物落盘（Documents / CACHE 中转）与 `file://` URI 读取 |
+| [@capacitor/share](https://github.com/ionic-team/capacitor-plugins) | MIT | 导出物分享面板（CSV / ICS / 备份文件） |
+| [@capacitor/camera](https://github.com/ionic-team/capacitor-plugins) | MIT | 头像选图 / 票面照片导入 |
+| [@capacitor/preferences](https://github.com/ionic-team/capacitor-plugins) | MIT | 本机配置权威存储（激活门、AI 设置、昵称头像） |
+| [@capacitor/app](https://github.com/ionic-team/capacitor-plugins) | MIT | 系统返回键闭环、应用信息 |
+| [@capacitor/status-bar](https://github.com/ionic-team/capacitor-plugins) | MIT | 状态栏图标明暗（跟随系统深浅色） |
+| [@capacitor/keyboard](https://github.com/ionic-team/capacitor-plugins) | MIT | 软键盘避让 |
+| [@capacitor/splash-screen](https://github.com/ionic-team/capacitor-plugins) | MIT | 启动图收敛 |
+| [AndroidX](https://developer.android.com/jetpack/androidx)（AppCompat / Core / CoordinatorLayout / Core-Splashscreen / WebKit） | Apache-2.0 | 安卓基础组件与 WebView 现代实现 |
+
+### 7.2 本项目自研原生能力（无第三方依赖）
+
+| 类 | 用途 |
+|----|------|
+| `GallerySaverPlugin` | 导出 PNG 写系统相册：Android 10+ 走 `MediaStore` + `RELATIVE_PATH` + `IS_PENDING`，9 及以下写公共 Pictures 后触发媒体扫描 |
+| `HotUpdater` | 内容热更新：拉 `app/latest.json` → 下载 zip → 校验 sha256 → 解压到 `filesDir/web/b<version>` → 写入 Capacitor `serverBasePath`，下次冷启动生效；APK 升级时自动回退内置内容 |
+
+### 7.3 许可义务速览（安卓端）
+
+| 组件 | 许可 | 本项目义务 |
+|------|------|------------|
+| Capacitor 及其官方插件 | MIT | 保留版权与许可声明 |
+| AndroidX | Apache-2.0 | 保留版权与许可声明（随 AAR 分发） |
