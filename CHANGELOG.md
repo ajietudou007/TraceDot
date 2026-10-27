@@ -292,7 +292,7 @@
 
 ## [V5.3.0] - 2026-10-27
 
-> 本版是**安卓端**（`versionCode 535` / `versionName 5.3.0`）的正式发布：底包 + 内容包双轨，已安装用户后续可直接热更新，不必重新装包。
+> 本版是**安卓端**（`versionCode 536` / `versionName 5.3.0`）的正式发布：底包 + 内容包双轨，已安装用户后续可直接热更新，不必重新装包。
 
 ### 新增
 
@@ -309,7 +309,7 @@
 
 ### 发布方式
 
-- 底包 APK：`https://jidiandian.top/app/jidiandian-5.3.0.apk`（versionCode 535）
+- 底包 APK：`https://jidiandian.top/app/jidiandian-5.3.0.apk`（versionCode 536）
 - 内容包：`https://jidiandian.top/app/hot-bundle-5.3.0.zip`
 - 热更新清单：`https://jidiandian.top/app/latest.json`
 - 桌面 / 网页端不受影响（仍为 V5.2.4），本清单只服务安卓底包。

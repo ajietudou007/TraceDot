@@ -152,7 +152,7 @@ V5.0.1 → V5.1.5 共 **53 次迭代**，六个阶段：打底（性能与报错
 
 ### 方式三 · 安卓客户端（APK）
 
-从官网下载 [`app/jidiandian-5.3.0.apk`](https://jidiandian.top/app/jidiandian-5.3.0.apk)（versionCode 535，Android 7.0+）。
+从官网下载 [`app/jidiandian-5.3.0.apk`](https://jidiandian.top/app/jidiandian-5.3.0.apk)（versionCode 536，Android 7.0+）。
 
 安卓端是**底包 + 内容包**双轨：APK 只装一次，之后的内容更新走热更新——启动时后台拉
 `https://jidiandian.top/app/latest.json`，有新版就下载内容包并在**下次冷启动**生效。
@@ -271,7 +271,7 @@ TraceDot/
 ├── app/                          # 安卓端发布物（热更新清单 + 内容包 + 底包 APK）
 │   ├── latest.json               # 热更新清单（App 启动时拉取）
 │   ├── hot-bundle-5.3.0.zip      # 内容包（dist 全量，zip 根即 index.html）
-│   └── jidiandian-5.3.0.apk      # 底包 APK（versionCode 535）
+│   └── jidiandian-5.3.0.apk      # 底包 APK（versionCode 536）
 ├── docs/
 │   ├── FEATURES.md               # 模块功能详表
 │   └── screenshots/              # 演示截图（含 16:9 头图与八模块总览图）
