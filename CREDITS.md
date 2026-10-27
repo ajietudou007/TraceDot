@@ -20,6 +20,7 @@
 | Material Symbols（flight 等） | Apache-2.0 | 行程地图航班图标与登机牌预览同款 Material flight 轮廓 |
 | ReactBits 风格动效 | 参考 | 外壳侧栏「磁吸聚光 · 扫光 · 流光边框 · 波纹涟漪」动效注入（jdd-fx，V3.0.2 侧栏重构） |
 | Wave Grid / 06 SPATIAL CARD 设计稿 | 设计参考 | 珍藏册波浪网格 / 3D 视角展示模式的参考图（V3.3.0 ~ V3.3.2，经像素分析拟合视角方向） |
+| [RailGo](https://github.com/RailGoApps/RailGo) | MIT | **铁路查询**（V5.2.x 起）内嵌的 UniApp 版中国铁路信息查询工具（[railgo.dev](https://railgo.dev)），页面沿用其 Web 版界面与开放数据接口：车次时刻 / 正晚点、车站、动车组档案与列车图鉴均经其接口获取；原始数据归 12306 及原服务方所有，查询结果仅供参考，请以 12306 官方信息为准 |
 
 ## 二、AI 与云服务（均需用户明确确认后才联网）
 
