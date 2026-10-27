@@ -152,11 +152,10 @@ V5.0.1 → V5.1.5 共 **53 次迭代**，六个阶段：打底（性能与报错
 
 ### 方式三 · 安卓客户端（APK）
 
-从官网下载 [`app/jidiandian-5.3.0.apk`](https://jidiandian.top/app/jidiandian-5.3.0.apk)（versionCode 539，Android 7.0+）。
+从官网下载 [`app/jidiandian-5.3.0.apk`](https://jidiandian.top/app/jidiandian-5.3.0.apk)（versionCode 540，Android 7.0+）。
 
-安卓端是**底包 + 内容包**双轨：APK 只装一次，之后的内容更新走热更新——启动时后台拉
-`https://jidiandian.top/app/latest.json`，有新版就下载内容包并在**下次冷启动**生效。
-只有底包能力变更（例如新增「导出图片进系统相册」这类原生插件）时才需要重新下载 APK。
+安卓端统一走**全量覆盖更新**：每次发版都出完整 APK，用户在「我的 → 版本更新」检测到新版本后，
+直接给最新版本的下载链接，下载后覆盖安装即可（数据不丢失）。没有内容包，也没有热更新。
 
 ### 方式四 · 桌面端（Windows 安装包）
 
@@ -220,46 +219,38 @@ npm run dist:mac         # 产出 macOS dmg + zip
 
 ---
 
-## 📦 发布 · 安卓底包与内容热更新
+## 📦 发布 · 安卓全量覆盖更新
 
 安卓端的发布物全部放在仓库根的 **`app/`**（GitHub Pages 直出，带 CNAME，地址永远是
-`https://jidiandian.top/app/`）。三个文件缺一不可：
+`https://jidiandian.top/app/`）。两个文件：
 
 | 文件 | 作用 | 谁在拉 |
 |------|------|--------|
-| `app/latest.json` | 热更新清单：`bundle{version,vc,url,urlAlt,sha256,bytes}` + `apk{versionCode,versionName,url}` | 已安装的 App 启动时 |
-| `app/hot-bundle-vc<vc>.zip` | 内容包：`dist/` 的全部内容，zip 根即 `index.html` | 用户点「立即更新」后 |
-| `app/jidiandian-<verName>.apk` | 底包（一次性安装；能力变更时才需要换） | 新用户 |
+| `app/latest.json` | 更新清单：`apk{versionCode,versionName,url}` | 已安装的 App「我的 → 版本更新」时 |
+| `app/jidiandian-<verName>.apk` | 完整安装包（每次发版都是全新 APK） | 新用户 / 有更新时下载覆盖安装 |
 
-**版本规则（重要）**：产品版本长期停在 `5.3.0`，内容包只认整数 `bundle.vc`
-（= 出这版内容时的底包 versionCode，或内容专属递增号）。原生只比
-`清单 vc > 本机已装 vc`，`version` 字段纯展示。
+**版本规则**：产品版本号 `versionName`（如 `5.3.0`）只用于展示；`versionCode`（整数，如 540）
+用来判断新旧——App 点「版本更新」时读本机 `App.getInfo().build`，与清单里的 `apk.versionCode`
+比较，**只有更大才算有新版**。没有内容包，也没有热更新。
 
-**发一版内容更新（最常见，不换底包）**，在安卓工程目录（`02_安卓端适配`）执行：
+**发一版更新**，在安卓工程目录（`02_安卓端适配`）执行：
 
 ```bash
-npm run build                                  # 产出 dist/
-node scripts/pack-hot-bundle.mjs \
-  --version 5.3.0 --vc 540 --out hot --apk-name jidiandian-5.3.0.apk
-# 把 hot/hot-bundle-vc540.zip 与 hot/latest.json 覆盖到本仓库 app/
+npm run build          # 产出 dist/
+npm run cap:sync       # 同步 Web 资源进 android/app/src/main/assets/public/
+# android/app/build.gradle 里 versionCode +1
+cd android && ./gradlew assembleRelease
+# 把产物复制为 app/jidiandian-<versionName>.apk
 ```
 
-推送后约 1 分钟生效；已安装用户**下次启动会收到「立即更新 / 稍后」提示**，不点就停在当前版本。
+然后把本仓库 `app/latest.json` 的 `versionCode` 改成新构建号（`versionName` / `url` 保持对应）。
+推送后约 1 分钟生效；已安装用户点「我的 → 版本更新」会看到「发现新版本」卡片，
+按钮「立即下载」直接打开 APK 下载链接。
 
-> 📦 内容包下载走 **Gitee raw**（`raw.giteeusercontent.com/.../raw/main/app/hot-bundle-vc<vc>.zip`），
-> 国内直连、9 MB 左右不会被「大文件需登录」拦；`jidiandian.top` 作为清单里的 `urlAlt` 兜底。
-> 所以 **Gitee 远端必须先推**，否则清单指向的文件 404。
+> ⚠️ **改了代码就必须抬 `versionCode`**：判断只认「大于本机 versionCode」，
+> 不抬构建号，已装旧版的机器永远收不到更新。
 
-> ⚠️ **内容改了就必须抬 `--vc`**：清单只认「大于本机已装 vc」。
-> 不抬 vc（历史上前几版都写着同一个版本号），装过旧内容包的机器就再也拉不到新内容。
-
-**换底包（改了原生 Java / 权限 / 插件）**：在安卓工程里 `versionCode +1` → 出 APK →
-复制为 `app/jidiandian-<versionName>.apk` → **同时把 `HotUpdater.BUNDLED_BUNDLE_VC` 改成新
-versionCode** → 重新跑一次 `pack-hot-bundle.mjs` 让清单里的 `apk.versionCode` 跟上 → 一起推到 `app/`。
-
-> 回滚：内容包按 `filesDir/web/b<vc>/` 保留「当前 + 上一版」，APK 升级时 Capacitor
-> 会自动清空 `serverBasePath` 回到内置内容；清单只认「大于」本机 vc 的 `bundle.vc`，
-> 所以把 `latest.json` 的 vc 写小不会把人拉回旧版。
+> 回滚：把 `latest.json` 的 `versionCode` 写小即可——清单只认「大于」本机构建号，不会把人拉回旧版。
 
 ---
 
@@ -278,10 +269,9 @@ TraceDot/
 │   └── changelog.html            # 官方网站 · 更新日志页
 ├── release/
 │   └── TraceDot-V5.2.4.html     # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
-├── app/                          # 安卓端发布物（热更新清单 + 内容包 + 底包 APK）
-│   ├── latest.json               # 热更新清单（App 启动时拉取）
-│   ├── hot-bundle-vc539.zip      # 内容包（dist 全量，zip 根即 index.html）
-│   └── jidiandian-5.3.0.apk      # 底包 APK（versionCode 539，内置内容包 539）
+├── app/                          # 安卓端发布物（更新清单 + 完整 APK）
+│   ├── latest.json               # 更新清单（App「我的 → 版本更新」拉取）
+│   └── jidiandian-5.3.0.apk      # 完整 APK（versionCode 540）
 ├── docs/
 │   ├── FEATURES.md               # 模块功能详表
 │   └── screenshots/              # 演示截图（含 16:9 头图与八模块总览图）

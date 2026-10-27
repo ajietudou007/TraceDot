@@ -1,14 +1,6 @@
 {
-  "bundle": {
-    "version": "5.3.0",
-    "vc": 539,
-    "url": "https://raw.giteeusercontent.com/ajiepotato/TraceDot/raw/main/app/hot-bundle-vc539.zip",
-    "urlAlt": "https://jidiandian.top/app/hot-bundle-vc539.zip",
-    "sha256": "e2a9594650020dcc225b9eedb384d22b9b6f57293461aae64ab59d2196b856ab",
-    "bytes": 9366943
-  },
   "apk": {
-    "versionCode": 539,
+    "versionCode": 540,
     "versionName": "5.3.0",
     "url": "https://jidiandian.top/app/jidiandian-5.3.0.apk"
   }
