@@ -1,12 +1,12 @@
 {
   "bundle": {
-    "version": "5.3.0",
-    "url": "https://jidiandian.top/app/hot-bundle-5.3.0.zip",
-    "sha256": "c8bfbb0dbaa081d10195f7bcb96b06b50b3b46e26309840fa10901a10dc6344c",
-    "bytes": 9364148
+    "version": "5.3.1",
+    "url": "https://jidiandian.top/app/hot-bundle-5.3.1.zip",
+    "sha256": "a2821788ac0fe0244f6897a1a808dd441d47cf577c3c8df14bedd6de754f11ef",
+    "bytes": 9364683
   },
   "apk": {
-    "versionCode": 536,
+    "versionCode": 537,
     "versionName": "5.3.0",
     "url": "https://jidiandian.top/app/jidiandian-5.3.0.apk"
   }
