@@ -152,7 +152,7 @@ V5.0.1 → V5.1.5 共 **53 次迭代**，六个阶段：打底（性能与报错
 
 ### 方式三 · 安卓客户端（APK）
 
-从官网下载 [`app/jidiandian-5.3.0.apk`](https://jidiandian.top/app/jidiandian-5.3.0.apk)（versionCode 540，Android 7.0+）。
+从官网下载 [`app/jidiandian-5.3.0.apk`](https://jidiandian.top/app/jidiandian-5.3.0.apk)（versionCode 541，Android 7.0+）。
 
 安卓端统一走**全量覆盖更新**：每次发版都出完整 APK，用户在「我的 → 版本更新」检测到新版本后，
 直接给最新版本的下载链接，下载后覆盖安装即可（数据不丢失）。没有内容包，也没有热更新。
@@ -271,7 +271,7 @@ TraceDot/
 │   └── TraceDot-V5.2.4.html     # 应用本体（单文件，含全部样式 / 脚本 / 内嵌资源）
 ├── app/                          # 安卓端发布物（更新清单 + 完整 APK）
 │   ├── latest.json               # 更新清单（App「我的 → 版本更新」拉取）
-│   └── jidiandian-5.3.0.apk      # 完整 APK（versionCode 540）
+│   └── jidiandian-5.3.0.apk      # 完整 APK（versionCode 541）
 ├── docs/
 │   ├── FEATURES.md               # 模块功能详表
 │   └── screenshots/              # 演示截图（含 16:9 头图与八模块总览图）
