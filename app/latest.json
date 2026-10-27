@@ -1,13 +1,14 @@
 {
   "bundle": {
-    "version": "5.3.2",
-    "url": "https://raw.giteeusercontent.com/ajiepotato/TraceDot/raw/main/app/hot-bundle-5.3.2.zip",
-    "urlAlt": "https://jidiandian.top/app/hot-bundle-5.3.2.zip",
-    "sha256": "ccbd27998aeb6ccaf0cb633d3e7effba917d52706c8cf2beab5a20cbde575e4d",
-    "bytes": 9366970
+    "version": "5.3.0",
+    "vc": 539,
+    "url": "https://raw.giteeusercontent.com/ajiepotato/TraceDot/raw/main/app/hot-bundle-vc539.zip",
+    "urlAlt": "https://jidiandian.top/app/hot-bundle-vc539.zip",
+    "sha256": "e2a9594650020dcc225b9eedb384d22b9b6f57293461aae64ab59d2196b856ab",
+    "bytes": 9366943
   },
   "apk": {
-    "versionCode": 538,
+    "versionCode": 539,
     "versionName": "5.3.0",
     "url": "https://jidiandian.top/app/jidiandian-5.3.0.apk"
   }
