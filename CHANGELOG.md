@@ -338,6 +338,17 @@
 
 - 致谢补充安卓运行环境：Capacitor 及其官方插件（MIT）、AndroidX（Apache-2.0）。
 
+### 安卓底包 versionCode 544（2026-10-28）
+
+> 全量覆盖更新：`https://jidiandian.top/app/jidiandian-5.3.0.apk?v=544`，`versionName` 仍为 5.3.0，`versionCode` 544。
+
+- **联想候选框真正置顶**：登机牌工坊「出发城市 / 到达城市」的候选框原来挂在卡片内部，卡片（`.glass`）自带 `isolation:isolate` 形成独立层叠上下文，浮层的 `z-index` 出不去——表现为被「到达城市」文字穿插、被下方「乘客 · 座位」卡片压住。现抽出共用模块 `src/studio/suggest.js`，浮层挂 `doc.body` + `position:fixed` + `z-index:65`，火车票工坊与登机牌工坊共用同一套样式、触发与交互。
+- **候选框从输入框弹出**：以输入框矩形为锚点定位。输入法弹起（`body.kb-open` 或 `visualViewport` 收缩 >120px）时贴输入框上沿往上弹；输入法收起时贴下沿往下弹，下方空间不足才翻上；`visualViewport` resize/scroll、window resize、文档捕获滚动、`body` class 观察器四条链路实时跟随。
+- **下拉选择面板过渡平滑**：`.tkp-mask`（工坊枚举 / 日期 / 时间面板）与 `.tk-sheet-mask`（细节调整）原来是 `display:none → display:flex` 切换，CSS 无法过渡，安卓 WebView 上表现为「白闪一下再出内容」。现改为常驻 `display:flex` + `opacity/visibility/transform` 过渡，并在加 `.on` 前强制一次布局，避免首帧即终态。
+- **启动即检测新版本**：新增 `src/core/update.js`。应用启动、首屏就绪后异步检测一次（不阻塞启动），原生端命中新版即弹「发现新版本」卡；选「立即更新」跳官网下载页并交系统浏览器打开，选「暂不更新」直接关闭；安卓返回键优先关闭该弹层，边缘手势在弹层打开时不接管。
+- **「我的 → 版本更新」角标**：检测到新版本时，该条目右侧显示「有新版本」渐变角标（复用启动检测的缓存结论，进屏不再重复请求）。
+- **更新弹窗带版本更新日志**：更新日志由服务端 `latest.json` 的 `changelog` 数组下发，弹窗内渲染为可滚动列表，改文案无需单独发版。
+
 ---
 
 ## [V5.2.4] - 2026-10-25
