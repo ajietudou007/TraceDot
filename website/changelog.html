@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>更新日志 · 迹点点 TraceDot V5.3.0</title>
 <meta name="description" content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V5.3.0（安卓端全量覆盖更新），五个阶段共 36 组版本记录；V5 阶段桌面端以内容更新持续迭代，安卓端改为全量覆盖更新。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。">
-<meta name="theme-color" content="#EDF4F1">
-<link rel="stylesheet" href="glass.css?v=97bcb15c22">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232E7E6B'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23FCF6E5'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23FCF6E5'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23FCF6E5'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#F1EDE6">
+<link rel="stylesheet" href="glass.css?v=988373945c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23F3EB30'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23202020' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23202020' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23202020'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23202020'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23202020'/%3E%3C/svg%3E">
 <style>
 /* ══════════ 更新日志页专属组件（复用 glass.css 令牌与卡片） ══════════ */
 .cl-hero{padding:8.5rem 2rem 0;max-width:76rem;margin:0 auto;text-align:center;
@@ -24,23 +24,24 @@
 .cl-chips{display:flex;flex-wrap:wrap;gap:.4375rem}
 .cl-chip{border:0;cursor:pointer;font-family:inherit;font-size:.75rem;font-weight:600;color:var(--ink-2);
   padding:.4375rem .75rem;border-radius:var(--r-pill);background:rgba(255,255,255,.66);
-  box-shadow:inset 0 1px 0 var(--lf-rim),inset 0 0 0 1px rgba(12,44,34,.09);
+  box-shadow:inset 0 1px 0 var(--lf-rim),inset 0 0 0 1px rgba(32,32,32,.09);
   transition:color .25s var(--ease),background .25s var(--ease),box-shadow .25s var(--ease),transform .4s var(--spring)}
-.cl-chip:hover{transform:translateY(-2px);background:#fff;box-shadow:0 0 0 1px rgba(21,112,90,.22),inset 0 1px 0 var(--lf-rim-strong)}
+.cl-chip:hover{transform:translateY(-2px);background:#fff;box-shadow:0 0 0 1px rgba(200,155,0,.22),inset 0 1px 0 var(--lf-rim-strong)}
 .cl-chip b{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.625rem;font-weight:600;color:var(--ink-4);margin-left:.375rem}
-.cl-chip.on{color:#fff;background:var(--accent);box-shadow:0 8px 18px -12px rgba(21,112,90,.55)}
-.cl-chip.on b{color:rgba(255,255,255,.78)}
+.cl-chip.on{color:var(--ink);background:var(--accent-fill);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 8px 18px -12px rgba(200,155,0,.55)}
+.cl-chip.on b{color:rgba(32,32,32,.62)}
 .cl-tools{display:flex;gap:.4375rem}
 .cl-tool{border:0;cursor:pointer;font-family:inherit;font-size:.6875rem;font-weight:600;color:var(--ink-3);
   padding:.375rem .6875rem;border-radius:var(--r-pill);background:rgba(255,255,255,.5);
-  box-shadow:inset 0 0 0 1px rgba(12,44,34,.08);transition:color .2s var(--ease),background .2s var(--ease)}
+  box-shadow:inset 0 0 0 1px rgba(32,32,32,.08);transition:color .2s var(--ease),background .2s var(--ease)}
 .cl-tool:hover{color:var(--accent);background:#fff}
 
 /* 时间轴 */
 .cl-stream{position:relative;display:flex;flex-direction:column;gap:1.125rem;
   --cl-pad:2.75rem;--cl-line:.9375rem;padding-left:var(--cl-pad);padding-bottom:1rem}
 .cl-stream::before{content:"";position:absolute;left:calc(var(--cl-line) - .5px);top:1.1875rem;bottom:2rem;width:1px;
-  background:linear-gradient(180deg,rgba(21,112,90,.34),rgba(21,112,90,.14) 62%,transparent)}
+  background:linear-gradient(180deg,rgba(200,155,0,.34),rgba(200,155,0,.14) 62%,transparent)}
 .cl-stage{position:relative;display:flex;align-items:center;gap:.75rem;margin:1.75rem 0 .25rem}
 /* ⚠️ [hidden] 的 UA 规则是 display:none，但作者样式里的 display:flex 会盖掉它
    —— 不显式声明，筛选后阶段标题不会消失 */
@@ -48,8 +49,8 @@
 .cl-stage:first-child{margin-top:0}
 .cl-stage-no{display:grid;place-items:center;width:1.75rem;height:1.75rem;flex-shrink:0;border-radius:50%;
   margin-left:calc(var(--cl-line) - var(--cl-pad) - .875rem);
-  font-size:.75rem;font-weight:800;color:#fff;background:var(--accent);
-  box-shadow:0 0 0 4px rgba(237,244,241,.9),0 6px 14px -8px rgba(21,112,90,.5)}
+  font-size:.75rem;font-weight:800;color:var(--ink);background:var(--accent-fill);
+  box-shadow:0 0 0 4px rgba(247,243,236,.9),0 6px 14px -8px rgba(200,155,0,.5)}
 .cl-stage h2{margin:0;display:block;font-size:.875rem;font-weight:700;color:var(--ink);line-height:1.5}
 .cl-stage i{display:block;font-style:normal;font-family:"JetBrains Mono",ui-monospace,monospace;
   font-size:.625rem;color:var(--ink-4);letter-spacing:.02em}
@@ -61,15 +62,15 @@
   overflow:visible;contain:layout style}
 .cl-entry:hover{transform:none}
 .cl-node{position:absolute;left:calc(var(--cl-line) - var(--cl-pad));top:1.75rem;transform:translateX(-50%);
-  width:.625rem;height:.625rem;border-radius:50%;background:#fff;
-  box-shadow:0 0 0 1px rgba(21,112,90,.28),inset 0 0 0 2px var(--accent),0 0 0 4px rgba(237,244,241,.9)}
+  width:.625rem;height:.625rem;border-radius:50%;background:var(--accent-fill);
+  box-shadow:0 0 0 1.5px rgba(32,32,32,.28),0 0 0 4px rgba(247,243,236,.92)}
 .cl-top{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
 .cl-verline{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;min-width:0}
 .cl-ver{margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:1rem;font-weight:800;
   letter-spacing:-.01em;color:var(--ink);line-height:1.3}
 .cl-badge{font-size:.625rem;font-weight:700;padding:.1875rem .5rem;border-radius:var(--r-pill);
-  color:var(--ink-3);background:rgba(12,44,34,.07);white-space:nowrap}
-.cl-badge.live{color:#fff;background:var(--accent)}
+  color:var(--ink-3);background:rgba(32,32,32,.07);white-space:nowrap}
+.cl-badge.live{color:var(--ink);background:var(--accent-fill)}
 .cl-date{display:inline-flex;align-items:center;gap:.375rem;margin-left:auto;
   font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.6875rem;color:var(--ink-4)}
 .cl-date svg{width:.8125rem;height:.8125rem}
@@ -79,22 +80,22 @@
 /* 高亮卡 */
 .cl-hls{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-top:1rem}
 .cl-hls.cols-3{grid-template-columns:repeat(3,1fr)}
-.cl-hl{padding:.9375rem 1.0625rem;border-radius:.9375rem;background:rgba(240,250,246,.62);
-  box-shadow:inset 0 1px 0 var(--lf-rim),inset 0 0 0 1px rgba(12,44,34,.065);
+.cl-hl{padding:.9375rem 1.0625rem;border-radius:.9375rem;background:rgba(252,249,242,.62);
+  box-shadow:inset 0 1px 0 var(--lf-rim),inset 0 0 0 1px rgba(32,32,32,.065);
   transition:transform .45s var(--spring),background .3s var(--ease),box-shadow .35s var(--ease)}
 .cl-hl:hover{transform:translateY(-2px);background:rgba(255,255,255,.9);
-  box-shadow:0 0 0 1px rgba(21,112,90,.18),inset 0 1px 0 var(--lf-rim-strong),0 10px 22px -16px rgba(21,112,90,.3)}
+  box-shadow:0 0 0 1px rgba(200,155,0,.18),inset 0 1px 0 var(--lf-rim-strong),0 10px 22px -16px rgba(200,155,0,.3)}
 .cl-hl-t{display:flex;align-items:center;gap:.5rem;font-size:.875rem;font-weight:700;color:var(--ink);line-height:1.45}
 .cl-ico{display:grid;place-items:center;width:1.5rem;height:1.5rem;flex-shrink:0;border-radius:.4375rem;
-  color:var(--accent);background:rgba(21,112,90,.10);transition:color .3s var(--ease),background .3s var(--ease)}
+  color:var(--accent);background:rgba(200,155,0,.10);transition:color .3s var(--ease),background .3s var(--ease)}
 .cl-ico svg{width:.875rem;height:.875rem}
-.cl-hl:hover .cl-ico{color:#fff;background:var(--accent)}
-.cl-hl.alt .cl-ico{color:var(--accent-2);background:rgba(194,65,12,.10)}
-.cl-hl.alt:hover .cl-ico{color:#fff;background:var(--accent-2)}
+.cl-hl:hover .cl-ico{color:var(--ink);background:var(--accent-fill)}
+.cl-hl.alt .cl-ico{color:var(--accent-2);background:rgba(240,117,42,.10)}
+.cl-hl.alt:hover .cl-ico{color:var(--ink);background:var(--accent-fill-2)}
 .cl-hl p{margin:.5rem 0 0;font-size:.8125rem;line-height:1.8;color:var(--ink-3)}
 .cl-tags{display:flex;flex-wrap:wrap;gap:.3125rem;margin-top:.5rem}
 .cl-tag{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.5625rem;color:var(--ink-3);
-  padding:.0625rem .375rem;border-radius:.3125rem;background:rgba(12,44,34,.06)}
+  padding:.0625rem .375rem;border-radius:.3125rem;background:rgba(32,32,32,.06)}
 
 /* 明细折叠 */
 .cl-more{margin-top:.875rem;padding-top:.75rem;border-top:1px solid var(--line)}
@@ -103,7 +104,7 @@
 .cl-more>summary::-webkit-details-marker{display:none}
 .cl-more>summary:hover{opacity:.75}
 .cl-more>summary b{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.625rem;
-  padding:.0625rem .3125rem;border-radius:.25rem;background:rgba(21,112,90,.12)}
+  padding:.0625rem .3125rem;border-radius:.25rem;background:rgba(200,155,0,.12)}
 .cl-caret{display:grid;place-items:center;width:.875rem;height:.875rem;transition:transform .3s var(--ease)}
 .cl-caret svg{width:.875rem;height:.875rem}
 .cl-more[open] .cl-caret{transform:rotate(90deg)}
@@ -111,19 +112,19 @@
 
 .cl-items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.375rem}
 .cl-items li{display:flex;align-items:flex-start;gap:.5625rem;padding:.5rem .6875rem;border-radius:.6875rem;
-  background:rgba(240,250,246,.5);transition:background .25s var(--ease)}
+  background:rgba(252,249,242,.5);transition:background .25s var(--ease)}
 .cl-items li:hover{background:rgba(255,255,255,.9)}
 .cl-items p{margin:0;font-size:.8125rem;line-height:1.78;color:var(--ink-3)}
 .cl-li-ico{display:grid;place-items:center;width:1.0625rem;height:1.0625rem;flex-shrink:0;margin-top:.125rem;color:var(--accent)}
 .cl-li-ico svg{width:1.0625rem;height:1.0625rem}
 .cl-items li.is-alt .cl-li-ico{color:var(--accent-2)}
-.cl-items li.is-tertiary .cl-li-ico{color:#0E7490}
+.cl-items li.is-tertiary .cl-li-ico{color:#2F6BD8}
 .cl-dot{width:.375rem;height:.375rem;border-radius:50%;flex-shrink:0;margin-top:.5625rem;background:var(--accent)}
 .cl-items li.is-alt .cl-dot{background:var(--accent-2)}
 
 /* 索引型 kv 块 */
-.cl-kv{margin-top:.875rem;padding:.875rem 1rem;border-radius:.9375rem;background:rgba(240,250,246,.55);
-  box-shadow:inset 0 0 0 1px rgba(12,44,34,.06)}
+.cl-kv{margin-top:.875rem;padding:.875rem 1rem;border-radius:.9375rem;background:rgba(252,249,242,.55);
+  box-shadow:inset 0 0 0 1px rgba(32,32,32,.06)}
 .cl-kv-h{font-size:.625rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:.5rem}
 .cl-kv-list{margin:0;display:grid;grid-template-columns:repeat(2,1fr);gap:.25rem .875rem}
 .cl-kv-row{display:flex;gap:.4375rem;font-size:.75rem;line-height:1.72}
@@ -137,7 +138,7 @@
 .cl-foot p{margin:0;font-size:.8125rem;line-height:1.8;color:var(--ink-3);max-width:46rem}
 
 .cl-entry code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.6875rem;
-  padding:.0625rem .3125rem;border-radius:.25rem;color:var(--accent);background:rgba(21,112,90,.10)}
+  padding:.0625rem .3125rem;border-radius:.25rem;color:var(--accent);background:rgba(200,155,0,.10)}
 .cl-entry strong{font-weight:700;color:var(--ink)}
 
 .cl-end{text-align:center;margin:1.75rem 0 0;font-size:.75rem;color:var(--ink-4);font-family:"JetBrains Mono",ui-monospace,monospace}
@@ -180,7 +181,7 @@
 <div class="navwrap">
   <header class="glass-nav" id="topnav">
     <a href="index.html" class="brand">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232E7E6B'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23FCF6E5'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23FCF6E5'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23FCF6E5'/%3E%3C/svg%3E" alt="迹点点 Logo" class="brand-logo">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23F3EB30'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23202020' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23202020' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23202020'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23202020'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23202020'/%3E%3C/svg%3E" alt="迹点点 Logo" class="brand-logo">
       <span class="brand-name">迹点点</span>
       <span class="brand-ver">V5.3.0</span>
     </a>
@@ -351,7 +352,7 @@
         <summary><span class="cl-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 9V4.4H9"/><path d="M14 4.4h5.6V10"/><path d="M19.6 15v4.6H14"/><path d="M10 19.6H4.4V15"/></svg></span>详细条目 (Features &amp; Fixes) <b>5</b></summary>
         <ul class="cl-items">
           <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p>珍藏册「重新编辑」路由表补充<strong>船</strong>票种，与外壳侧票种映射保持一致，船票不再落入火车票默认分支。</p></li>
-          <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p>珍藏册筛选条票种顺序补入<strong>船</strong>，船票拥有独立筛选 chip；同步补上船形图标与专属配色（#4A7FA5），卡片不再显示「其他」图标。</p></li>
+          <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p>珍藏册筛选条票种顺序补入<strong>船</strong>，船票拥有独立筛选 chip；同步补上船形图标与专属配色（#2F6BD8），卡片不再显示「其他」图标。</p></li>
           <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p>珍藏册单点路线行的交通类判定补入<strong>船</strong>：缺到达站的船票改为显示出发港，不再把「船名 + 航次」当主标题。</p></li>
           <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p>交通票工坊预填优先按账本 <code>kind</code> 字段精确定位票种（船 → ferry），修掉「跳转正确但表单停留公交」的次生问题；航次框填值前剥掉船名前缀，船名单独回填。</p></li>
           <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></span><p>本版为<strong>纯内容热更新</strong>：已安装桌面客户端自动更新内核；热更新清单版本号 5.2.3。playwright 端到端验收 15 项全通过。</p></li>
@@ -1397,7 +1398,7 @@
 <footer class="wrap foot">
   <div class="foot-top">
     <div class="foot-brand">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232E7E6B'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23FCF6E5' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23FCF6E5'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23FCF6E5'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23FCF6E5'/%3E%3C/svg%3E" alt="迹点点 Logo" class="brand-logo">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23F3EB30'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23202020' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23202020' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23202020'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23202020'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23202020'/%3E%3C/svg%3E" alt="迹点点 Logo" class="brand-logo">
       <div><b>迹点点 TraceDot</b><i>旅行纪念票根工作室</i></div>
     </div>
     <nav class="foot-nav">
