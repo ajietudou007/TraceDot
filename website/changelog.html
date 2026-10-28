@@ -268,7 +268,7 @@
       <div class="cl-top">
         <div class="cl-verline">
           <h3 class="cl-ver">V5.3.0</h3>
-          <span class="cl-badge live">最新稳定版</span><span class="cl-badge">安卓端</span><span class="cl-badge">全量覆盖更新</span>
+          <span class="cl-badge live">最新稳定版</span><span class="cl-badge">安卓端</span><span class="cl-badge">网页端</span><span class="cl-badge">桌面端</span><span class="cl-badge">全量覆盖更新</span>
         </div>
         <time class="cl-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="5.2" width="16.8" height="15.2" rx="2.4"/><path d="M3.6 10h16.8"/><path d="M8.4 3.2v4M15.6 3.2v4"/></svg>2026-10-27</time>
       </div>
@@ -283,8 +283,9 @@
         </div>
       </div>
       <details class="cl-more" open>
-        <summary><span class="cl-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 9V4.4H9"/><path d="M14 4.4h5.6V10"/><path d="M19.6 15v4.6H14"/><path d="M10 19.6H4.4V15"/></svg></span>详细条目 (Features &amp; Fixes) <b>12</b></summary>
+        <summary><span class="cl-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 9V4.4H9"/><path d="M14 4.4h5.6V10"/><path d="M19.6 15v4.6H14"/><path d="M10 19.6H4.4V15"/></svg></span>详细条目 (Features &amp; Fixes) <b>13</b></summary>
         <ul class="cl-items">
+          <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4a8.6 8.6 0 0 0 0 17.2c1.3 0 2-.9 2-1.8 0-.8-.5-1.3-.5-2 0-1 .8-1.7 1.8-1.7H18a3.6 3.6 0 0 0 3.6-3.6C21.6 6.7 17.3 3.4 12 3.4Z"/><circle cx="7.4" cy="11" r="1.1"/><circle cx="10.4" cy="7.4" r="1.1"/><circle cx="15" cy="7.6" r="1.1"/></svg></span><p><strong>网页端 / 桌面端换上安卓同款「液态玻璃」皮肤</strong>（2026-10-28）：不做逻辑改动，只在页头注入一层覆盖样式并替换地图底色的两处 SVG 渐变，把设计令牌换成安卓端口径——暖灰底、墨色四级文字、荧光黄高亮、橙色主按钮、高模糊高饱和的玻璃面板。主操作橙渐变实心、次级操作玻璃幽灵、状态芯片选中态荧光黄实心；输入框统一 36px 高白玻璃配橙色聚焦光晕；底部导航坞与地图工具条改为近白玻璃浮岛。内容文件 <code>release/TraceDot-V5.3.0.html</code>，桌面端热更新清单同步指向 Gitee Release 资产。</p></li>
           <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>更新方式改为「全量覆盖更新」</strong>：取消内容包热更新，每次发版都是完整 APK。原生侧移除 <code>HotUpdater</code> / <code>HotUpdatePlugin</code> 与底包内容目录映射，Web 侧移除 <code>hot-update.js</code>、内容更新弹窗与构建号模块，打包脚本 <code>pack-hot-bundle.mjs</code> 一并删除——底包 APK 即完整应用，不再有「内容包」这一层。</p></li>
           <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>「我的 → 版本更新」直接给下载链接</strong>：点「版本更新」拉 <code>app/latest.json</code>，只比 <code>apk.versionCode</code>；有新版弹应用内卡片「发现新版本 vX.Y.Z」，按钮「立即下载」直接打开 APK 下载直链——<strong>不进官网、不发浏览器首页</strong>；没有新版提示「已是最新」。清单只剩 <code>apk</code> 段（<code>versionCode</code> / <code>versionName</code> / <code>url</code>）。</p></li>
           <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>状态栏不再压住正文（全色沉浸）</strong>：原来只靠 <code>env(safe-area-inset-top)</code> 让顶部内容避让，而 Chromium 的 safe-area 只反映「屏幕刘海」——没有刘海的机型算出来是 0，edge-to-edge 下标题直接顶到状态栏上，于是「有的机型正常、有的机型重叠」。现启动时读状态栏真实高度（StatusBar 插件 <code>getInfo().height</code>，已按 density 换算成 CSS px）写进 <code>--safe-top</code>，只抬高不降低；底图（极光 / 卡片底）依旧铺满到屏幕最顶端，只对正文限位。</p></li>
@@ -1404,7 +1405,7 @@
     <nav class="foot-nav">
       <a href="index.html">官网首页</a>
       <a href="index.html#download">下载应用</a>
-      <a href="https://jidiandian.top/release/TraceDot-V5.2.4.html" target="_blank" rel="noopener">在线应用</a>
+      <a href="https://jidiandian.top/release/TraceDot-V5.3.0.html" target="_blank" rel="noopener">在线应用</a>
       <a href="changelog.html">更新日志</a>
       <a href="https://github.com/ajietudou007/TraceDot" target="_blank" rel="noopener">GitHub ↗</a>
       <a href="index.html#credits">致谢</a>
