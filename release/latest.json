@@ -1,7 +1,7 @@
 {
-  "version": "5.3.0",
-  "file": "TraceDot-V5.3.0.html",
-  "url": "https://gitee.com/ajiepotato/TraceDot/releases/download/v5.3.0/TraceDot-V5.3.0.html",
-  "updated": "2026-10-28",
-  "note": "桌面端内容更新清单。改这里并推送，已安装的壳会在下次启动时自动拉取新 HTML，无需重新打包。"
+  "version": "5.3.1",
+  "file": "TraceDot-V5.3.1.html",
+  "url": "https://jidiandian.top/release/TraceDot-V5.3.1.html",
+  "updated": "2026-11-01",
+  "note": "桌面端内容更新清单。V5.3.1 接入云端账号（注册 / 登录 / 找回密码 / 内测申请），云端同步暂未开放（NO_SYNC=true）。Gitee Release v5.3.1 资产未上传前，url 暂指向官网直发文件，桌面端拉取同样生效。"
 }
