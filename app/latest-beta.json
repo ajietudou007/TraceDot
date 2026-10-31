@@ -1,0 +1,17 @@
+{
+  "channel": "beta",
+  "apk": {
+    "versionCode": 549,
+    "versionName": "5.4.0 Preview",
+    "url": "https://jidiandian.top/app/preview/jidiandian-5.4.0-preview.apk?v=549"
+  },
+  "page": "https://jidiandian.top/website/#download",
+  "changelog": [
+    "版本升级为 V5.4.0 Preview：内测通道专用，仅内测权限用户可检测到",
+    "云端同步开放：备份到云端、从云端恢复、历史版本回滚",
+    "「我的」界面改版：账号面板，点头像换头像、昵称就地编辑，修改密码 / 申请内测版 / 退出登录收进账号菜单",
+    "隐私与关于文案更新：数据默认仅存本机，云端备份零知识加密上传，可随时删除",
+    "云端备份面板精简：只保留备份 / 恢复 / 历史版本 / 删除数据",
+    "内测权限为单版本授权：本轮资质绑定 versionCode 549，新内测版本发布后需要重新申请"
+  ]
+}
