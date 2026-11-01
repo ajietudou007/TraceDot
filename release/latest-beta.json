@@ -1,0 +1,8 @@
+{
+  "channel": "beta",
+  "version": "5.4.0-Preview",
+  "file": "TraceDot-V5.4.0-Preview.html",
+  "url": "https://jidiandian.top/release/TraceDot-V5.4.0-Preview.html",
+  "updated": "2026-11-01",
+  "note": "桌面端内测内容清单。只有内测授权用户（网页登录后 /api/beta/status 判定为 beta）才会拉这一份；云端同步（NO_SYNC=false）只在本内测包开放。未授权用户仍走 release/latest.json 的正式版内容。"
+}
