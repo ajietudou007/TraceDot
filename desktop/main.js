@@ -600,6 +600,11 @@ function setupUpdater() {
   // 打包环境才启用；开发模式（electron .）跳过，避免报错
   if (!app.isPackaged) return;
 
+  /* macOS 包未签名（build.mac.identity = null），Squirrel.Mac 换不掉 app bundle：
+     自动下载只会「下完装不上」，用户重启还是旧版本、下次启动又弹同一个版本。
+     所以 mac 上不走自动下载，发现新版本时直接引导去官网下载页手动安装。 */
+  const manualUpdate = process.platform === 'darwin';
+
   autoUpdater.autoDownload = false; // 先询问用户再下载
   autoUpdater.autoInstallOnAppQuit = true;
 
@@ -635,7 +640,24 @@ function setupUpdater() {
   });
 
   autoUpdater.on('update-available', (info) => {
-    pendingDownload = true;
+    pendingDownload = !manualUpdate;
+    if (manualUpdate) {
+      dialog
+        .showMessageBox(win, {
+          type: 'info',
+          title: '发现新版本',
+          message: `发现新版本 V${info.version}，macOS 需手动安装。`,
+          detail:
+            '点「打开下载页」获取安装包，下载后把「迹点点」拖进「应用程序」覆盖旧版即可，本机数据不会丢失。',
+          buttons: ['打开下载页', '稍后提醒'],
+          defaultId: 0,
+          cancelId: 1
+        })
+        .then((r) => {
+          if (r.response === 0) shell.openExternal(RELEASES_URL);
+        });
+      return;
+    }
     dialog
       .showMessageBox(win, {
         type: 'info',
