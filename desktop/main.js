@@ -1,4 +1,4 @@
-const { app, BrowserWindow, shell, Menu, dialog, screen } = require('electron');
+const { app, BrowserWindow, shell, Menu, dialog, screen, session, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const https = require('https');
@@ -7,7 +7,7 @@ const https = require('https');
    macOS 两个包仍走 GitHub（页面自动择优公益加速线路）。
    GitHub 发布页仍从「项目主页」进入，用于查历史版本。 */
 const RELEASES_URL = 'https://jidiandian.top/#download';
-const APP_VERSION = '5.3.0';
+const APP_VERSION = '5.4.0-Preview';
 let win = null;
 
 /* ---------- 壳与网页分离 ----------
@@ -20,6 +20,8 @@ let win = null;
    小文件（清单几百字节）走 raw 直连；12 MB 的应用本体过不了 Gitee raw 的
    「large file require login」限制，由清单里的 url 指向 Gitee Release 资产分发。 */
 const PAGE_MANIFEST = 'https://raw.giteeusercontent.com/ajiepotato/TraceDot/raw/main/release/latest.json';
+/* 内测页面清单：拿到内测权限的用户走这条；拉不到时自动回退正式清单 */
+const PAGE_MANIFEST_BETA = 'https://raw.giteeusercontent.com/ajiepotato/TraceDot/raw/main/release/latest-beta.json';
 const PAGE_MAX_BYTES = 128 * 1024 * 1024;
 const PAGE_MIN_BYTES = 1024 * 1024;
 
@@ -56,17 +58,96 @@ function writePageVersion(v) {
   }
 }
 
-/* 逐段比较版本号，返回 1 / 0 / -1 */
+/* ---------- 内测通道 ----------
+   网页里登录并拿到内测权限后会调用 window.jddDesktop.setChannel('beta')，
+   壳只落一个标记文件；页面清单据此在内测 / 正式之间切换。
+   权限撤销时网页写回 'stable'，即回到正式页面。 */
+const BETA_CHANNEL_VALUES = ['beta', 'stable'];
+
+function betaChannelPath() {
+  return path.join(app.getPath('userData'), 'beta-channel.txt');
+}
+
+function isBetaChannel() {
+  return readFileTrim(betaChannelPath()) === 'beta';
+}
+
+function writeBetaChannel(ch) {
+  const v = String(ch || '').trim();
+  if (BETA_CHANNEL_VALUES.indexOf(v) < 0) {
+    console.warn('ignore invalid beta channel:', ch);
+    return;
+  }
+  try {
+    fs.writeFileSync(betaChannelPath(), v);
+  } catch (e) {
+    console.warn('write beta channel failed:', e && e.message);
+  }
+}
+
+/* 按通道取页面清单：内测通道先拉 BETA 清单，拉不到（404 / 网络故障）
+   就回退正式清单 —— 回退不算失败，不能因此挡住内容更新。 */
+function fetchPageManifest() {
+  const beta = isBetaChannel();
+  return fetchText(beta ? PAGE_MANIFEST_BETA : PAGE_MANIFEST)
+    .then((body) => ({ body: body, beta: beta }))
+    .catch((err) => {
+      if (!beta) throw err;
+      console.warn('beta manifest unavailable, fallback to stable:', err && err.message);
+      return fetchText(PAGE_MANIFEST).then((body) => ({ body: body, beta: false }));
+    });
+}
+
+/* 把版本号拆成「数字段 + 后缀」：5.4.0-Preview → { nums:'5.4.0', tag:'preview' } */
+function splitVer(v) {
+  const s = String(v || '').trim();
+  const m = /^([0-9.]*)(.*)$/.exec(s);
+  const nums = (m && m[1] ? m[1] : '').replace(/\.+$/, '');
+  const tag = (m && m[2] ? m[2] : '').trim().replace(/^[-_.\s]+/, '').toLowerCase();
+  return { nums: nums, tag: tag };
+}
+
+/* 逐段比较版本号，返回 1 / 0 / -1。
+   数字段相同时，带后缀的版本（如 5.4.0-Preview）视为比同号正式版更新 ——
+   内测内容就是「同号的 Preview」，不带这条规则永远检测不到内测更新。 */
 function cmpVer(a, b) {
-  const pa = String(a || '').split('.').map((n) => parseInt(n, 10) || 0);
-  const pb = String(b || '').split('.').map((n) => parseInt(n, 10) || 0);
+  const va = splitVer(a);
+  const vb = splitVer(b);
+  const pa = (va.nums || '0').split('.').map((n) => parseInt(n, 10) || 0);
+  const pb = (vb.nums || '0').split('.').map((n) => parseInt(n, 10) || 0);
   const len = Math.max(pa.length, pb.length);
   for (let i = 0; i < len; i++) {
     const x = pa[i] || 0;
     const y = pb[i] || 0;
     if (x !== y) return x > y ? 1 : -1;
   }
+  if (va.tag && !vb.tag) return 1;
+  if (!va.tag && vb.tag) return -1;
+  if (va.tag !== vb.tag) return va.tag > vb.tag ? 1 : -1;
   return 0;
+}
+
+/* 旧内容页迁移（V5.4.1 起）：10/29 那批 V5.4.0 页面没有 window.jddDesktop 通道桥，
+   版本号又比壳自带种子高，导致内测通道永远打不开。首次启动检测一次，缺桥就用种子重铺。 */
+function pageBridgeMarkPath() {
+  return path.join(pageDir(), 'desktop-bridge.txt');
+}
+
+function pageHasDesktopBridge() {
+  if (fs.existsSync(pageBridgeMarkPath())) return true;
+  let text = '';
+  try {
+    text = fs.readFileSync(pagePath(), 'utf8');
+  } catch (e) {
+    return false;
+  }
+  if (text.indexOf('jddDesktop') < 0) return false;
+  try {
+    fs.writeFileSync(pageBridgeMarkPath(), 'ok');
+  } catch (e) {
+    /* 标记写失败不影响本轮判断 */
+  }
+  return true;
 }
 
 /* 首次启动、或壳自带的内容比本地新时，把内置种子铺到用户目录 */
@@ -86,6 +167,14 @@ function ensurePage() {
 
   // 本地缺失/损坏：铺种子
   if (localSize < PAGE_MIN_BYTES) {
+    fs.copyFileSync(seedHtml, pagePath());
+    writePageVersion(seedVer || app.getVersion());
+    return;
+  }
+
+  /* 旧页没有桌面通道桥：版本号可能比种子高，但功能比种子旧，
+     内测通道也打不开，这里强制用种子重铺一次（迁移标记只触发一次）。 */
+  if (!pageHasDesktopBridge()) {
     fs.copyFileSync(seedHtml, pagePath());
     writePageVersion(seedVer || app.getVersion());
     return;
@@ -343,14 +432,15 @@ function checkContent(interactive) {
   if (contentChecking) return;
   contentChecking = true;
 
-  fetchText(PAGE_MANIFEST)
-    .then((body) => {
+  fetchPageManifest()
+    .then((src) => {
       let manifest;
       try {
-        manifest = JSON.parse(body);
+        manifest = JSON.parse(src.body);
       } catch (e) {
         throw new Error('更新清单格式错误');
       }
+      const beta = src.beta;
       const remote = String(manifest.version || '').trim();
       const local = readPageVersion();
       if (!remote) throw new Error('更新清单缺少版本号');
@@ -358,8 +448,8 @@ function checkContent(interactive) {
         if (interactive) {
           dialog.showMessageBox(win, {
             type: 'info',
-            title: '迹点点 TraceDot',
-            message: '应用内容已是最新版本。'
+            title: beta ? '迹点点 TraceDot（内测版）' : '迹点点 TraceDot',
+            message: beta ? '内测版：应用内容已是最新版本。' : '应用内容已是最新版本。'
           });
         }
         return null;
@@ -370,7 +460,7 @@ function checkContent(interactive) {
       /* 内容文件稳定在 12 MB 上下；万一服务器没给 Content-Length，就用它当分母估进度，
          总比让进度条干等着强（估到 95% 封顶，真正的 100% 只在写入完成时给） */
       const EST_BYTES = 12 * 1024 * 1024;
-      progOpen('正在下载应用内容 V' + remote);
+      progOpen((beta ? '正在下载内测版内容' : '正在下载应用内容') + ' V' + remote);
       return downloadTo(url, pagePath() + '.next', 180000, 0, (got, total) => {
         const denom = total > 0 ? total : EST_BYTES;
         const pct = total > 0 ? (got / total) * 100 : Math.min(95, (got / denom) * 100);
@@ -389,8 +479,8 @@ function checkContent(interactive) {
         return dialog
           .showMessageBox(win, {
             type: 'info',
-            title: '内容已更新',
-            message: `新内容 V${remote} 已就绪，重启后生效。`,
+            title: beta ? '内测版内容已更新' : '内容已更新',
+            message: `新内容 V${remote} 已就绪，重启后生效。${beta ? '（内测版）' : ''}`,
             detail: '壳程序无需重新下载，重启即可。',
             buttons: ['立即重启', '稍后'],
             defaultId: 0
@@ -426,6 +516,32 @@ function checkContent(interactive) {
 app.commandLine.appendSwitch('ignore-gpu-blocklist');
 app.commandLine.appendSwitch('enable-gpu-rasterization');
 
+/* ---------- 云端接口跨域（V5.4.0 加云端功能）----------
+   应用本体是 file:// 页面，它的 Origin 是字面量 "null"，不在云端服务端的 CORS
+   白名单里（安卓 WebView 的 Origin 是 https://localhost，所以安卓端不用管）。
+   这里在主进程给云端域名的响应补上 CORS 头，只放行迹点点自己的接口域名。
+   备份包下载要读 x-jdd-version / x-jdd-sha256 / x-jdd-records 等自定义响应头，
+   必须同时补 Access-Control-Expose-Headers，否则 JS 侧读不到。 */
+const CLOUD_API_HOSTS = ['https://api.jidiandian.top'];
+const CLOUD_EXPOSE_HEADERS = 'authorization, content-type, x-jdd-version, x-jdd-sha256, x-jdd-records, x-jdd-created-at';
+
+function setupCloudCors() {
+  try {
+    session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+      const headers = details.responseHeaders || {};
+      if (CLOUD_API_HOSTS.some((h) => String(details.url || '').startsWith(h))) {
+        headers['access-control-allow-origin'] = ['*'];
+        headers['access-control-allow-methods'] = ['GET,POST,PUT,DELETE,OPTIONS'];
+        headers['access-control-allow-headers'] = ['*'];
+        headers['access-control-expose-headers'] = [CLOUD_EXPOSE_HEADERS];
+      }
+      callback({ responseHeaders: headers });
+    });
+  } catch (e) {
+    console.warn('cloud cors setup failed:', e && e.message);
+  }
+}
+
 function createWindow() {
   win = new BrowserWindow({
     width: 1440,
@@ -439,6 +555,7 @@ function createWindow() {
     /* 先隐藏、首帧就绪再显示：避免白底闪一下再重绘整窗（老机器上这一步很明显） */
     show: false,
     webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true,
@@ -633,6 +750,18 @@ function appMenuExtra() {
 }
 
 app.whenReady().then(() => {
+  /* 网页侧设置通道：落标记文件；刚切到内测时立刻拉一次内测内容清单，
+     用户申请获批后不用再手动点「检查内容更新」。 */
+  ipcMain.on('jdd:set-beta-channel', (e, ch) => {
+    const wasBeta = isBetaChannel();
+    writeBetaChannel(ch);
+    if (!wasBeta && isBetaChannel()) setTimeout(() => checkContent(false), 500);
+  });
+  try {
+    setupCloudCors();
+  } catch (e) {
+    console.warn('cloud cors failed:', e && e.message);
+  }
   try {
     ensurePage();
   } catch (e) {
