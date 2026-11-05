@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>更新日志 · 迹点点 TraceDot V5.4.1</title>
-<meta name="description" content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V5.4.1（云端同步开放与激活码门禁取消），五个阶段共 38 组版本记录；V5 阶段桌面端以内容更新持续迭代，安卓端改为全量覆盖更新。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。">
+<meta name="description" content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V5.4.1（云端同步开放与安卓端图标重绘），五个阶段共 38 组版本记录；V5 阶段桌面端以内容更新持续迭代，安卓端改为全量覆盖更新。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。">
 <meta name="theme-color" content="#F1EDE6">
 <link rel="stylesheet" href="glass.css?v=988373945c">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23F3EB30'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23202020' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23202020' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23202020'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23202020'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23202020'/%3E%3C/svg%3E">
@@ -278,8 +278,8 @@
           <p>原先只在预发线开放的零知识加密备份并入正式版：网页端 <code>NO_SYNC = false</code>、安卓端 <code>CLOUD_SYNC_ENABLED = true</code>。密码与数据密钥都不出本机，云端只存密文备份包；新增<strong>自动同步</strong>——启动时补拉昵称与头像，数据改动后自动上传，换设备也能接着用。</p>
         </div>
         <div class="cl-hl alt">
-          <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="5" width="14.8" height="15.4" rx="2.4"/><path d="M9.2 5V4a1.4 1.4 0 0 1 1.4-1.4h2.8A1.4 1.4 0 0 1 14.6 4v1"/><path d="M8.6 11.2h6.8"/><path d="M8.6 15.2h4.4"/></svg></span>取消激活码（内测）门禁</div>
-          <p>首次打开不再要求输入激活码：网页端门禁脚本启动即旁路，安卓端整屏 <code>gate-screen</code> 与 <code>jdd-beta-gate.v1</code> 判定一并删除，启动链直接进账号登录门（门内仍可选「离线运行」）。旧机器上残留的激活记忆不再参与任何判定。</p>
+          <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="5" width="14.8" height="15.4" rx="2.4"/><path d="M9.2 5V4a1.4 1.4 0 0 1 1.4-1.4h2.8A1.4 1.4 0 0 1 14.6 4v1"/><path d="M8.6 11.2h6.8"/><path d="M8.6 15.2h4.4"/></svg></span>激活码门禁保留，启动链收口</div>
+          <p>首次打开仍需输入激活码：网页端单文件的门禁脚本与激活码清单原样保留（通过一次写入本机记忆，之后不再询问），安卓端 <code>gate-screen</code> 照旧是启动第一步。启动链固定为<strong>激活码 → 云端账号登录 → 主界面</strong>，未激活时只渲染激活门、应用其余部分整体不显示。</p>
         </div>
       </div>
       <details class="cl-more" open>
@@ -287,7 +287,7 @@
         <ul class="cl-items">
           <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>云端同步正式开放</strong>：备份到云端、从云端恢复、历史版本回滚全量可用；网页端与安卓端同一套密文格式，跨端可互相恢复。</p></li>
           <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>自动同步</strong>：进入主界面即补拉一次云端资料（昵称 / 头像），账本改动后自动上传，不需要再手动点「备份」。</p></li>
-          <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>激活码门禁下线</strong>：安卓端删除 <code>src/screens/gate-screen.js</code> 与路由 / 屏元数据，启动判定改为「本机有数据密钥 + 会话 → 主界面，否则进登录门」；网页端单文件启动脚本直接 <code>open()</code> 并保留 <code>jdd-locked</code> 到登录门放行，避免主界面在登录门后面闪现。</p></li>
+          <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>激活码门禁保留</strong>：网页端单文件的激活门脚本、激活码清单与 <code>jdd-beta-gate.v1</code> 记忆逻辑原样保留；安卓端 <code>src/screens/gate-screen.js</code> 与路由 / 屏元数据一并保留，启动时先读激活记忆，未通过只渲染激活门，通过后再按「本机数据密钥 + 会话」决定进主界面还是账号登录门。</p></li>
           <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>安卓端图标全部重绘并视觉对齐</strong>：45 枚内联 SVG sprite 按 24 网格 / 1.8 描边 / 3.4–20.8 安全框统一重画；显示尺寸收口到 12 / 14 / 16 / 18 / 20 / 24 偶数档，图标间距两档（6 / 10），下拉箭头与返回箭头共用同一枚。</p></li>
           <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></span><p><strong>修复安卓端顶部泛白</strong>：删掉 <code>body::after</code> 那层全屏白色斜向流光（<code>position:fixed;inset:0</code>，沉浸式下状态栏区域没有卡片压住就成了白膜），并把顶部极光收紧、透明度下调。</p></li>
           <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></span><p><strong>修复行程地图 / 铁路查询全屏</strong>：界面大小调到「宽松 / 更多」后按钮不再被裁掉，全屏跟随界面尺寸自适应；底部改用与行程地图一致的模糊遮罩，去掉滚动进度条与多余的限位框。</p></li>

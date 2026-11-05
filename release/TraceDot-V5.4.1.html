@@ -2441,11 +2441,11 @@ body.vn-on .vignette,body.cle-on .vignette,body.rr-on .vignette{
     else runAuth();
   }
 
-  /* V5.4.1 公开发布：激活码（内测）门禁已取消 —— 不再等待输码，启动即进云端登录门
-     （登录门内仍可选「离线运行」跳过）。仍先加 jdd-locked，避免主界面在登录门后面闪现。 */
+  var stored = readStored();
+  /* 激活码已过：仍要保持应用隐藏，等云端登录门放行（否则主界面会在登录门后面闪现） */
+  if (stored && pass(stored)){ document.documentElement.classList.add('jdd-locked'); open(); return; }
+
   document.documentElement.classList.add('jdd-locked');
-  open();
-  return;
 
   form.addEventListener('submit', function(ev){
     ev.preventDefault();
