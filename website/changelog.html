@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>更新日志 · 迹点点 TraceDot V5.4.1</title>
-<meta name="description" content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V5.4.1（云端同步开放与安卓端图标重绘），五个阶段共 38 组版本记录；V5 阶段桌面端以内容更新持续迭代，安卓端改为全量覆盖更新。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。">
+<title>更新日志 · 迹点点 TraceDot V5.4.2</title>
+<meta name="description" content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V5.4.2（安卓端铁路查询布局修正），五个阶段共 39 组版本记录；V5 阶段桌面端以内容更新持续迭代，安卓端改为全量覆盖更新。遵循 Keep a Changelog 精神沉淀每次技术迭代与视觉重塑。">
 <meta name="theme-color" content="#F1EDE6">
 <link rel="stylesheet" href="glass.css?v=988373945c">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23F3EB30'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23202020' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23202020' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23202020'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23202020'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23202020'/%3E%3C/svg%3E">
@@ -232,12 +232,12 @@
       <span>版本演进史 · 遵循 Keep a Changelog</span>
     </div>
     <h1 class="cl-title">迹点点 TraceDot<br><em>每次出发与沉淀的足迹</em></h1>
-    <p class="cl-lead">从前身「12306 火车票票根编辑器」一路走到 V5.4.1，共五个阶段、38 组版本记录；第五阶段桌面端以内容更新持续迭代，安卓端改为全量覆盖更新。这里记录每一次技术取舍与视觉重塑。</p>
+    <p class="cl-lead">从前身「12306 火车票票根编辑器」一路走到 V5.4.2，共五个阶段、39 组版本记录；第五阶段桌面端以内容更新持续迭代，安卓端改为全量覆盖更新。这里记录每一次技术取舍与视觉重塑。</p>
 
     <div class="cl-stats">
       <div class="metric"><span class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 12a8.4 8.4 0 1 0 2.5-5.9"/><path d="M3.6 4.6v5h5"/><path d="M12 8.2V12l2.9 1.7"/></svg></span><b>80+</b><i>收录迭代版本</i></div>
       <div class="metric"><span class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4 3.4 7.8 12 12.2l8.6-4.4z"/><path d="M3.4 12 12 16.4 20.6 12"/><path d="M3.4 16.2 12 20.6l8.6-4.4"/></svg></span><b>5 大阶段</b><i>演进历程跨度</i></div>
-      <div class="metric"><span class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8 20 6v5.9c0 4.5-3.3 7.9-8 9.2-4.7-1.3-8-4.7-8-9.2V6z"/><path d="M8.8 11.9 11.4 14.5l3.9-4.6"/></svg></span><b>V5.4.1</b><i>当前稳定版本</i></div>
+      <div class="metric"><span class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8 20 6v5.9c0 4.5-3.3 7.9-8 9.2-4.7-1.3-8-4.7-8-9.2V6z"/><path d="M8.8 11.9 11.4 14.5l3.9-4.6"/></svg></span><b>V5.4.2</b><i>当前稳定版本</i></div>
       <div class="metric"><span class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.6 8.4 4.4 12l4.2 3.6"/><path d="M15.4 8.4 19.6 12l-4.2 3.6"/></svg></span><b>100%</b><i>独立纯前端开源</i></div>
     </div>
   </section>
@@ -261,14 +261,41 @@
     <div class="cl-stream" id="clStream">
     <div class="cl-stage" data-stage="stage-5">
       <span class="cl-stage-no">五</span>
-      <div><h2>第五阶段 · V5 视觉与体验重塑</h2><i>2026-10-16 ~ 11-05 · 25 条</i></div>
+      <div><h2>第五阶段 · V5 视觉与体验重塑</h2><i>2026-10-16 ~ 11-05 · 26 条</i></div>
     </div>
+    <article class="glass-card cl-entry" id="v5-4-2" data-stage="stage-5">
+      <span class="cl-node" aria-hidden="true"></span>
+      <div class="cl-top">
+        <div class="cl-verline">
+          <h3 class="cl-ver">V5.4.2</h3>
+          <span class="cl-badge live">最新稳定版</span><span class="cl-badge">安卓端</span><span class="cl-badge">铁路查询</span><span class="cl-badge">布局修正</span>
+        </div>
+        <time class="cl-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="5.2" width="16.8" height="15.2" rx="2.4"/><path d="M3.6 10h16.8"/><path d="M8.4 3.2v4M15.6 3.2v4"/></svg>2026-11-05</time>
+      </div>
+      <div class="cl-hls">
+        <div class="cl-hl ">
+          <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="5" width="14.8" height="15.4" rx="2.4"/><path d="M8.6 9.6h6.8"/><path d="M8.6 13.6h6.8"/><path d="M8.6 17.4h4"/></svg></span>查询区收到导航栏顶边</div>
+          <p>铁路查询内容区高度改为「屏幕高 − 浮岛高 − 浮岛下边距 − 安全区」，列表与结果卡片到导航栏上方即结束，最后一行不再被底部浮岛压住。</p>
+        </div>
+        <div class="cl-hl alt">
+          <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6v16.8"/><path d="M3.6 12h16.8"/><circle cx="12" cy="12" r="3.2"/></svg></span>数据来源收成一行，页签贴住屏头</div>
+          <p>屏头的橙色说明条收成单行「数据来源：RailGo 开放数据」，挂到「铁路查询」标题右侧最边上；正文整体上移，车次查询 / 车站查询 / 动车组查询 / 列车图鉴四个页签框定在屏头下方。</p>
+        </div>
+      </div>
+      <details class="cl-more" open>
+        <summary><span class="cl-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 9V4.4H9"/><path d="M14 4.4h5.6V10"/><path d="M19.6 15v4.6H14"/><path d="M10 19.6H4.4V15"/></svg></span>详细条目 (Fixes) <b>2</b></summary>
+        <ul class="cl-items">
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>修复铁路查询底部遮挡</strong>：查询区止于浮岛顶边，底部的车次 / 车站结果最后一行的文字与操作完整可见，不再被导航栏压住。</p></li>
+          <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>屏头改版与页签收口</strong>：数据来源文案精简为「数据来源：RailGo 开放数据」，经 <code>noteInHead</code> 挂到屏头右侧；<code>.ws-note-head</code> 单行药丸不挤压标题，四个查询页签固定贴在屏头下方。</p></li>
+        </ul>
+      </details>
+    </article>
     <article class="glass-card cl-entry" id="v5-4-1" data-stage="stage-5">
       <span class="cl-node" aria-hidden="true"></span>
       <div class="cl-top">
         <div class="cl-verline">
           <h3 class="cl-ver">V5.4.1</h3>
-          <span class="cl-badge live">最新稳定版</span><span class="cl-badge">网页端</span><span class="cl-badge">桌面端</span><span class="cl-badge">安卓端</span><span class="cl-badge">云端同步</span>
+          <span class="cl-badge">稳定版</span><span class="cl-badge">网页端</span><span class="cl-badge">桌面端</span><span class="cl-badge">安卓端</span><span class="cl-badge">云端同步</span>
         </div>
         <time class="cl-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="5.2" width="16.8" height="15.2" rx="2.4"/><path d="M3.6 10h16.8"/><path d="M8.4 3.2v4M15.6 3.2v4"/></svg>2026-11-05</time>
       </div>
