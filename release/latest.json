@@ -1,7 +1,7 @@
 {
-  "version": "5.3.1",
-  "file": "TraceDot-V5.3.1.html",
-  "url": "https://jidiandian.top/release/TraceDot-V5.3.1.html",
-  "updated": "2026-11-01",
-  "note": "桌面端内容更新清单。V5.3.1 接入云端账号（注册 / 登录 / 找回密码 / 内测申请），云端同步暂未开放（NO_SYNC=true）。Gitee Release v5.3.1 资产未上传前，url 暂指向官网直发文件，桌面端拉取同样生效。"
+  "version": "5.4.1",
+  "file": "TraceDot-V5.4.1.html",
+  "url": "https://jidiandian.top/release/TraceDot-V5.4.1.html",
+  "updated": "2026-11-05",
+  "note": "桌面端内容更新清单。V5.4.1 起云端同步正式开放（NO_SYNC=false），并取消首次打开的激活码门禁；安卓端同步发版（versionCode 550）。"
 }
