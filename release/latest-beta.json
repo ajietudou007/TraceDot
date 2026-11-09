@@ -1,8 +1,8 @@
 {
   "channel": "beta",
-  "version": "5.4.1",
-  "file": "TraceDot-V5.4.1.html",
-  "url": "https://jidiandian.top/release/TraceDot-V5.4.1.html",
-  "updated": "2026-11-05",
-  "note": "桌面端内测内容清单。本轮没有独立的 Preview 包：原先只在预发线开放的云端同步已并入 V5.4.1 正式版，内测通道与正式通道指向同一份内容，内测用户也随之更新到 5.4.1。"
+  "version": "5.5.0",
+  "file": "TraceDot-V5.5.0.html",
+  "url": "https://gitee.com/ajiepotato/TraceDot/releases/download/v5.5.0/TraceDot-V5.5.0.html",
+  "updated": "2026-11-10",
+  "note": "桌面端内测内容清单。本轮没有独立的 Preview 包：内测通道与正式通道指向同一份 V5.5.0 内容，避免内测用户的页面版本落后于正式版。"
 }
