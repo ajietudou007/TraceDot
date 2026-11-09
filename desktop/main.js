@@ -427,24 +427,76 @@ function downloadTo(url, dest, timeout, redirects, onProgress) {
 
 let contentChecking = false;
 
-/* 检查网页内容更新：只换 HTML，不动壳 */
+/* 统一取更新清单：正式 / 内测通道的判定只在这里做。
+   自动内容更新与用户点「检查更新」共用同一个来源，避免两套判定漂移。 */
+function fetchManifest() {
+  return fetchPageManifest().then((src) => {
+    let manifest;
+    try {
+      manifest = JSON.parse(src.body);
+    } catch (e) {
+      throw new Error('更新清单格式错误');
+    }
+    const remote = String(manifest.version || '').trim();
+    if (!remote) throw new Error('更新清单缺少版本号');
+    return { manifest: manifest, beta: src.beta, remote: remote };
+  });
+}
+
+/* 下载并落地新内容：自动更新与手动检查共用，只换 HTML，不动壳 */
+function applyContentUpdate(info) {
+  const manifest = info.manifest;
+  const beta = info.beta;
+  const remote = info.remote;
+  /* 清单没给 url 时按「版本 tag + 文件名」拼 Gitee Release 资产地址 */
+  const url = manifest.url || 'https://gitee.com/ajiepotato/TraceDot/releases/download/v' + remote + '/' + manifest.file;
+  /* 内容文件稳定在 12 MB 上下；万一服务器没给 Content-Length，就用它当分母估进度，
+     总比让进度条干等着强（估到 95% 封顶，真正的 100% 只在写入完成时给） */
+  const EST_BYTES = 12 * 1024 * 1024;
+  progOpen((beta ? '正在下载内测版内容' : '正在下载应用内容') + ' V' + remote);
+  return downloadTo(url, pagePath() + '.next', 180000, 0, (got, total) => {
+    const denom = total > 0 ? total : EST_BYTES;
+    const pct = total > 0 ? (got / total) * 100 : Math.min(95, (got / denom) * 100);
+    progSet(pct, fmtBytes(got) + (total > 0 ? ' / ' + fmtBytes(total) : '') + ' · ' + pct.toFixed(0) + '%');
+  }).then(() => {
+    progSet(100, '下载完成，正在写入…');
+    progClose();
+    try {
+      fs.copyFileSync(pagePath(), pagePath() + '.prev');
+    } catch (e) {
+      /* 保留上一版失败不阻塞更新 */
+    }
+    fs.renameSync(pagePath() + '.next', pagePath());
+    writePageVersion(remote);
+
+    return dialog
+      .showMessageBox(win, {
+        type: 'info',
+        title: beta ? '内测版应用已更新' : '应用已更新',
+        message: `新版本 V${remote} 已就绪，重启后生效。${beta ? '（内测版）' : ''}`,
+        detail: '本次只更新应用内容，客户端无需重新下载，重启即可。',
+        buttons: ['立即重启', '稍后'],
+        defaultId: 0
+      })
+      .then((r) => {
+        if (r.response === 0) {
+          app.relaunch();
+          app.exit(0);
+        }
+      });
+  });
+}
+
+/* 启动 / 回前台 / 定时的自动内容更新：有新版就直接下载，不打断用户 */
 function checkContent(interactive) {
   if (contentChecking) return;
   contentChecking = true;
 
-  fetchPageManifest()
-    .then((src) => {
-      let manifest;
-      try {
-        manifest = JSON.parse(src.body);
-      } catch (e) {
-        throw new Error('更新清单格式错误');
-      }
-      const beta = src.beta;
-      const remote = String(manifest.version || '').trim();
-      const local = readPageVersion();
-      if (!remote) throw new Error('更新清单缺少版本号');
-      if (cmpVer(remote, local) <= 0) {
+  fetchManifest()
+    .then((info) => {
+      const beta = info.beta;
+      const remote = info.remote;
+      if (cmpVer(remote, readPageVersion()) <= 0) {
         if (interactive) {
           dialog.showMessageBox(win, {
             type: 'info',
@@ -454,44 +506,7 @@ function checkContent(interactive) {
         }
         return null;
       }
-
-      /* 清单没给 url 时按「版本 tag + 文件名」拼 Gitee Release 资产地址 */
-      const url = manifest.url || 'https://gitee.com/ajiepotato/TraceDot/releases/download/v' + remote + '/' + manifest.file;
-      /* 内容文件稳定在 12 MB 上下；万一服务器没给 Content-Length，就用它当分母估进度，
-         总比让进度条干等着强（估到 95% 封顶，真正的 100% 只在写入完成时给） */
-      const EST_BYTES = 12 * 1024 * 1024;
-      progOpen((beta ? '正在下载内测版内容' : '正在下载应用内容') + ' V' + remote);
-      return downloadTo(url, pagePath() + '.next', 180000, 0, (got, total) => {
-        const denom = total > 0 ? total : EST_BYTES;
-        const pct = total > 0 ? (got / total) * 100 : Math.min(95, (got / denom) * 100);
-        progSet(pct, fmtBytes(got) + (total > 0 ? ' / ' + fmtBytes(total) : '') + ' · ' + pct.toFixed(0) + '%');
-      }).then(() => {
-        progSet(100, '下载完成，正在写入…');
-        progClose();
-        try {
-          fs.copyFileSync(pagePath(), pagePath() + '.prev');
-        } catch (e) {
-          /* 保留上一版失败不阻塞更新 */
-        }
-        fs.renameSync(pagePath() + '.next', pagePath());
-        writePageVersion(remote);
-
-        return dialog
-          .showMessageBox(win, {
-            type: 'info',
-            title: beta ? '内测版内容已更新' : '内容已更新',
-            message: `新内容 V${remote} 已就绪，重启后生效。${beta ? '（内测版）' : ''}`,
-            detail: '壳程序无需重新下载，重启即可。',
-            buttons: ['立即重启', '稍后'],
-            defaultId: 0
-          })
-          .then((r) => {
-            if (r.response === 0) {
-              app.relaunch();
-              app.exit(0);
-            }
-          });
-      });
+      return applyContentUpdate(info);
     })
     .catch((err) => {
       progClose();
@@ -503,6 +518,69 @@ function checkContent(interactive) {
           message: String((err && err.message) || err)
         });
       }
+    })
+    .finally(() => {
+      contentChecking = false;
+    });
+}
+
+/* 「检查更新」：以应用本体版本为准（本地内容版本 vs 线上内容版本）。
+   壳（Electron / 原生能力）的版本不参与这里的比较，只在菜单里作为「客户端」展示。
+   本地 > 线上（回滚过或线上清单滞后）也算「已是最新」，不做降级。 */
+function checkAppUpdate() {
+  if (!app.isPackaged) {
+    dialog.showMessageBox(win, {
+      type: 'info',
+      title: '迹点点 TraceDot',
+      message: '当前为开发模式，更新检查仅在打包后的应用中生效。'
+    });
+    return;
+  }
+  if (contentChecking) return;
+  contentChecking = true;
+
+  fetchManifest()
+    .then((info) => {
+      const local = readPageVersion();
+      if (cmpVer(info.remote, local) > 0) {
+        return dialog
+          .showMessageBox(win, {
+            type: 'info',
+            title: info.beta ? '发现新版应用（内测版）' : '发现新版应用',
+            message: `发现新版本 V${info.remote}，是否立即更新？`,
+            detail: `当前版本 V${local}。更新只替换应用内容（约 12 MB），无需重新安装客户端。`,
+            buttons: ['立即更新', '稍后', '打开下载页'],
+            defaultId: 0,
+            cancelId: 1
+          })
+          .then((r) => {
+            if (r.response === 0) return applyContentUpdate(info);
+            if (r.response === 2) shell.openExternal(RELEASES_URL);
+            return null;
+          });
+      }
+      /* 方案：本体已最新时不再提壳。壳只作为二级信息写进详情，避免用户为了
+         一个「客户端落后」被迫重装，也避免两套版本号并排造成困惑。 */
+      return dialog.showMessageBox(win, {
+        type: 'info',
+        title: info.beta ? '迹点点 TraceDot（内测版）' : '迹点点 TraceDot',
+        message: `当前已是最新版本 V${local}`,
+        detail: `客户端 ${app.getVersion()}（应用外壳，仅包含运行框架与原生能力，不影响应用版本）`
+      });
+    })
+    .catch((err) => {
+      progClose();
+      console.warn('app update check failed:', err && err.message);
+      dialog
+        .showMessageBox(win, {
+          type: 'warning',
+          title: '检查更新失败',
+          message: '无法连接更新服务器，是否打开下载页手动查看？',
+          buttons: ['打开下载页', '稍后']
+        })
+        .then((r) => {
+          if (r.response === 0) shell.openExternal(RELEASES_URL);
+        });
     })
     .finally(() => {
       contentChecking = false;
@@ -646,7 +724,7 @@ function setupUpdater() {
         .showMessageBox(win, {
           type: 'info',
           title: '发现新版本',
-          message: `发现新版本 V${info.version}，macOS 需手动安装。`,
+          message: `发现客户端新版本 V${info.version}，macOS 需手动安装。`,
           detail:
             '点「打开下载页」获取安装包，下载后把「迹点点」拖进「应用程序」覆盖旧版即可，本机数据不会丢失。',
           buttons: ['打开下载页', '稍后提醒'],
@@ -661,15 +739,15 @@ function setupUpdater() {
     dialog
       .showMessageBox(win, {
         type: 'info',
-        title: '发现新版本',
-        message: `发现新版本 V${info.version}，是否立即下载？`,
-        detail: '下载完成后将在退出或重启时自动安装。',
+        title: '发现客户端新版本',
+        message: `发现客户端新版本 V${info.version}，是否立即下载？`,
+        detail: '客户端是应用外壳（运行框架与原生能力），升级不影响应用内容与本地数据。下载完成后将在退出或重启时自动安装。',
         buttons: ['立即下载', '稍后提醒', '打开下载页']
       })
       .then((r) => {
         if (r.response === 0) {
           pendingDownload = false;
-          progOpen('正在下载新版本 V' + info.version + '…');
+          progOpen('正在下载客户端 V' + info.version + '…');
           autoUpdater.downloadUpdate();
         } else if (r.response === 2) {
           pendingDownload = false;
@@ -684,7 +762,7 @@ function setupUpdater() {
       dialog.showMessageBox(win, {
         type: 'info',
         title: '迹点点 TraceDot',
-        message: '当前已是最新版本。'
+        message: '客户端已是最新版本。'
       });
     }
   });
@@ -695,7 +773,7 @@ function setupUpdater() {
       .showMessageBox(win, {
         type: 'info',
         title: '更新已就绪',
-        message: `新版本 V${info.version} 已下载，立即重启安装还是稍后自动安装？`,
+        message: `客户端 V${info.version} 已下载，立即重启安装还是稍后自动安装？`,
         buttons: ['立即重启安装', '稍后'],
         defaultId: 0
       })
@@ -710,7 +788,7 @@ function setupUpdater() {
   updaterReady = true;
 }
 
-function checkForUpdates(interactive) {
+function checkShellUpdate(interactive) {
   if (!app.isPackaged) {
     if (interactive) {
       dialog.showMessageBox(win, {
@@ -740,11 +818,20 @@ function checkForUpdates(interactive) {
   });
 }
 
+function showAbout() {
+  dialog.showMessageBox(win, {
+    type: 'info',
+    title: '关于 迹点点',
+    message: '迹点点 TraceDot V' + (readPageVersion() || '—'),
+    detail: '客户端 ' + app.getVersion() + '（应用外壳，仅包含运行框架与原生能力，不影响应用版本）'
+  });
+}
+
 function buildMenu() {
   const isMac = process.platform === 'darwin';
   const template = [
     ...(isMac
-      ? [{ role: 'appMenu', submenu: [{ label: '关于 迹点点', role: 'about' }, { type: 'separator' }, ...appMenuExtra()] }]
+      ? [{ role: 'appMenu', submenu: [{ label: '关于 迹点点', click: showAbout }, { type: 'separator' }, ...appMenuExtra()] }]
       : []),
     { role: 'fileMenu' },
     { role: 'editMenu' },
@@ -765,8 +852,11 @@ function buildMenu() {
 
 function appMenuExtra() {
   return [
-    { label: '检查更新…', click: () => checkForUpdates(true) },
-    { label: '检查内容更新…', click: () => checkContent(true) },
+    /* 版本号只展示应用本体版本；壳版本明确标成「客户端」放在同一行的次要位置 */
+    { label: '版本 V' + (readPageVersion() || '—') + ' · 客户端 ' + app.getVersion(), enabled: false },
+    { type: 'separator' },
+    { label: '检查应用更新…', click: () => checkAppUpdate() },
+    { label: '检查客户端更新…', click: () => checkShellUpdate(true) },
     { label: '官网下载页（手动下载）', click: () => shell.openExternal(RELEASES_URL) }
   ];
 }
@@ -793,8 +883,8 @@ app.whenReady().then(() => {
   createWindow();
   setupUpdater();
   if (app.isPackaged) {
-    // 壳更新先查；内容更新稍后错开，避免同时弹窗
-    setTimeout(() => checkForUpdates(false), 3000);
+    /* 启动只做内容更新（用户感知的「版本」就是本体版本）。
+       壳更新不再自动弹窗：它只随大版本统一发布，用户可在「帮助」菜单手动检查。 */
     setTimeout(() => checkContent(false), 9000);
   }
   app.on('activate', () => {
