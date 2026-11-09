@@ -1,7 +1,7 @@
 {
-  "version": "5.4.1",
-  "file": "TraceDot-V5.4.1.html",
-  "url": "https://jidiandian.top/release/TraceDot-V5.4.1.html",
-  "updated": "2026-11-05",
-  "note": "桌面端内容更新清单。V5.4.1 云端同步正式开放（NO_SYNC=false）；激活码门禁保留，首次打开仍需输入激活码（通过后本机不再询问）。安卓端同步发版（versionCode 550）。"
+  "version": "5.5.0",
+  "file": "TraceDot-V5.5.0.html",
+  "url": "https://gitee.com/ajiepotato/TraceDot/releases/download/v5.5.0/TraceDot-V5.5.0.html",
+  "updated": "2026-11-10",
+  "note": "桌面端内容更新清单。改这里并推送，已安装的壳会在下次启动时自动拉取新 HTML，无需重新打包。"
 }
