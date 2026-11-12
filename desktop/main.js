@@ -2,6 +2,7 @@ const { app, BrowserWindow, shell, Menu, dialog, screen, session, ipcMain } = re
 const path = require('path');
 const fs = require('fs');
 const https = require('https');
+const crypto = require('crypto');
 
 /* 手动下载统一走官网下载区：Windows 安装包与单文件网页版已切 Gitee 国内线路直发，
    macOS 两个包仍走 GitHub（页面自动择优公益加速线路）。
@@ -41,6 +42,27 @@ function seedPath(name) {
 function readFileTrim(p) {
   try {
     return String(fs.readFileSync(p, 'utf8')).trim();
+  } catch (e) {
+    return '';
+  }
+}
+
+/* 内容摘要：分块流式读，不为算指纹把 12 MB 页面整个读进内存。
+   读不到（文件不存在 / 无权限）返回空串，调用方据此决定是否跳过比对。 */
+function fileSha256(p) {
+  try {
+    const fd = fs.openSync(p, 'r');
+    try {
+      const h = crypto.createHash('sha256');
+      const buf = Buffer.allocUnsafe(1024 * 1024);
+      let n = 0;
+      while ((n = fs.readSync(fd, buf, 0, buf.length, null)) > 0) {
+        h.update(buf.subarray(0, n));
+      }
+      return h.digest('hex');
+    } finally {
+      fs.closeSync(fd);
+    }
   } catch (e) {
     return '';
   }
@@ -150,7 +172,40 @@ function pageHasDesktopBridge() {
   return true;
 }
 
-/* 首次启动、或壳自带的内容比本地新时，把内置种子铺到用户目录 */
+/* 用随包种子重铺本地页面：先写临时文件、校验摘要、再原子改名。
+   任何一步失败都保留原有页面 —— 用户可能只是磁盘满或文件被占用，
+   不能因为重铺失败就把现有页面删掉、落到「没有可用页面」。
+   返回本地页面是否可用（可用则继续加载它）。 */
+function reseedPage(seedHtml, seedVer, reason) {
+  const dest = pagePath();
+  const tmp = dest + '.seed';
+  try {
+    fs.copyFileSync(seedHtml, tmp);
+    const seedDigest = fileSha256(seedHtml);
+    if (!seedDigest) throw new Error('种子不可读');
+    if (fileSha256(tmp) !== seedDigest) throw new Error('种子写入不完整');
+    fs.renameSync(tmp, dest);
+  } catch (e) {
+    try {
+      fs.unlinkSync(tmp);
+    } catch (e2) {
+      /* 临时文件可能根本没写出来 */
+    }
+    console.warn('page reseed failed (' + reason + '):', e && e.message);
+    try {
+      return fs.statSync(dest).size >= PAGE_MIN_BYTES;
+    } catch (e3) {
+      return false;
+    }
+  }
+  writePageVersion(seedVer || app.getVersion());
+  return true;
+}
+
+/* 首次启动、或随包种子与本地页面不是同一份内容时，把种子铺到用户目录。
+   主判据是内容摘要，不是版本号：同号异内容（5.5.1 带本地激活码 / 已移除本地激活码）
+   在版本号上完全一样，只比版本号会让旧页面永远换不掉。
+   版本号只作为辅助：本地明显更新（热更新下来的页面）时才不回退。 */
 function ensurePage() {
   fs.mkdirSync(pageDir(), { recursive: true });
 
@@ -167,34 +222,47 @@ function ensurePage() {
 
   // 本地缺失/损坏：铺种子
   if (localSize < PAGE_MIN_BYTES) {
-    fs.copyFileSync(seedHtml, pagePath());
-    writePageVersion(seedVer || app.getVersion());
-    return;
+    return reseedPage(seedHtml, seedVer, '本地页面缺失');
   }
 
   /* 旧页没有桌面通道桥：版本号可能比种子高，但功能比种子旧，
      内测通道也打不开，这里强制用种子重铺一次（迁移标记只触发一次）。 */
   if (!pageHasDesktopBridge()) {
-    fs.copyFileSync(seedHtml, pagePath());
-    writePageVersion(seedVer || app.getVersion());
-    return;
+    return reseedPage(seedHtml, seedVer, '旧页面缺少桌面通道桥');
   }
 
-  // 壳升级后自带更新的内容：直接覆盖（仅当种子确实更新，避免回退热更新的内容）
-  if (seedVer && cmpVer(seedVer, localVer) > 0) {
-    fs.copyFileSync(seedHtml, pagePath());
-    writePageVersion(seedVer);
+  const seedDigest = fileSha256(seedHtml);
+  if (!seedDigest) {
+    /* 种子读不到就没法判断，保留本地页面，避免误删 */
+    console.warn('seed digest unavailable, keep local page');
+    return true;
   }
+
+  const localDigest = fileSha256(pagePath());
+  if (!localDigest) {
+    return reseedPage(seedHtml, seedVer, '本地页面不可读');
+  }
+
+  // 内容一致：无需动本地页面
+  if (localDigest === seedDigest) return true;
+
+  /* 内容不同：本地版本号严格高于种子 → 这是热更新下来的更新内容，不能回退。
+     同号或更低一律按旧页面处理（5.5.1 同号异内容就是这一支）。 */
+  if (localVer && seedVer && cmpVer(localVer, seedVer) > 0) return true;
+
+  return reseedPage(seedHtml, seedVer, '内容摘要与种子不一致');
 }
 
 function loadApp() {
+  let localReady = false;
   try {
-    ensurePage();
-    win.loadFile(pagePath());
+    localReady = ensurePage();
   } catch (e) {
     console.warn('page seed failed, fallback to built-in:', e && e.message);
-    win.loadFile(seedPath('index.html'));
   }
+  /* 本地页面不可用（重铺失败且原本就缺失）时直接加载包内种子，
+     宁可少一次热更新能力，也不能让窗口停在加载失败页 */
+  win.loadFile(localReady ? pagePath() : seedPath('index.html'));
 }
 
 /* 把重定向的 Location 补全成绝对地址。
