@@ -25,6 +25,9 @@ const hash = (f) => crypto.createHash('sha1').update(fs.readFileSync(path.join(S
 const targets = [
   { file: 'glass.css', re: /href="glass\.css(?:\?v=[0-9a-f]+)?"/g, tpl: (v) => `href="glass.css?v=${v}"` },
   { file: 'glass.js', re: /src="glass\.js(?:\?v=[0-9a-f]+)?"/g, tpl: (v) => `src="glass.js?v=${v}"` },
+  /* 阅读层 / 动效层：同样参与指纹，避免 Pages + Cloudflare 的 4h 缓存拿到旧文件 */
+  { file: 'motion.css', re: /href="motion\.css(?:\?v=[^"]+)?"/g, tpl: (v) => `href="motion.css?v=${v}"` },
+  { file: 'motion.js', re: /src="motion\.js(?:\?v=[^"]+)?"/g, tpl: (v) => `src="motion.js?v=${v}"` },
 ].map((t) => ({ ...t, ver: hash(t.file) }));
 
 targets.forEach((t) => console.log(`  ${t.file.padEnd(10)} → v=${t.ver}`));

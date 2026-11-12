@@ -1,0 +1,184 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   迹点点 TraceDot · 阅读层与动效层（motion.css）
+   ---------------------------------------------------------------------------
+   加载顺序：必须在 glass.css 之后；changelog.html 还要放在页内 <style> 之后。
+   设计约束（严格）：
+     1. 不新增、不覆盖任何配色令牌。光斑只使用既有品牌黄 #F3EB30 / --warm
+        #C89B00 的低透明度，以及白色玻璃层；纸面、墨色、绿色一律不动。
+     2. 不触碰 section 的上下 padding（3.75rem 是已经调过两轮的定值），
+        呼吸感只从「版心 / 卡片内边距 / 字距 / 行距 / 栅格间距」里找。
+     3. .wrap 只写 max-width 与 padding-inline —— 写 padding 简写会把
+        <section class="wrap"> 的上下内边距归零（DESIGN-web.md 致命坑 1）。
+     4. 用 CSS `translate` 属性做入场位移，不占用 `transform`，
+        避免与 tilt / hover 抬升互相覆盖。
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. 版心：显示范围放宽 ───────────────────────────────────────────
+   76rem(1216) → 88rem(1408)，左右内边距 2rem → 2.5rem。
+   1440 视口下有效文字宽度约 1152 → 1328px（+15%）。 */
+.wrap{max-width:88rem;padding-inline:2.5rem}
+.hero-grid{max-width:88rem;padding:0 2.5rem;gap:5rem}
+.glass-nav{max-width:72rem}
+.cl-hero{max-width:88rem;padding-left:2.5rem;padding-right:2.5rem}
+.cl-stats{max-width:68rem}
+.cl-lead{max-width:52rem}
+
+/* ── 2. 字距与行距：把「挤在一起」的观感拉开 ───────────────────────── */
+body{line-height:1.75;letter-spacing:.012em}
+h1,h2,h3,h4{letter-spacing:-.008em}
+.hero-title{letter-spacing:-.012em;line-height:1.3}
+.cl-title{letter-spacing:-.008em}
+.cl-ver{letter-spacing:.004em}
+.sec-lead,.mini p,.mod p,.stack-item p,.cl-intro,.cl-hl p,
+.cl-items p,.cl-foot p,.fine,.tips-list li,.credit-list span,
+.cl-lead,.fx-more-body,.foot-note{letter-spacing:.014em}
+
+/* 小字放大一档：12px → 13~14px，行距同步放宽 */
+.sec-lead{font-size:1rem;line-height:1.85;max-width:46rem}
+.sec-lead.wide{max-width:56rem}
+.mini p,.mod p,.stack-item p{font-size:.875rem;line-height:1.9}
+.mini-t{font-size:1rem}
+.mod h3{font-size:1.125rem}
+.metric i,.fine,.tips-list li,.foot-nav,.foot-note{font-size:.8125rem;line-height:1.85}
+.credit-list span{font-size:.8125rem;line-height:1.85}
+.credit-list b{font-size:.8125rem}
+.dl-card i,.dl-act,.cl-chip,.cl-tool,.cl-more>summary{font-size:.75rem}
+.cl-intro,.cl-hl p,.cl-items p,.cl-foot p{font-size:.875rem;line-height:1.9}
+.cl-hl-t{font-size:.9375rem}
+.cl-kv-row{font-size:.8125rem}
+.cl-tag,.cl-badge,.cl-date{font-size:.6875rem}
+.cl-lead{font-size:1rem;line-height:1.9}
+
+/* ── 3. 内部呼吸感：卡片内边距与栅格间距 ───────────────────────────── */
+.glass-card.pad{padding:2.75rem}
+.mod{padding:2rem 1.75rem;gap:1.25rem}
+.mini{padding:1.75rem 1.5rem}
+.metric{padding:1.75rem 1.25rem}
+.stack-item{padding:1.375rem 1.5rem}
+.cl-entry{padding:1.75rem 2rem}
+.grid-4{gap:2.25rem}
+.grid-3{gap:2.25rem}
+.grid-2{gap:3rem}
+.metrics-grid,.creator-grid{gap:3.5rem}
+.sec-center{margin-bottom:3.25rem}
+.sec-head{margin-bottom:2.5rem}
+.stack{gap:1rem;margin-top:2rem}
+.dl-grid{gap:.625rem}
+.tips-list{gap:.625rem}
+.cl-stream{gap:1.5rem}
+.cl-hls{gap:1rem}
+.cl-items{gap:.5rem}
+.cl-bar{margin-top:2.75rem;margin-bottom:1.75rem;gap:1.25rem}
+.foot-nav{gap:1.5rem}
+
+/* ── 4. 长文折叠组件：信息不删，只收进可展开区 ───────────────────────
+   用于首页两段最长的说明文字，解决「一屏都是字」。 */
+.fx-more{margin-top:1rem}
+.fx-more>summary{
+  list-style:none;display:inline-flex;align-items:center;gap:.4375rem;cursor:pointer;
+  font-size:.8125rem;font-weight:700;letter-spacing:.02em;color:var(--accent);
+  padding:.375rem .8125rem;border-radius:var(--r-pill);
+  background:rgba(255,255,255,.55);
+  box-shadow:inset 0 1px 0 var(--lf-rim),inset 0 0 0 1px rgba(200,155,0,.18);
+  transition:background .25s var(--ease),transform .3s var(--spring)
+}
+.fx-more>summary::-webkit-details-marker{display:none}
+.fx-more>summary:hover{background:#fff;transform:translateY(-1px)}
+.fx-more>summary::after{content:"+";font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.875rem}
+.fx-more[open]>summary::after{content:"\2212"}
+.fx-more[open]>summary{margin-bottom:.8125rem}
+.fx-more-body{
+  font-size:.875rem;line-height:1.9;color:var(--ink-2);letter-spacing:.014em;
+  padding:1.0625rem 1.25rem;border-radius:var(--r-md);
+  background:rgba(255,255,255,.46);
+  box-shadow:inset 0 1px 0 var(--lf-rim),inset 0 0 0 1px rgba(32,32,32,.06)
+}
+.fx-more-body b{color:var(--ink);font-weight:700}
+.fx-hint{font-size:.6875rem;color:var(--ink-4);letter-spacing:.02em;align-self:center}
+
+/* ── 5. 鼠标追踪：全局光标光池 ───────────────────────────────────────
+   参考 hyphentech.top 的 .glare 思路，但光色换成既有品牌黄的低透明度，
+   且放在内容层之下（main z-index:2），不遮挡文字、不改变任何配色。 */
+#fx-cursor{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(460px circle at var(--fx-cx,50%) var(--fx-cy,50%),
+    rgba(243,235,48,.10) 0%,rgba(243,235,48,.045) 38%,transparent 68%);
+  opacity:0;transition:opacity .6s var(--ease)
+}
+body.fx-ready #fx-cursor{opacity:1}
+/* 极光随光标做微小位移：只动父层 transform，子带的 auroraFlow 动画不受影响 */
+.aurora{transform:translate3d(var(--fx-ax,0px),var(--fx-ay,0px),0);
+  transition:transform .6s var(--ease-out)}
+
+/* ── 6. 鼠标追踪：卡片 3D 倾斜 + 光标跟随光斑 ───────────────────────
+   光斑用真 DOM 节点而非伪元素，避开 .glass-card::before/::after 的
+   镜面高光与折射边（DESIGN-web.md 致命坑 2）。 */
+.fx-tilt{
+  /* .mini / .metric / .cl-hl / .stack-item 原本是 static，
+     不 relative 的话光斑会跑去以 .cl-entry 或 body 定位，糊满整张卡 */
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform .18s ease-out,background .35s var(--ease),box-shadow .4s var(--ease)
+}
+/* 页脚不在 main 里，抬到光池之上，避免文字被叠一层淡黄 */
+.foot{position:relative;z-index:2}
+.fx-glare{
+  position:absolute;inset:0;z-index:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(380px circle at var(--gx,50%) var(--gy,50%),
+    rgba(243,235,48,.18) 0%,rgba(243,235,48,.06) 42%,transparent 70%);
+  opacity:0;transition:opacity .3s var(--ease)
+}
+.fx-tilt:hover .fx-glare,.fx-tilt.fx-active .fx-glare{opacity:1}
+/* 让卡片内容压在光斑之上；绝对定位的角标/时间轴节点保持原样 */
+.fx-tilt>*:not(.fx-glare):not(.mod-badge):not(.cl-node):not(.stage-aura){
+  position:relative;z-index:1
+}
+
+/* 首屏票面展台：跟随光标的轻微 3D 旋转（参考站 hero --rx/--ry） */
+.hero-stage .glass-card.stage{
+  transform:perspective(1200px) rotateX(var(--fx-rx,0deg)) rotateY(var(--fx-ry,0deg));
+  transition:transform .5s var(--ease-out),box-shadow .7s var(--ease)
+}
+
+/* ── 7. 滚动显现 ─────────────────────────────────────────────────────
+   属性由 JS 在观测器就绪后才写入，无 JS / 打印时内容始终可见。 */
+[data-fx-reveal]{
+  opacity:0;translate:0 22px;
+  transition:opacity .75s var(--ease-out),translate .75s var(--ease-out);
+  transition-delay:var(--fx-delay,0ms)
+}
+[data-fx-reveal].is-in{opacity:1;translate:0 0}
+
+/* ── 8. 响应式：守住移动端原有收口值 ────────────────────────────── */
+@media (max-width:68rem){
+  .wrap{padding-inline:2rem}
+  .hero-grid{padding:0 2rem;gap:3rem}
+  .glass-card.pad,.cl-entry{padding:2rem}
+  .grid-2,.metrics-grid,.creator-grid{gap:2.25rem}
+}
+@media (max-width:34rem){
+  .wrap{padding-inline:1.25rem}
+  .hero-grid{padding:0 1.25rem;gap:2.5rem}
+  .cl-hero{padding-left:1.25rem;padding-right:1.25rem}
+  .glass-card.pad,.cl-entry{padding:1.5rem}
+  .mini,.mod,.metric{padding:1.375rem}
+  .sec-lead,.cl-lead{font-size:.9375rem}
+  .cl-bar{gap:.75rem}
+}
+
+/* ── 9. 无障碍与降级 ───────────────────────────────────────────────── */
+@media (hover:none),(pointer:coarse){
+  #fx-cursor,.fx-glare{display:none}
+  .hero-stage .glass-card.stage{transform:none}
+  .aurora{transform:none}
+}
+@media (prefers-reduced-motion:reduce){
+  #fx-cursor,.fx-glare{display:none}
+  .aurora,.hero-stage .glass-card.stage{transform:none!important;transition:none}
+  [data-fx-reveal]{opacity:1!important;translate:none!important;transition:none}
+}
+@media print{
+  #fx-cursor,.fx-glare{display:none!important}
+  [data-fx-reveal]{opacity:1!important;translate:none!important}
+  .fx-more-body{display:block!important}
+}
