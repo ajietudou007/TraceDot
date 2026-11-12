@@ -1,7 +1,7 @@
 {
   "name": "tracedot-desktop",
   "productName": "迹点点",
-  "version": "5.5.1",
+  "version": "5.5.2",
   "description": "迹点点 TraceDot 桌面端：单文件应用包装为原生窗口",
   "main": "main.js",
   "private": true,
@@ -36,7 +36,8 @@
     },
     "win": {
       "target": [
-        { "target": "nsis", "arch": ["x64"] }
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "zip", "arch": ["x64"] }
       ]
     },
     "nsis": {
