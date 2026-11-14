@@ -85,7 +85,7 @@
       window.jddDownloadLine = prefix || '';
     }
 
-    /* 探测目标用同一次发布里的 latest.yml（几百字节），
+    /* 探测目标用同一次发布里的 latest.yml（体积很小），
        404 也证明线路是通的 */
     function testUrl(prefix) {
       var u = nodes[0].getAttribute('data-gh');

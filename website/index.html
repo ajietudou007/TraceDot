@@ -1,493 +1,623 @@
 <!DOCTYPE html>
-<html lang="zh-CN" class="scroll-smooth">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>迹点点 TraceDot · 旅行纪念票根工作室</title>
-<meta name="description" content="迹点点 TraceDot：把火车票、登机牌、城市交通与演出门票整理成一张属于你的旅途地图。纯前端、在线即用、数据不出浏览器。">
-<meta name="theme-color" content="#F1EDE6">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="glass.css?v=81ff73352a">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23F3EB30'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23202020' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23202020' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23202020'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23202020'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23202020'/%3E%3C/svg%3E">
+<title>迹点点 TraceDot · 把每一次出发，变成一张会讲故事的票根</title>
+<meta name="description" content="迹点点 TraceDot V5.5.2：四大工坊、十种票面，把车票、登机牌、城市交通与影演票收进一本珍藏册；本地优先存储，可选账号与零知识加密备份，跨设备恢复。">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232E7FF2'/%3E%3Cstop offset='1' stop-color='%231E66D0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Ccircle cx='31' cy='67' r='9.8' fill='none' stroke='%23fff' stroke-width='5.9'/%3E%3Ccircle cx='69.5' cy='32.5' r='9.8' fill='none' stroke='%23fff' stroke-width='5.9'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23fff'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23fff'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/jdd.css">
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════════════════════════
-     液态玻璃折射引擎（SVG filter）
-     原理：backdrop-filter 的 blur/saturate 等 10 个函数只能改颜色与清晰度，
-     没有一个能「移动像素」——所以纯 backdrop-filter 永远是毛玻璃。
-     真实折射（Apple Liquid Glass 的定义性特征）必须用 feDisplacementMap：
-       feTurbulence 生成有机噪声 → feGaussianBlur 柔化成水波
-       → feDisplacementMap 按 R/G 通道把背景像素推开。
-     低频 baseFrequency(0.008 0.012) = 大尺度液面涌动（非细碎磨砂）；
-     scale 30 = 边缘可见的折射位移；filter region 放宽 25% 防止边缘硬切。
-     Chromium 支持 backdrop-filter:url()，Safari/Firefox 不支持
-     → CSS 侧用 @supports 门控，失败则回退 frosted 版（不丢 blur）。
-     ══════════════════════════════════════════════════════════════════ -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <defs>
-    <filter id="lg-refract" x="-25%" y="-25%" width="150%" height="150%"
-            color-interpolation-filters="sRGB">
-      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.012"
-                    numOctaves="2" seed="7" result="noise"/>
-      <feGaussianBlur in="noise" stdDeviation="6" result="liquid"/>
-      <feDisplacementMap in="SourceGraphic" in2="liquid" scale="30"
-                         xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </defs>
-</svg>
-
-<!-- ══════════════════════════════════════════════════════════════
-     极光光场：两层不同速度的流动光带，低透明度、避开中央内容区。
-     只动 transform（合成层），不用 blur filter，不参与内容层叠。
-     ══════════════════════════════════════════════════════════════ -->
-<div class="aurora" aria-hidden="true">
-  <div class="aurora-band ab-1"></div>
-  <div class="aurora-band ab-2"></div>
-  <div class="aurora-band ab-3"></div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════════
-     液态玻璃导航层（浮于内容之上，不参与内容层叠）
-     ══════════════════════════════════════════════════════════════ -->
-<div class="navwrap">
-  <header class="glass-nav" id="topnav">
-    <a href="#home" class="brand">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23F3EB30'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23202020' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23202020' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23202020'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23202020'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23202020'/%3E%3C/svg%3E" alt="迹点点 Logo" class="brand-logo">
-      <span class="brand-name">迹点点</span>
-      <span class="brand-ver">V5.5.2</span>
+<!-- ══════════ 导航 ══════════ -->
+<header class="site-nav" id="siteNav">
+  <div class="shell">
+    <a href="#top" class="brandmark" aria-label="迹点点首页">
+      <img src="ic_brand_logo.png" alt="" width="34" height="34" decoding="async">
+      <span class="bm-txt"><b>迹点点</b><i>TRACEDOT</i></span>
+      <span class="ver-tag">V5.5.2</span>
     </a>
-
-    <nav class="nav-links" id="navLinks">
-      <a href="#home" class="on">首页</a>
-      <a href="#metrics">数据看板</a>
-      <a href="#modules">功能模块</a>
-      <a href="#features">技术亮点</a>
+    <nav class="nav-links" aria-label="主导航">
+      <a href="#news">新版本</a>
+      <a href="#studios">工坊</a>
+      <a href="#modules">能力</a>
+      <a href="#privacy">数据与云端</a>
+      <a href="#client">客户端</a>
+      <a href="#download">下载</a>
       <a href="changelog.html">更新日志</a>
-      <a href="#privacy">隐私说明</a>
-      <a href="#credits">致谢</a>
-      <a href="#creator">关于作者</a>
     </nav>
-
-    <div class="nav-actions">
-      <a href="https://github.com/ajietudou007/TraceDot" target="_blank" rel="noopener" class="icon-btn" title="GitHub 源码">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+    <div class="nav-cta">
+      <a class="icon-link" href="https://github.com/ajietudou007/TraceDot" target="_blank" rel="noopener" title="GitHub 源码" aria-label="GitHub 源码">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
       </a>
-      <a href="#download" class="glass-btn-primary">下载客户端
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
-      </a>
-      <button class="burger" id="burger" aria-label="展开菜单" aria-expanded="false">
-        <span></span><span></span>
-      </button>
+      <a class="btn btn-primary btn-sm" href="#download">下载客户端</a>
+      <button class="burger" id="burger" aria-label="展开菜单" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span></button>
     </div>
-  </header>
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="#home">首页</a>
-    <a href="#metrics">数据看板</a>
-    <a href="#modules">功能模块</a>
-    <a href="#features">技术亮点</a>
-    <a href="changelog.html">更新日志</a>
-    <a href="#privacy">隐私说明</a>
-    <a href="#credits">致谢</a>
-    <a href="#creator">关于作者</a>
-    <a href="#download" class="mm-primary">下载客户端</a>
   </div>
+</header>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#news">新版本</a>
+  <a href="#studios">四大工坊</a>
+  <a href="#modules">能力</a>
+  <a href="#privacy">数据与云端</a>
+  <a href="#client">客户端</a>
+  <a href="#download">下载</a>
+  <a href="changelog.html">更新日志</a>
+  <a href="#download" class="mm-primary">下载客户端 V5.5.2</a>
 </div>
 
-<main id="home">
+<main id="top">
 
-  <!-- ══════════════ Hero：液态玻璃票面主视觉 ══════════════ -->
-  <section class="hero">
-    <div class="hero-grid">
-      <div class="hero-copy">
-        <div class="chip-live">
-          <span class="dot"></span>
-          <span class="mono">TRACEDOT V5.5.2</span>
-          <span class="sep"></span>
-          <span>纯前端 · 在线即用 · 数据零外传</span>
-        </div>
+<!-- ══════════ Hero：中央 Logo + 环绕轨道 ══════════ -->
+<section class="hero">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="hero-grid-lines" aria-hidden="true"></div>
 
-        <h1 class="hero-title">
-          把每一次出发，<br>
-          化作一张 <em class="grad">温润可触</em> 的记忆。
-        </h1>
+  <div class="shell hero-inner">
+    <span class="eyebrow">
+      <span class="pulse"></span>
+      <span>TRACEDOT V5.5.2</span>
+      <span class="sep"></span>
+      <span class="light">本地优先 · 云端备份可选 · 开源</span>
+    </span>
 
-        <p class="hero-lead">
-          将火车票、登机牌、城市公共交通、演出门票与船票整理汇聚成一张专属的时光旅行地图，
-          并在年底生成一份属于你的年度报告。纯本地运行，在线打开即用。
-        </p>
+    <h1>把每一次出发，<br>收进一张<em>会讲故事</em>的票根。</h1>
+    <p class="hero-lead">
+      火车票、登机牌、公交地铁、出租、客运、船票、电影票、景区门票与演唱会入场券，
+      四大工坊用<b>十种票面</b>把它们收进同一个地方；珍藏册、行程地图与年度回顾，
+      再把这些票根讲成一条只属于你的路线。不登录也能完整使用，需要换设备时再开云端备份。
+    </p>
 
-        <div class="hero-tags">
-          <span class="tag">自绘矢量航迹地图</span>
-          <span class="tag">12306 / 登机牌 / 交通 / 影演</span>
-          <span class="tag tag-hl">年度报告（V5 新增）</span>
-        </div>
+    <div class="orbit-stage">
+      <div class="orbit-tilt" id="orbitTilt">
+        <div class="orbit" role="img" aria-label="迹点点能力环绕图：火车票、登机牌、城市交通、影演票、珍藏册与年度报告围绕品牌标识缓慢旋转">
+          <div class="orbit-ticks" aria-hidden="true"></div>
+          <div class="ring r1" aria-hidden="true"></div>
+          <div class="ring r2" aria-hidden="true"></div>
+          <div class="ring r3" aria-hidden="true"></div>
 
-        <div class="hero-cta">
-          <a href="#download" class="glass-btn-primary lg">
-            立即下载体验
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-          </a>
-          <a href="https://jidiandian.top/app/" target="_blank" rel="noopener" class="glass-btn lg">浏览器在线打开 <span class="arr">↗</span></a>
-        </div>
-
-        <div class="hero-assure">
-          <span>无服务器上传</span><span>零商业依赖</span><span>开源透明</span>
-        </div>
-      </div>
-
-      <!-- 液态玻璃票面展台 -->
-      <div class="hero-stage">
-        <div class="glass-card stage">
-          <div class="stage-aura"></div>
-
-          <div class="stage-head">
-            <div class="stage-head-l">
-              <div class="stage-ico">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-              </div>
-              <div>
-                <div class="stage-kicker">TRIP ARCHIVE <span class="mini-ver">V5.5.2</span></div>
-                <div class="stage-sub">10 种票面 · 32 套纪念票面 · 液态玻璃档案库</div>
+          <div class="spin" style="--dur:66s" aria-hidden="true">
+            <div class="node" style="--a:0deg;--rad:calc(var(--o) * var(--rr,.4));--dimd:0s">
+              <div class="node-in" style="--dur:66s">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6.4" width="16" height="11.2" rx="2"/><path d="M4 10.4h16"/><path d="M8.6 14.4h4"/></svg>
+                <b>火车票</b><span class="n-sub">12306 双票面</span>
               </div>
             </div>
-            <div class="live-pill"><span class="dot"></span>LIVE STUDIO</div>
+            <div class="node" style="--a:60deg;--rad:calc(var(--o) * var(--rr,.4));--dimd:-11s">
+              <div class="node-in" style="--dur:66s">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.6 15.6 21.4 8.4l-2.2 5.2-8.4 3.4-2.8 3.2-1-3.4z"/></svg>
+                <b>登机牌</b><span class="n-sub">8500+ 机场</span>
+              </div>
+            </div>
+            <div class="node" style="--a:120deg;--rad:calc(var(--o) * var(--rr,.4));--dimd:-22s">
+              <div class="node-in" style="--dur:66s">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6.4" y="3.2" width="11.2" height="17.6" rx="3"/><path d="M9.6 7.4h4.8"/><path d="M9.6 17h4.8"/></svg>
+                <b>城市交通</b><span class="n-sub">5 种票据</span>
+              </div>
+            </div>
+            <div class="node" style="--a:180deg;--rad:calc(var(--o) * var(--rr,.4));--dimd:-33s">
+              <div class="node-in" style="--dur:66s">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.4h16v12H4z"/><path d="M4 10h16"/><path d="M8.4 14.2h3.2"/></svg>
+                <b>影演票</b><span class="n-sub">电影 / 景区 / 演出</span>
+              </div>
+            </div>
+            <div class="node" style="--a:240deg;--rad:calc(var(--o) * var(--rr,.4));--dimd:-44s">
+              <div class="node-in" style="--dur:66s">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 4.6h6v15h-6z"/><path d="M13.4 4.6h6v15h-6z"/><path d="M6.6 8.2h2"/></svg>
+                <b>珍藏册</b><span class="n-sub">编年史时间轴</span>
+              </div>
+            </div>
+            <div class="node" style="--a:300deg;--rad:calc(var(--o) * var(--rr,.4));--dimd:-55s">
+              <div class="node-in" style="--dur:66s">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 19.4V13"/><path d="M9.6 19.4V8.6"/><path d="M14.8 19.4v-4.8"/><path d="M20 19.4V5.4"/></svg>
+                <b>年度报告</b><span class="n-sub">12 格热力</span>
+              </div>
+            </div>
           </div>
 
-          <!-- 立体票面层叠 -->
-          <div class="stage-planes">
-            <div class="plane-bg p1"></div>
-            <div class="plane-bg p2"></div>
-
-            <!-- 登机牌 -->
-            <article class="tk plane" style="--tk-a:#F0752A;--tk-b:#2F6BD8">
-              <div class="tk-band"></div>
-              <div class="tk-body">
-                <div class="tk-row top">
-                  <span class="tk-air">CHINA AIR <b>MU5108</b></span>
-                  <span class="tk-en">ELECTRONIC BOARDING PASS</span>
-                </div>
-                <div class="tk-route">
-                  <div class="tk-port"><b>PEK</b><i>北京首都 T2</i></div>
-                  <div class="tk-flight"><span>3h 15m</span>
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
-                  </div>
-                  <div class="tk-port r"><b>CTU</b><i>成都双流 T2</i></div>
-                </div>
-              </div>
-            </article>
-
-            <!-- 12306 高铁票 -->
-            <article class="tk train" style="--tk-a:#F0752A;--tk-b:#E0681F">
-              <div class="tk-sheen"></div>
-              <div class="tk-grain"></div>
-              <div class="tk-row top">
-                <span class="tk-no">G082341 <i>12306 客票</i></span>
-                <span class="tk-rail">中国铁路高速 <i>CRH</i></span>
-              </div>
-              <div class="tk-route big">
-                <div class="tk-port"><b>昆明南</b><i>Kunmingnan</i></div>
-                <div class="tk-train"><b>G2884</b><span class="tk-arrow">―――▶</span><i>4小时36分</i></div>
-                <div class="tk-port r"><b>重庆西</b><i>Chongqingxi</i></div>
-              </div>
-              <div class="tk-meta">
-                <span>2026年09月16日 <b>10:24开</b></span>
-                <span><b>02车11F号</b> 二等座</span>
-              </div>
-              <div class="tk-foot">
-                <div><b class="price">￥381.0<span>元</span></b><i>530102********1234 李*</i><i>限乘当日当次车 · 仅供报销凭证</i></div>
-                <div class="tk-code"><i>检票 12B</i>
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm13-2h3v3h-3v-3zm0 5h3v3h-3v-3zm-3-5h2v2h-2v-2zm0 4h2v4h-2v-4zm5-2h2v5h-2v-5z"/></svg>
-                </div>
-              </div>
-            </article>
+          <div class="core" aria-hidden="true">
+            <div class="core-tile">
+              <img src="ic_brand_logo.png" alt="" width="192" height="192" decoding="async">
+            </div>
           </div>
 
-          <div class="stage-stats">
-            <div><b>10</b><i>种票面支持</i></div>
-            <div><b>32</b><i>套纪念票面</i></div>
-            <div><b>2,478<span>km</span></b><i>示例累计旅程</i></div>
-            <div><b>100%</b><i>纯本地存储</i></div>
-          </div>
+        </div>
+      </div>
+    </div>
 
-          <div class="stage-foot">
-            <span><b>✓</b> 离线双保险引擎激活</span>
-            <span class="mono-chip">IndexedDB OK</span>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#download">
+        下载客户端 V5.5.2
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6v11.6"/><path d="M7.4 10.8 12 15.4l4.6-4.6"/><path d="M4.6 19.4h14.8"/></svg>
+      </a>
+      <a class="btn btn-line" href="https://jidiandian.top/app/" target="_blank" rel="noopener">
+        在线打开网页端
+        <span class="arr">↗</span>
+      </a>
+    </div>
+
+    <div class="hero-assure">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg>不登录也能完整使用</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg>云端备份零知识加密</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg>MIT 开源 · 可自行构建</span>
+    </div>
+  </div>
+
+  <div class="hero-hint" aria-hidden="true"><i></i>SCROLL<i></i></div>
+</section>
+
+<!-- ══════════ 本版更新 ══════════ -->
+<section class="sec" id="news">
+  <div class="shell">
+    <div class="news-panel reveal">
+      <div class="news-left">
+        <div class="news-meta">
+          <span class="kicker">Latest release</span>
+          <span class="ver-tag">V5.5.2</span>
+          <span class="news-date">2026-11-13</span>
+        </div>
+        <h2 class="h2">这一版把「内测申请」接了回来，<br>开放的是<em>安卓端 V6</em>。</h2>
+        <p class="lead">
+          网页端、桌面端与安卓端在「我的 → 更多 → 申请内测版」重新开放申请，填写用途、通知邮箱与关注情况即可提交，
+          提交后进入后台审批队列。申请页会显示待审、通过、拒绝或撤销状态；通过后可直接获取安卓 V6 内测包。
+          <b>这一轮申请的是安卓端 V6（6.0.1）内测，网页端与桌面端没有内测包。</b>
+          V5.5.2 自身仍走正式更新通道。
+        </p>
+        <div class="news-foot">
+          <span class="news-pill">网页 / 桌面 / 安卓 · 统一 V5.5.2</span>
+          <a class="sec-link" href="changelog.html#v5-5-2">查看完整条目 <span>↗</span></a>
+        </div>
+      </div>
+      <div class="news-right">
+        <div class="news-list">
+          <div class="news-item">
+            <span class="ni-no">01</span>
+            <div><b>入口回到原来的位置</b><p>三端都回到「我的 → 更多 → 申请内测版」，位置、文案与字段和 V5.4.x 保持一致，没有新造一套界面。</p></div>
+          </div>
+          <div class="news-item">
+            <span class="ni-no">02</span>
+            <div><b>审批状态看得见</b><p>提交后可查看待审 / 通过 / 拒绝 / 撤销；被拒绝或撤销后，新版本可以重新申请。</p></div>
+          </div>
+          <div class="news-item">
+            <span class="ni-no">03</span>
+            <div><b>通过后直接下载内测包</b><p>已通过或已授权用户会拿到安卓 V6 内测包的下载地址，不需要再私下要链接。</p></div>
+          </div>
+          <div class="news-item">
+            <span class="ni-no">04</span>
+            <div><b>正式版不受影响</b><p>V5.5.2 不切换本机内测通道；激活码校验、强制更新与站内消息照常工作。旧版本会被要求升级到 V5.5.2。</p></div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ══════════════ V5 全新能力 ══════════════ -->
-  <section class="wrap" id="whatsnew">
-    <div class="glass-card pad">
-      <div class="sec-head">
-        <div>
-          <span class="chip">V5.5.2 · WHAT'S NEW</span>
-          <h2>恢复「申请内测版」，申请目标为安卓端 6.0.1 内测</h2>
-          <p class="sec-lead">三端恢复 5.4.x 的「我的 → 更多 → 申请内测版」入口：填用途、通知邮箱与抖音关注情况，提交后走 <b>/api/beta/apply</b> 生成待审记录，后台「内测审批」实时可见；通过后可在申请页看到审批状态与安卓端内测包下载地址。本次申请的是<b>安卓端 6.0.1 内测</b>，桌面端与网页端没有内测包；V5.5.2 自身仍走正式更新通道，不切换内测通道。</p>
-        </div>
-        <a href="changelog.html" class="glass-btn">查看完整更新日志 <span class="arr">↗</span></a>
-      </div>
-
-      <div class="grid-4">
-        <article class="mini">
-          <span class="mini-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4v11.4"/><path d="M7.6 10.6 12 15l4.4-4.4"/><path d="M4.6 18.6v.6a1.8 1.8 0 0 0 1.8 1.8h11.2a1.8 1.8 0 0 0 1.8-1.8v-.6"/></svg></span>
-          <div class="mini-t">恢复「申请内测版」入口 <b class="badge new">恢复</b></div>
-          <p>网页端、桌面端与安卓端统一回到「我的 → 更多 → 申请内测版」，位置、文案、字段与 V5.4.x 一致，不另造一套 UI。</p>
-        </article>
-
-        <article class="mini">
-          <span class="mini-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6.4" y="2.8" width="11.2" height="18.4" rx="2.4"/><path d="M10.6 18.6h2.8"/></svg></span>
-          <div class="mini-t">申请目标：安卓端 6.0.1 内测 <b class="badge">Android</b></div>
-          <p>弹窗明确提示本次申请的是安卓端内测，桌面与网页没有内测包；提交仍走 <b>/api/beta/apply</b>，后台「内测审批」实时出现待审记录。</p>
-        </article>
-
-        <article class="mini">
-          <span class="mini-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/><path d="M20.2 12.4 9.6 23 4.2 17.6" opacity=".45"/></svg></span>
-          <div class="mini-t">通过后看状态与下载地址 <b class="badge">/api/beta/status</b></div>
-          <p>已通过 / 已授权用户打开申请页即可看到审批状态，并直接拿到 6.0.1 安卓内测包下载地址，不用再去别处找。</p>
-        </article>
-
-        <article class="mini">
-          <span class="mini-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8 20 6v5.9c0 4.5-3.3 7.9-8 9.2-4.7-1.3-8-4.7-8-9.2V6z"/><path d="M8.8 11.9 11.4 14.5l3.9-4.6"/></svg></span>
-          <div class="mini-t">V5.5.2 仍走正式通道 <b class="badge">不切内测</b></div>
-          <p>只恢复申请与状态展示，不恢复会把整条链接短路的内测切换逻辑；激活码云端校验与强制更新门禁保持不变。</p>
-        </article>
-
-        <article class="mini">
-          <span class="mini-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="5" width="14.8" height="15.4" rx="2.4"/><path d="M9.2 5V4a1.4 1.4 0 0 1 1.4-1.4h2.8A1.4 1.4 0 0 1 14.8 4v1"/><path d="M8.6 11.2h6.8"/><path d="M8.6 15.2h4.4"/></svg></span>
-          <div class="mini-t">粘贴即录入</div>
-          <p>把 12306 短信或订单邮件正文整段贴进工坊即自动填票，支持多种区间写法与订单号识别。</p>
-        </article>
-
-        <article class="mini">
-          <span class="mini-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6.2" rx="7.4" ry="3.2"/><path d="M4.6 6.2v11.6c0 1.77 3.31 3.2 7.4 3.2s7.4-1.43 7.4-3.2V6.2"/><path d="M4.6 12c0 1.77 3.31 3.2 7.4 3.2s7.4-1.43 7.4-3.2"/></svg></span>
-          <div class="mini-t">数据不再悄悄丢 <b class="badge">IndexedDB</b></div>
-          <p>账本迁入 IndexedDB 主存 + localStorage 镜像，不再撞 5MB 墙；导入前自动快照，回滚可撤销。</p>
-        </article>
-
-        <article class="mini">
-          <span class="mini-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4v11.4"/><path d="M7.6 10.6 12 15l4.4-4.4"/><path d="M4.6 18.6v.6a1.8 1.8 0 0 0 1.8 1.8h11.2a1.8 1.8 0 0 0 1.8-1.8v-.6"/></svg></span>
-          <div class="mini-t">老备份导得进来</div>
-          <p>备份解析器认得 V4 与手机端旧结构，老用户不再被「格式不支持」挡在门外，草稿自动迁移。</p>
-        </article>
-
-        <article class="mini">
-          <span class="mini-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8 20 6v5.9c0 4.5-3.3 7.9-8 9.2-4.7-1.3-8-4.7-8-9.2V6z"/><path d="M8.8 11.9 11.4 14.5l3.9-4.6"/></svg></span>
-          <div class="mini-t">安全评审与加固</div>
-          <p>修掉一处可被恶意备份触发的存储型 XSS，补上导入体积与条数上限，联网识别时明确提示照片将上传。</p>
-        </article>
-      </div>
+<!-- ══════════ 数字带 ══════════ -->
+<section class="stats-band" aria-label="关键数据">
+  <div class="shell">
+    <div class="stats-grid">
+      <div class="stat"><b>10<span>种</span></b><i>票面版式</i></div>
+      <div class="stat"><b>4<span>大</span></b><i>制作工坊</i></div>
+      <div class="stat"><b>3<span>份</span></b><i>云端备份版本</i></div>
+      <div class="stat"><b><em>100%</em></b><i>MIT 开源</i></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ══════════════ 数据看板 ══════════════ -->
-  <section class="wrap" id="metrics">
-    <div class="glass-card pad">
-      <div class="metrics-grid">
-        <div class="metrics-l">
-          <span class="chip">THE ESSENTIALS</span>
-          <h2>一份极其轻巧的工具，<br>装下整段远方旅程。</h2>
-          <p class="sec-lead">从生成第一张复古火车票，到翻开整本珍藏册、再到年底回看一整年的年度报告。八个模块都收在同一个界面里，过去繁重复杂的整理与绘图操作，全部化作轻柔流畅的指尖体验。</p>
-        </div>
-        <div class="metrics-cards">
-          <div class="metric"><span class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 2.2 4.6 13.4h5.9l-.9 8.4 8.8-11.4h-6z"/></svg></span><b>0</b><i>运行时依赖</i></div>
-          <div class="metric"><span class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 7.4h15.2a1 1 0 0 1 1 1v1.9a1.85 1.85 0 0 0 0 3.7v1.9a1 1 0 0 1-1 1H4.4a1 1 0 0 1-1-1v-1.9a1.85 1.85 0 0 0 0-3.7V8.4a1 1 0 0 1 1-1z"/><path d="M14.6 7.4v9.6" stroke-dasharray="2 2.2"/></svg></span><b>10</b><i>种票面支持</i></div>
-          <div class="metric"><span class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="3.6" width="6.8" height="6.8" rx="1.6"/><rect x="13.6" y="3.6" width="6.8" height="6.8" rx="1.6"/><rect x="3.6" y="13.6" width="6.8" height="6.8" rx="1.6"/><rect x="13.6" y="13.6" width="6.8" height="6.8" rx="1.6"/></svg></span><b>8</b><i>大功能模块</i></div>
-          <div class="metric"><span class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><b>100%</b><i>数据本地化</i></div>
-        </div>
+<!-- ══════════ 四大工坊 ══════════ -->
+<section class="sec" id="studios">
+  <div class="shell">
+    <div class="sec-head reveal">
+      <div>
+        <span class="kicker">Four studios · ten ticket types</span>
+        <h2 class="h2">四大工坊，<em>十种票面</em></h2>
+        <p class="lead">票面不是一张通用模板换个标题。每类票据的字段、版式、条码与导出规格都单独做过，填进去的信息才对得上真实票据。</p>
       </div>
-    </div>
-  </section>
-
-  <!-- ══════════════ 八大功能模块 ══════════════ -->
-  <section class="wrap" id="modules">
-    <div class="sec-center">
-      <span class="chip">THE WORKSPACE · 8 MODULES</span>
-      <h2>八大功能模块，收录你的每一次抵达</h2>
-      <p class="sec-lead wide">从一张泛黄的火车软纸票，到跨越重洋的登机牌、散落各地的城市地铁票，再到年末那份只讲你自己的年度回顾。</p>
+      <a class="sec-link" href="https://jidiandian.top/app/" target="_blank" rel="noopener">在线试用 <span>↗</span></a>
     </div>
 
-    <div class="grid-4">
-      <article class="glass-card mod">
-        <div class="mod-top"><span class="mod-no">01</span><span class="mod-en">MAP &amp; ROUTES</span></div>
-        <h3>行程地图</h3>
-        <p>全境底图自动绘制，铁路实线、航班虚线航路，到访城市逐一点亮；筛选即时联动，直辖市按省域整片点亮。</p>
-        <div class="mod-foot"><span>全国站名 &amp; 机场坐标 · 筛选联动</span><span>→</span></div>
-      </article>
-
-      <article class="glass-card mod">
-        <div class="mod-top"><span class="mod-no">02</span><span class="mod-en">AI PLANNER</span></div>
-        <h3>我的旅游计划</h3>
-        <p>对话式 AI 规划：实时查景点、酒店与天气，按天生成时间轴与行李清单，支持多轮自然语言调整，最长 15 天。</p>
-        <div class="mod-foot"><span>高德 API + 智能推演 · 最长 15 天</span><span>→</span></div>
-      </article>
-
-      <article class="glass-card mod">
-        <div class="mod-top"><span class="mod-no">03</span><span class="mod-en">TRAIN TICKET</span></div>
+    <div class="studios reveal">
+      <article class="studio">
+        <div class="st-top"><span class="st-no">STUDIO 01</span><span class="st-count">1 种</span></div>
+        <div class="st-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6.4" width="16" height="11.2" rx="2"/><path d="M4 10.4h16"/><path d="M8.6 14.4h4"/></svg></div>
         <h3>火车票工坊</h3>
-        <p>12306 经典与现代双风格，八款底图；支持 PDF / OCR 导入与高清导出，粘贴短信正文即自动填票。</p>
-        <div class="mod-foot"><span>8 款版画底纸 · 粘贴即录入</span><span>→</span></div>
+        <p>12306 经典与现代双票面、8 款底纸；粘贴短信、导入 PDF 或识别照片，都能把车次、席别、票价与检票口填回票面，再导出高清图。</p>
+        <div class="tchips"><span class="tchip hot">火车票</span></div>
       </article>
 
-      <article class="glass-card mod">
-        <div class="mod-top"><span class="mod-no">04</span><span class="mod-en">BOARDING PASS</span></div>
+      <article class="studio">
+        <div class="st-top"><span class="st-no">STUDIO 02</span><span class="st-count">1 种</span></div>
+        <div class="st-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.6 15.6 21.4 8.4l-2.2 5.2-8.4 3.4-2.8 3.2-1-3.4z"/><path d="M15.4 12.2 18 17"/></svg></div>
         <h3>登机牌工坊</h3>
-        <p>全球 8500+ 机场与航司二字码联想，纸质扫描件 AI 转录回填；条码为真 PDF417 + BCBP，可被扫码枪读出。</p>
-        <div class="mod-foot"><span>OurAirports 数据库 · PDF417</span><span>→</span></div>
+        <p>8500+ 机场与航司二字码联想，纸质登机牌可识别转录；条码按真实 PDF417 与 BCBP 规格生成，扫码枪能读。</p>
+        <div class="tchips"><span class="tchip hot">登机牌</span></div>
       </article>
 
-      <article class="glass-card mod">
-        <div class="mod-top"><span class="mod-no">05</span><span class="mod-en">TRANSIT TICKETS</span></div>
-        <h3>交通票工坊</h3>
-        <p>公交、地铁（48 城全库）、出租、公路客运与船票，按像素规范还原城市交通记忆，条码为真 Code128。</p>
-        <div class="mod-foot"><span>48 城地铁 · 8000+ 站点 · 含船票</span><span>→</span></div>
+      <article class="studio">
+        <div class="st-top"><span class="st-no">STUDIO 03</span><span class="st-count">5 种</span></div>
+        <div class="st-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6.4" y="3.2" width="11.2" height="17.6" rx="3"/><path d="M9.6 7.4h4.8"/><path d="M9.6 17h4.8"/></svg></div>
+        <h3>交通票据工坊</h3>
+        <p>公交、地铁、出租、公路客运与船票五种版式；地铁覆盖 48 城 8000+ 站点，条码为真 Code128，不是装饰图形。</p>
+        <div class="tchips"><span class="tchip">公交</span><span class="tchip">地铁</span><span class="tchip">出租</span><span class="tchip">客运</span><span class="tchip">船票</span></div>
       </article>
 
-      <article class="glass-card mod">
-        <div class="mod-top"><span class="mod-no">06</span><span class="mod-en">VENUE &amp; CINEMA</span></div>
-        <h3>影演票工坊</h3>
-        <p>电影票、景区门票、演唱会入场券；OMDb 海报自动联动，全国 5400+ 景区库，叠加 SVG 纸张颗粒。</p>
-        <div class="mod-foot"><span>海报智能匹配 · 纸张颗粒</span><span>→</span></div>
-      </article>
-
-      <article class="glass-card mod">
-        <div class="mod-top"><span class="mod-no">07</span><span class="mod-en">CHRONICLE TIMELINE</span></div>
-        <h3>珍藏册 · 编年史</h3>
-        <p>把所有票据按行程正序串成编年史时间轴，按票种与城市筛选，一键导出高清原图与备份。</p>
-        <div class="mod-foot"><span>CSV / ICS / 备份 JSON</span><span>→</span></div>
-      </article>
-
-      <article class="glass-card mod new">
-        <span class="mod-badge">V5 NEW</span>
-        <div class="mod-top"><span class="mod-no">08</span><span class="mod-en">YEAR IN REVIEW</span></div>
-        <h3>年度报告</h3>
-        <p>总里程、到访城市、12 格月度热力、最远单程与准点率，一次看完一整年。</p>
-        <div class="mod-foot"><span>12 格热力 · 榜单 · 准点率</span><span>→</span></div>
+      <article class="studio">
+        <div class="st-top"><span class="st-no">STUDIO 04</span><span class="st-count">3 种</span></div>
+        <div class="st-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.4h16v12H4z"/><path d="M4 10h16"/><path d="M8.4 14.2h3.2"/></svg></div>
+        <h3>影演票据工坊</h3>
+        <p>电影票、景区门票与演唱会入场券；电影海报联动查询，景区接入全国 5400+ 景区资料，纸张颗粒与荧光油墨按实体票还原。</p>
+        <div class="tchips"><span class="tchip">电影</span><span class="tchip">景区</span><span class="tchip">演唱会</span></div>
       </article>
     </div>
-  </section>
 
-  <!-- ══════════════ 技术亮点 · 隐私 · 下载 ══════════════ -->
-  <section class="wrap" id="features">
-    <div class="grid-2">
-      <article class="glass-card pad" id="privacy">
-        <span class="chip">ARCHITECTURE &amp; PRIVACY</span>
-        <h2>你的数据，只属于你的浏览器</h2>
-        <p class="sec-lead">迹点点所有数据逻辑均在前端运行：无后台用户数据库、无账户绑定、无追踪。断网环境下所有制票与时间轴整理功能均可离线运行。</p>
+    <div class="ten-band reveal d2">
+      <div>
+        <h3>一张票，一种走法</h3>
+        <p>十种票面共用同一套珍藏册、行程地图与导出格式，不会因为票种不同变成十个孤岛。</p>
+      </div>
+      <div class="ten-list">
+        <span class="ten-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="6.4" width="16" height="11.2" rx="2"/></svg>火车票<i>铁路</i></span>
+        <span class="ten-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2.6 15.6 21.4 8.4l-2.2 5.2-8.4 3.4-2.8 3.2-1-3.4z"/></svg>登机牌<i>航空</i></span>
+        <span class="ten-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="5" width="14" height="14" rx="4"/></svg>公交<i>城市</i></span>
+        <span class="ten-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6.4" y="3.2" width="11.2" height="17.6" rx="3"/></svg>地铁<i>城市</i></span>
+        <span class="ten-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 16.4h16l-1.6-6H5.6z"/><circle cx="7.4" cy="18.4" r="1.4"/><circle cx="16.6" cy="18.4" r="1.4"/></svg>出租<i>城市</i></span>
+        <span class="ten-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8h16v8H4z"/><path d="M4 12h16"/></svg>客运<i>城市</i></span>
+        <span class="ten-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 14.6 18 9.4l-2 6.2H4z"/><path d="M4 18.4h16"/></svg>船票<i>城市</i></span>
+        <span class="ten-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.6 7.4h16.8v9H3.6z"/><path d="M8 12h4"/></svg>电影票<i>影演</i></span>
+        <span class="ten-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 18V9l8-4 8 4v9z"/><path d="M9 18v-5h6v5"/></svg>景区门票<i>影演</i></span>
+        <span class="ten-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4.4v15.2"/><path d="M6 5.4c5-2.4 7 2.4 12 0v8.2c-5 2.4-7-2.4-12 0"/></svg>演出票<i>影演</i></span>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <div class="stack">
-          <div class="stack-item"><span class="s-no">01</span><div><b>原生前端，零构建负担</b><p>原生 HTML / CSS / JS，无构建步骤；在线打开即用，桌面端与安卓端跑的是同一份界面。</p></div></div>
-          <div class="stack-item"><span class="s-no">02</span><div><b>IndexedDB 主存 + localStorage 镜像</b><p>V5 起账本以 IndexedDB 为主存、localStorage 为镜像，并用写入时间戳仲裁新旧；导出前的自动快照与一键回滚让误导入不再是单向操作。</p></div></div>
-          <div class="stack-item"><span class="s-no">03</span><div><b>本地多引擎 OCR 与 AI 转录</b><p>内置 PP-OCRv6 与 Tesseract.js 本地离线引擎，亦可按需使用多模态大模型一键提取纸质票面；V5 起选择联网引擎会明确提示照片将上传。</p></div></div>
-          <div class="stack-item"><span class="s-no">04</span><div><b>V5 安全评审与加固</b><p>修复一处可由恶意备份触发的存储型 XSS，加入导入体积与条数上限、三条低风险 CSP 指令，制票与时间轴整理依旧全程离线。</p></div></div>
-        </div>
+<!-- ══════════ 能力模块 ══════════ -->
+<section class="sec" id="modules" style="background:var(--surface);border-top:1px solid var(--line2);border-bottom:1px solid var(--line2)">
+  <div class="shell">
+    <div class="sec-head reveal">
+      <div>
+        <span class="kicker">Beyond the ticket</span>
+        <h2 class="h2">票根做完之后，<em>故事才刚开始</em></h2>
+        <p class="lead">从一本按时间翻的编年史，到一张点亮城市的行程地图，再到一份只讲你自己的年度回顾。所有入口都在同一个应用里。</p>
+      </div>
+      <a class="sec-link" href="changelog.html">看它一路如何长成 <span>↗</span></a>
+    </div>
 
-        <p class="fine">* 仅在联网查询海报或选择云端 AI 时经由用户授权发起安全请求</p>
+    <div class="mods three reveal">
+      <article class="mod">
+        <span class="mod-no">01</span><span class="mod-en">ALBUM</span>
+        <div class="mod-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 4.6h6v15h-6z"/><path d="M13.4 4.6h6v15h-6z"/><path d="M6.6 8.2h2"/></svg></div>
+        <h3>珍藏册</h3>
+        <p>所有票根按时间串成编年史，可按票种、年份与城市筛选；封面流快速翻，支持关键词搜索，导出 CSV、ICS 日历或完整 JSON 备份。</p>
+        <div class="mod-foot"><span>筛选 · 搜索 · 导出</span><span>→</span></div>
       </article>
 
-      <article class="glass-card pad tint" id="download">
-        <div class="dl-head">
-          <span class="chip">ANDROID + DESKTOP</span>
-          <span class="mono">安卓 V5.5.2 · 桌面 V5.5.2</span>
+      <article class="mod">
+        <span class="mod-no">02</span><span class="mod-en">MAP</span>
+        <div class="mod-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s6.4-5.6 6.4-11A6.4 6.4 0 0 0 5.6 10c0 5.4 6.4 11 6.4 11z"/><circle cx="12" cy="10" r="2.2"/></svg></div>
+        <h3>行程地图</h3>
+        <p>去过的城市在地图上点亮，铁路画实线、航班画虚线；按月筛选，全屏查看，导出一张能直接发出去的路线图。</p>
+        <div class="mod-foot"><span>城市点亮 · 线路还原</span><span>→</span></div>
+      </article>
+
+      <article class="mod">
+        <span class="mod-no">03</span><span class="mod-en">REVIEW</span>
+        <div class="mod-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 19.4V13"/><path d="M9.6 19.4V8.6"/><path d="M14.8 19.4v-4.8"/><path d="M20 19.4V5.4"/></svg></div>
+        <h3>年度回顾</h3>
+        <p>年度城市与省份、12 格月度热力、最远单程、花费与出行节奏，自动整理成一份年度之最，一键导出长图留档。</p>
+        <div class="mod-foot"><span>12 格热力 · 年度之最</span><span>→</span></div>
+      </article>
+
+      <article class="mod">
+        <span class="mod-no">04</span><span class="mod-en">PLAN</span>
+        <div class="mod-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.6h11.4l2.6 2.6v12.2H5z"/><path d="M8.2 9h7.6"/><path d="M8.2 12.6h7.6"/><path d="M8.2 16.2h4.4"/></svg></div>
+        <h3>旅游计划</h3>
+        <p>说清目的地、天数、同行人与预算，AI 先给一份能逐天修改的草稿；每日时间轴、天气预估与行李清单跟着一起生成。草稿永远可改，不会被锁死。</p>
+        <div class="mod-foot"><span>内置 Agnes 3.0 · 可改草稿</span><span>→</span></div>
+      </article>
+
+      <article class="mod">
+        <span class="mod-no">05</span><span class="mod-en">RAILGO</span>
+        <div class="mod-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3.4" width="14" height="14" rx="3.4"/><path d="M5 9.4h14"/><path d="M8.6 21l2-3.6"/><path d="M15.4 21l-2-3.6"/></svg></div>
+        <h3>铁路查询</h3>
+        <p>车次时刻、正晚点与车站大屏，动车组与车型图鉴连着实拍图集；制票前先查清楚，不用再切到别的应用。</p>
+        <div class="mod-foot"><span>时刻 · 正晚点 · 车型图鉴</span><span>→</span></div>
+      </article>
+
+      <article class="mod">
+        <span class="mod-no">06</span><span class="mod-en">MESSAGES</span>
+        <div class="mod-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.6h16v11.2H9.6L5.4 20v-3.2H4z"/><path d="M8.4 9.6h7.2"/><path d="M8.4 12.6h4.6"/></svg></div>
+        <h3>站内消息</h3>
+        <p>登录后接收官方通知与账号相关消息，未读状态会保留；点开消息直接跳到对应的版本、授权或申请页面。</p>
+        <div class="mod-foot"><span>官方通知 · 未读提醒</span><span>→</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 数据与云端 ══════════ -->
+<section class="sec alt" id="privacy">
+  <div class="shell">
+    <div class="split">
+      <div class="split-sticky reveal">
+        <span class="kicker">Local first · cloud optional</span>
+        <h2 class="h2">数据默认在你手里，<br><em>云端只是可选项</em>。</h2>
+        <p class="lead">
+          迹点点默认把票根存在本机：不登录也能完整制票、整理与导出。
+          登录之后才会出现云端能力——昵称头像同步、加密备份与跨设备恢复。
+          <b>每一步都由你主动触发，没有任何后台自动上传。</b>
+        </p>
+
+        <div class="leave-box">
+          <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4 21 19H3z"/><path d="M12 9v4.4"/><path d="M12 16.2v.2"/></svg>这几种情况，数据才会离开本机</h4>
+          <ul>
+            <li>你点「备份到云端」：只上传<b>加密后的备份包</b>，明文票根不会离开设备。</li>
+            <li>你登录账号：只同步<b>昵称与头像</b>，不会自动上传票根。</li>
+            <li>你主动使用联网功能：AI 识图、海报查询、AI 行程规划与铁路查询会发出查询请求。</li>
+            <li>你主动删除云端备份：服务端副本一并删除，<b>本机票根不受影响</b>。</li>
+          </ul>
+          <p class="fine">以上都不使用也可以一直离线：断网时制票、筛选与导出照常可用。</p>
         </div>
-        <h2>下载客户端，随时随地开启</h2>
-        <p class="sec-lead">安卓端是原生打包（Capacitor + WebView），桌面端是 Electron 轻量打包。<b>安卓端统一走全量覆盖更新：每次发版都是完整 APK，用户在「我的 → 版本更新」直接拿到最新版本的下载链接，覆盖安装即可，数据不丢失。</b>在线网页端、安卓端与桌面端数据格式完全一致，可随时互相导出导入。</p>
+      </div>
 
-        <h3 class="dl-sub">安卓 · V5.5.2</h3>
-        <div class="dl-grid">
-          <a href="https://jidiandian.top/app/jidiandian-5.5.2.apk?v=554" target="_blank" rel="noopener" class="dl-card">
-            <span class="dl-ico">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.2 8.4h9.6v8.1c0 .9-.7 1.6-1.6 1.6h-.7v2.2c0 .4-.3.7-.7.7s-.7-.3-.7-.7v-2.2H9.9v2.2c0 .4-.3.7-.7.7s-.7-.3-.7-.7v-2.2h-.7c-.9 0-1.6-.7-1.6-1.6V8.4zM4.4 8.6c.4 0 .7.3.7.7v4.9c0 .4-.3.7-.7.7s-.7-.3-.7-.7V9.3c0-.4.3-.7.7-.7zm15.2 0c.4 0 .7.3.7.7v4.9c0 .4-.3.7-.7.7s-.7-.3-.7-.7V9.3c0-.4.3-.7.7-.7zM8.3 7.2c.2-.9 1-1.7 2-2L9.7 4c0-.1 0-.2.1-.2l.5-.2c.1 0 .2 0 .2.1l.6 1.2c.6-.1 1.3-.1 1.9 0l.6-1.2c0-.1.1-.1.2-.1l.5.2c.1 0 .1.1.1.2l-.6 1.2c1 .3 1.8 1.1 2 2H8.3zm3.3 1.4c.2 0 .4-.2.4-.4s-.2-.4-.4-.4-.4.2-.4.4.2.4.4.4zm2.8 0c.2 0 .4-.2.4-.4s-.2-.4-.4-.4-.4.2-.4.4.2.4.4.4z"/></svg>
-            </span>
-            <span class="dl-txt"><b>安卓客户端</b><i>APK · Android 7.0 及以上 · V5.5.2</i></span>
-            <span class="dl-act">下载 ↓</span>
+      <div class="stack reveal d2">
+        <div class="stack-item">
+          <span class="s-no">01</span>
+          <div>
+            <b>本地优先</b>
+            <p>网页端把票根存在浏览器的 IndexedDB 并做一份 localStorage 镜像；安卓端存在应用私有数据库。断网也能制票、翻珍藏册和导出。</p>
+          </div>
+        </div>
+        <div class="stack-item">
+          <span class="s-no">02</span>
+          <div>
+            <b>账号只负责身份，不接管数据</b>
+            <p>登录后可同步昵称与头像，换设备看到的是同一个你。账号本身不保存票根，也不会因为退出登录而清空本机内容。</p>
+          </div>
+        </div>
+        <div class="stack-item">
+          <span class="s-no">03</span>
+          <div>
+            <b>零知识加密备份</b>
+            <p>备份在本机 gzip 压缩后用 AES-GCM 加密，密钥由账号密码经 PBKDF2（21 万次迭代）派生；服务端只保存密文，看不到密码、密钥和票面内容，最多保留 3 个版本。</p>
+          </div>
+        </div>
+        <div class="stack-item">
+          <span class="s-no">04</span>
+          <div>
+            <b>跨设备恢复与随时退出</b>
+            <p>新设备用密码解密恢复；忘记密码可用申请时生成的恢复码。恢复时云端较新的记录覆盖本地同名记录，本地独有记录保留；云端删除后同步删除。不备份、不登录都能正常使用。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="crypt-grid reveal">
+      <div class="crypt">
+        <b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="10" width="14.8" height="10" rx="2.4"/><path d="M8.4 10V7.6a3.6 3.6 0 0 1 7.2 0V10"/></svg>密码不上传</b>
+        <p>登录与备份都用派生密钥完成，明文密码不会写进任何请求。</p>
+      </div>
+      <div class="crypt">
+        <b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4 19.4 6v6c0 4.2-3 7.4-7.4 9-4.4-1.6-7.4-4.8-7.4-9V6z"/><path d="M8.8 12.2 11 14.4l4.2-4.4"/></svg>服务端只见密文</b>
+        <p>备份包在设备上完成加密，服务器只负责存储与版本管理。</p>
+      </div>
+      <div class="crypt">
+        <b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 7.4h14.8"/><path d="M9.4 7.4V4.6h5.2v2.8"/><path d="M6.6 7.4l1 12h8.8l1-12"/></svg>随时可删</b>
+        <p>删除云端备份会连同服务端副本一起清除，本机票根继续保留。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 客户端机制 ══════════ -->
+<section class="sec" id="client">
+  <div class="shell">
+    <div class="sec-head reveal">
+      <div>
+        <span class="kicker">License · update · messages</span>
+        <h2 class="h2">激活、更新与通知，<br><em>规则写在明面上</em></h2>
+        <p class="lead">客户端不是装完就失联。授权状态、版本门槛与官方通知都由云端统一管理，出现问题时也知道该去哪里看。</p>
+      </div>
+    </div>
+
+    <div class="mech-grid reveal">
+      <article class="mech">
+        <div class="mk-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.4" cy="12" r="3.6"/><path d="M12 12h8.4"/><path d="M17.4 12v2.6"/><path d="M20.4 12v1.8"/></svg></div>
+        <div>
+          <b>激活码在云端校验</b>
+          <p>激活码与账号绑定，在云端校验状态；后台可以停用、吊销或延期。网络异常时保留上一次的已激活状态，不会因为一次断网把人挡在门外。</p>
+          <span class="mk-tag">授权 · 停用 / 吊销 / 延期</span>
+        </div>
+      </article>
+
+      <article class="mech">
+        <div class="mk-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6v11.6"/><path d="M7.4 10.8 12 15.4l4.6-4.6"/><path d="M4.6 19.4h14.8"/></svg></div>
+        <div>
+          <b>强制更新门禁</b>
+          <p>应用读取发布清单判断版本；低于最低支持版本时必须升级后才能继续使用。覆盖安装保留本机票根，更新失败会保留上一次确认结果，不会误放行。</p>
+          <span class="mk-tag">版本门槛 · 覆盖安装不丢数据</span>
+        </div>
+      </article>
+
+      <article class="mech">
+        <div class="mk-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.6h16v11.2H9.6L5.4 20v-3.2H4z"/><path d="M8.4 9.6h7.2"/><path d="M8.4 12.6h4.6"/></svg></div>
+        <div>
+          <b>站内消息</b>
+          <p>官方通知、版本说明与账号相关消息在应用内送达，未读状态保留；打开消息可直接跳到对应的版本、授权或内测申请页面。</p>
+          <span class="mk-tag">官方通知 · 未读保留</span>
+        </div>
+      </article>
+
+      <article class="mech">
+        <div class="mk-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.8" width="10" height="18.4" rx="2.6"/><path d="M10.4 18.4h3.2"/></svg></div>
+        <div>
+          <b>安卓 V6 内测通道</b>
+          <p>V6.0 安卓端已用 Jetpack Compose 原生重写，目前通过内测申请分发。申请通过后单独下载内测包，与正式版更新互不影响。</p>
+          <span class="mk-tag">内测中 · 不影响正式版</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 下载 ══════════ -->
+<section class="sec" id="download">
+  <div class="shell">
+    <div class="dl-panel reveal">
+      <div class="dl-head">
+        <div>
+          <span class="kicker">Download</span>
+          <h2 class="h2">选一个平台，<br>把票根收进来。</h2>
+          <p class="lead">网页端免安装，安卓与桌面端为本地应用。当前正式版 <b>V5.5.2</b>；安卓 V6 原生版在内测，需在应用内申请。</p>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+          <span class="dl-badge"><i></i>STABLE · V5.5.2</span>
+          <span class="dl-line" id="dlLineHint"></span>
+        </div>
+      </div>
+
+      <div class="plat-grid">
+        <div class="plat">
+          <div class="pl-top"><b>网页端</b><span class="st">在线</span></div>
+          <p>浏览器直接打开，免安装；数据存在本机浏览器。</p>
+        </div>
+        <div class="plat">
+          <div class="pl-top"><b>桌面端</b><span class="st">V5.5.2</span></div>
+          <p>Windows 安装版 / 便携版，macOS Apple 芯片与 Intel。</p>
+        </div>
+        <div class="plat">
+          <div class="pl-top"><b>安卓端</b><span class="st">V5.5.2</span></div>
+          <p>正式版 APK，支持云端备份与跨设备恢复。</p>
+        </div>
+        <div class="plat">
+          <div class="pl-top"><b>安卓 V6</b><span class="st beta">内测</span></div>
+          <p>Jetpack Compose 原生重写，独立签名，应用内申请后获取。</p>
+        </div>
+      </div>
+
+      <div class="dl-groups">
+        <div class="dl-group primary">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M3.6 12h16.8"/><path d="M12 3.6c2.4 2.4 3.6 5.2 3.6 8.4s-1.2 6-3.6 8.4c-2.4-2.4-3.6-5.2-3.6-8.4S9.6 6 12 3.6z"/></svg>网页端 · 免安装</h3>
+          <a class="dl-item" href="https://jidiandian.top/app/" target="_blank" rel="noopener">
+            <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
+            <span class="di-txt"><b>在线打开网页端</b><i>浏览器直接使用，数据留在本机</i></span>
+            <span class="di-act">打开 ↗</span>
           </a>
-
-          <a href="https://jidiandian.top/app/latest.json" target="_blank" rel="noopener" class="dl-card">
-            <span class="dl-ico">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 5.8a8.4 8.4 0 0 1 0 12.4"/><path d="M3.8 18.2a8.4 8.4 0 0 1 0-12.4"/><path d="M17 9a4.6 4.6 0 0 1 0 6"/><path d="M7 15a4.6 4.6 0 0 1 0-6"/><circle cx="12" cy="12" r="1.6"/></svg>
-            </span>
-            <span class="dl-txt"><b>更新清单</b><i>latest.json · 「版本更新」检测新版本用</i></span>
-            <span class="dl-act">查看 ↗</span>
+          <a class="dl-item" href="changelog.html">
+            <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.6h14v15H5z"/><path d="M8.4 9h7.2"/><path d="M8.4 12.6h7.2"/><path d="M8.4 16.2h4.2"/></svg></span>
+            <span class="di-txt"><b>本版更新说明</b><i>V5.5.2 · 恢复安卓 V6 内测申请</i></span>
+            <span class="di-act">查看 →</span>
           </a>
         </div>
 
-        <h3 class="dl-sub">桌面 · V5.5.2</h3>
-        <!-- 下载清单：单列 5 行 —— Windows 安装版 → Windows 便携版 → macOS Apple → macOS Intel → 历史版本 -->
-        <div class="dl-grid">
-          <a href="https://github.com/ajietudou007/TraceDot/releases/download/v5.5.2/TraceDot-Setup-5.5.2-x64.exe" target="_blank" rel="noopener" class="dl-card js-gh-dl">
-            <span class="dl-ico">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.6l7.4-1.1v7H3v-5.9zm0 12.8l7.4 1.1v-6.9H3v5.8zm8.4 1.2L21 21v-8.4h-9.6v6.9zM11.4 4.6v7.1H21V3l-9.6 1.6z"/></svg>
-            </span>
-            <span class="dl-txt"><b>Windows 安装版（x64）</b><i>EXE · V5.5.2 · 装进系统 · 带开始菜单快捷方式</i></span>
-            <span class="dl-act">下载 ↓</span>
+        <div class="dl-group">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.8" width="10" height="18.4" rx="2.6"/><path d="M10.4 18.4h3.2"/></svg>安卓端 · Android</h3>
+          <a class="dl-item" href="https://jidiandian.top/app/jidiandian-5.5.2.apk?v=554" target="_blank" rel="noopener">
+            <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6v11.6"/><path d="M7.4 10.8 12 15.4l4.6-4.6"/><path d="M4.6 19.4h14.8"/></svg></span>
+            <span class="di-txt"><b>安卓 APK · V5.5.2</b><i>正式版 · 直接安装</i></span>
+            <span class="di-act">下载 ↓</span>
           </a>
-
-          <a href="https://github.com/ajietudou007/TraceDot/releases/download/v5.5.2/TraceDot-5.5.2-portable-x64.zip" target="_blank" rel="noopener" class="dl-card js-gh-dl">
-            <span class="dl-ico">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.6l7.4-1.1v7H3v-5.9zm0 12.8l7.4 1.1v-6.9H3v5.8zm8.4 1.2L21 21v-8.4h-9.6v6.9zM11.4 4.6v7.1H21V3l-9.6 1.6z"/></svg>
-            </span>
-            <span class="dl-txt"><b>Windows 便携版（x64）</b><i>ZIP · V5.5.2 · 解压即用 · 免安装</i></span>
-            <span class="dl-act">下载 ↓</span>
-          </a>
-
-          <a href="https://github.com/ajietudou007/TraceDot/releases/download/v5.5.2/TraceDot-5.5.2-arm64.dmg" target="_blank" rel="noopener" class="dl-card js-gh-dl">
-            <span class="dl-ico">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 1.4c0 1.14-.42 2.2-1.26 3.03-.9.9-2.02 1.42-3.12 1.33-.13-1.09.42-2.24 1.24-3.04.86-.86 2.14-1.42 3.14-1.32zM20.9 17.1c-.55 1.27-.82 1.84-1.53 2.96-.99 1.56-2.38 3.5-4.1 3.51-1.53.02-1.92-1-3.99-.99-2.07.01-2.5 1.01-4.03.99-1.72-.02-3.04-1.77-4.03-3.33C.46 16.9.17 11.8 1.87 9.09 3.08 7.16 4.99 6.03 6.78 6.03c1.83 0 2.98 1 4.49 1 1.47 0 2.36-1 4.48-1 1.6 0 3.29.87 4.5 2.37-3.95 2.17-3.31 7.82.65 9.7z"/></svg>
-            </span>
-            <span class="dl-txt"><b>macOS · Apple 芯片</b><i>DMG · Apple Silicon · V5.5.2 · 未签名</i></span>
-            <span class="dl-act">下载 ↓</span>
-          </a>
-
-          <a href="https://github.com/ajietudou007/TraceDot/releases/download/v5.5.2/TraceDot-5.5.2-x64.dmg" target="_blank" rel="noopener" class="dl-card js-gh-dl">
-            <span class="dl-ico">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 1.4c0 1.14-.42 2.2-1.26 3.03-.9.9-2.02 1.42-3.12 1.33-.13-1.09.42-2.24 1.24-3.04.86-.86 2.14-1.42 3.14-1.32zM20.9 17.1c-.55 1.27-.82 1.84-1.53 2.96-.99 1.56-2.38 3.5-4.1 3.51-1.53.02-1.92-1-3.99-.99-2.07.01-2.5 1.01-4.03.99-1.72-.02-3.04-1.77-4.03-3.33C.46 16.9.17 11.8 1.87 9.09 3.08 7.16 4.99 6.03 6.78 6.03c1.83 0 2.98 1 4.49 1 1.47 0 2.36-1 4.48-1 1.6 0 3.29.87 4.5 2.37-3.95 2.17-3.31 7.82.65 9.7z"/></svg>
-            </span>
-            <span class="dl-txt"><b>macOS · Intel 芯片</b><i>DMG · Intel · V5.5.2 · 未签名</i></span>
-            <span class="dl-act">下载 ↓</span>
-          </a>
-
-          <a href="https://github.com/ajietudou007/TraceDot/releases" target="_blank" rel="noopener" class="dl-card">
-            <span class="dl-ico">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1M3.5 4.5V10h5.4"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7.8V12l3 1.8"/></svg>
-            </span>
-            <span class="dl-txt"><b>全版本历史发布</b><i>GitHub Releases · 全平台历史版本</i></span>
-            <span class="dl-act">查看 ↗</span>
+          <a class="dl-item" href="#news">
+            <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4 19 19H5z"/><path d="M12 9v4"/><path d="M12 16v.2"/></svg></span>
+            <span class="di-txt"><b>安卓 V6 内测</b><i>需在应用内「申请内测版」</i></span>
+            <span class="di-act">看说明 →</span>
           </a>
         </div>
 
-        <div class="tips">
-          <div class="tips-head"><span class="tips-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.8"/><path d="M12 11.2v5.2"/><path d="M12 8.1v.15"/></svg></span><b>温馨提示</b></div>
-          <ol class="tips-list">
-            <li>安卓安装包由本站直发，首次安装需在系统设置里允许「安装未知来源应用」。</li>
-            <li>安卓端统一走全量覆盖更新：每次发版都是完整 APK。已安装用户在「我的 → 版本更新」检查到新版本后，点「立即下载」直接拿到最新版本的下载链接，下载后覆盖安装即可（数据不丢失）。</li>
-            <li>Windows 安装版与便携版功能完全一致，二选一即可：安装版装进系统、带开始菜单与桌面快捷方式，可在「设置 → 应用」里卸载；便携版解压到任意目录，双击「迹点点.exe」即用，不写系统目录。</li>
-            <li>macOS 安装包未做代码签名与公证：首次打开会拦一下，请在 DMG 里把「迹点点」拖进「应用程序」后，<b>对图标右键 → 打开</b>，再点「打开」即可；之后不再提示。</li>
-            <li>安装包未做代码签名：Windows 首次运行弹出 SmartScreen 请选「更多信息 → 仍要运行」。</li>
-            <li>桌面端基于 Electron 33，Windows 需 10 及以上（x64），macOS 需 11 及以上；其它平台请直接使用在线网页端 https://jidiandian.top/app/。</li>
+        <div class="dl-group">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="4.6" width="16.8" height="11.2" rx="1.8"/><path d="M8.4 19.4h7.2"/></svg>Windows · 桌面端</h3>
+          <a class="dl-item js-gh-dl" href="https://github.com/ajietudou007/TraceDot/releases/download/v5.5.2/TraceDot-Setup-5.5.2-x64.exe" target="_blank" rel="noopener">
+            <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6v11.6"/><path d="M7.4 10.8 12 15.4l4.6-4.6"/><path d="M4.6 19.4h14.8"/></svg></span>
+            <span class="di-txt"><b>安装版 · x64</b><i>开始菜单与卸载入口齐全</i></span>
+            <span class="di-act">下载 ↓</span>
+          </a>
+          <a class="dl-item js-gh-dl" href="https://github.com/ajietudou007/TraceDot/releases/download/v5.5.2/TraceDot-5.5.2-portable-x64.zip" target="_blank" rel="noopener">
+            <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 7.4h6v6h-6z"/><path d="M13.4 7.4h6v6h-6z"/><path d="M4.6 15.6h6v4h-6z"/><path d="M13.4 15.6h6v4h-6z"/></svg></span>
+            <span class="di-txt"><b>便携版 · x64</b><i>解压即用，不写注册表</i></span>
+            <span class="di-act">下载 ↓</span>
+          </a>
+        </div>
+
+        <div class="dl-group">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.4" y="4.4" width="17.2" height="12" rx="1.8"/><path d="M8.4 20h7.2"/><path d="M12 16.4V20"/></svg>macOS · 桌面端</h3>
+          <a class="dl-item js-gh-dl" href="https://github.com/ajietudou007/TraceDot/releases/download/v5.5.2/TraceDot-5.5.2-arm64.dmg" target="_blank" rel="noopener">
+            <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6v11.6"/><path d="M7.4 10.8 12 15.4l4.6-4.6"/><path d="M4.6 19.4h14.8"/></svg></span>
+            <span class="di-txt"><b>Apple 芯片 · arm64</b><i>M 系列芯片选这个</i></span>
+            <span class="di-act">下载 ↓</span>
+          </a>
+          <a class="dl-item js-gh-dl" href="https://github.com/ajietudou007/TraceDot/releases/download/v5.5.2/TraceDot-5.5.2-x64.dmg" target="_blank" rel="noopener">
+            <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.4 5.4h13.2v13.2H5.4z"/><path d="M9 9h6v6H9z"/></svg></span>
+            <span class="di-txt"><b>Intel 芯片 · x64</b><i>2020 年前的 Mac 选这个</i></span>
+            <span class="di-act">下载 ↓</span>
+          </a>
+        </div>
+
+        <div class="dl-group span2">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4v17.2"/><path d="m7.4 16 4.6 4.6 4.6-4.6"/><path d="M4 5.4h16"/></svg>全版本历史 · 所有发布</h3>
+          <a class="dl-item" href="https://github.com/ajietudou007/TraceDot/releases" target="_blank" rel="noopener">
+            <span class="di-ico"><svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></span>
+            <span class="di-txt"><b>GitHub Releases</b><i>全部版本与发布说明</i></span>
+            <span class="di-act">前往 ↗</span>
+          </a>
+          <a class="dl-item" href="https://gitee.com/ajiepotato/TraceDot/releases" target="_blank" rel="noopener">
+            <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 7.4h14.8v9.2H4.6z"/><path d="M8 11.4h4.4"/><path d="M8 14h7"/></svg></span>
+            <span class="di-txt"><b>Gitee Releases</b><i>国内访问镜像</i></span>
+            <span class="di-act">前往 ↗</span>
+          </a>
+          <a class="dl-item" href="changelog.html">
+            <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M12 7.6V12l3 1.8"/></svg></span>
+            <span class="di-txt"><b>完整更新日志</b><i>44 个版本 · 五个阶段</i></span>
+            <span class="di-act">查看 →</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="dl-note">
+        <div>
+          <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4 21 19H3z"/><path d="M12 9v4.4"/><path d="M12 16.2v.2"/></svg>macOS 首次打开提示「无法验证开发者」</h4>
+          <ol>
+            <li>macOS 桌面包<b>未签名、未公证</b>，这是 Gatekeeper 的正常提示，不是文件损坏。</li>
+            <li>把「迹点点」拖进「应用程序」，首次打开时若被拦截，进入 <b>系统设置 → 隐私与安全性</b>，在底部点「仍要打开」。</li>
+            <li>也可以在 Finder 中右键应用 →「打开」，再确认一次；之后就能正常双击启动。</li>
+            <li>不放心可以先看源码并自行构建，或改用网页端。</li>
           </ol>
         </div>
-      </article>
-    </div>
-  </section>
-
-  <!-- ══════════════ 致谢（新增） ══════════════ -->
-  <section class="wrap" id="credits">
-    <div class="glass-card pad">
-      <div class="sec-center">
-        <span class="chip">CREDITS &amp; ATTRIBUTIONS</span>
-        <h2>致谢：站在这些肩膀上</h2>
-        <p class="sec-lead wide">迹点点在开发过程中使用、内嵌或参考的第三方项目、开源数据库、云服务与字体。所有内嵌组件的许可声明同时保留在应用源码内。</p>
+        <div>
+          <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M12 8v.4"/><path d="M12 11.4V16"/></svg>安装与数据须知</h4>
+          <ol>
+            <li>Windows 安装版带卸载入口；便携版解压即用，配置留在解压目录。</li>
+            <li>同渠道覆盖安装<b>不会清空本机票根</b>；V6 内测包为独立签名，需按申请页说明安装。</li>
+            <li>网页端与桌面端各自保存在本机，换端时用账号的加密备份恢复即可。</li>
+            <li>所有版本都不包含广告、统计 SDK 与后台静默上传。</li>
+          </ol>
+        </div>
       </div>
+    </div>
+  </div>
+</section>
 
-      <div class="credit-cols">
-        <h4 class="credit-head"><span class="cb-no">一</span>开源项目（内嵌 / 演化 / 参考）</h4>
-        <ul class="credit-list">
-            <li><div class="cl-h"><b>12306 火车票票根编辑器</b><i>MIT</i></div><span>本项目前身，火车票工坊模块由其 V6.2.x 内核演化而来（Canvas 绘制管线、六款底图、PDF 导入、OCR 等）</span></li>
+<!-- ══════════ 致谢 ══════════ -->
+<section class="sec" id="credits" style="padding-top:0">
+  <div class="shell">
+    <div class="sec-head reveal">
+      <div>
+        <span class="kicker">Credits &amp; attributions</span>
+        <h2 class="h2">站在这些肩膀上</h2>
+        <p class="lead">迹点点在开发过程中使用、内嵌或参考的第三方项目、开源数据库、云服务与字体。所有内嵌组件的许可声明同时保留在应用源码内。</p>
+      </div>
+      <a class="sec-link" href="https://github.com/ajietudou007/TraceDot/blob/main/CREDITS.md" target="_blank" rel="noopener">完整 CREDITS.md <span>↗</span></a>
+    </div>
+
+    <div class="credits">
+      <details class="credit-group reveal">
+        <summary><span class="cg-no">一</span>开源项目（内嵌 / 演化 / 参考）<span class="cg-count">12 项</span>
+          <svg class="cg-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <div class="credit-body">
+          <ul class="credit-list">
+            <li><div class="cl-h"><b>12306 火车票票根编辑器</b><i>MIT</i></div><span>本项目前身，火车票工坊由其 V6.2.x 内核演化而来（Canvas 绘制管线、六款底图、PDF 导入、OCR 等）</span></li>
             <li><div class="cl-h"><b>pdf.js</b><i>Apache-2.0</i></div><span>内嵌于火车票工坊，解析 12306 官方「行程信息提示」PDF</span></li>
             <li><div class="cl-h"><b>LZ-String</b><i>MIT</i></div><span>行程数据压缩进 URL，支持携带数据的分享链接与旧格式回退</span></li>
             <li><div class="cl-h"><b>html2canvas 1.4.1</b><i>MIT</i></div><span>登机牌 / 交通票 / 影演票工坊的票面导出管线（离屏克隆 + 固定 2x 高清）</span></li>
@@ -500,14 +630,28 @@
             <li><div class="cl-h"><b>ReactBits 风格动效</b><i>参考</i></div><span>外壳侧栏「磁吸聚光 · 扫光 · 流光边框 · 波纹涟漪」动效注入（jdd-fx）</span></li>
             <li><div class="cl-h"><b>Wave Grid / 06 SPATIAL CARD 设计稿</b><i>设计参考</i></div><span>珍藏册波浪网格 / 3D 视角展示模式的参考图</span></li>
           </ul>
-        <h4 class="credit-head"><span class="cb-no">二</span>铁路查询（RailGo 开源项目与数据）</h4>
-        <ul class="credit-list">
+        </div>
+      </details>
+
+      <details class="credit-group reveal d1">
+        <summary><span class="cg-no">二</span>铁路查询（RailGo 开源项目与数据）<span class="cg-count">3 项</span>
+          <svg class="cg-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <div class="credit-body">
+          <ul class="credit-list">
             <li><div class="cl-h"><b>RailGo</b><i>MIT</i></div><span>铁路查询页面内嵌的 UniApp 版中国铁路信息查询工具（RailGoApps/RailGo · railgo.dev），车次、车站、动车组与列车图鉴数据均通过其开放接口获取</span></li>
             <li><div class="cl-h"><b>12306 官方数据</b><i>数据归原服务方</i></div><span>车次时刻、正晚点、票价与车站信息源自中国铁路 12306 及其上游服务；查询结果仅供参考，请以 12306 官方信息为准</span></li>
             <li><div class="cl-h"><b>列车图鉴 / 车型图集</b><i>RailGo 图鉴库</i></div><span>图鉴接口 train.idcmoss.cn，实拍图源 ctphotos.idcmoss.cn；车型资料与图片版权归原服务方</span></li>
           </ul>
-        <h4 class="credit-head"><span class="cb-no">三</span>开源数据库</h4>
-        <ul class="credit-list">
+        </div>
+      </details>
+
+      <details class="credit-group reveal">
+        <summary><span class="cg-no">三</span>开源数据库<span class="cg-count">6 项</span>
+          <svg class="cg-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <div class="credit-body">
+          <ul class="credit-list">
             <li><div class="cl-h"><b>OpenStreetMap</b><i>ODbL 1.0</i></div><span>车站坐标主源（STATION_XY，2,870 / 3,267 站，约 87.8%）© OpenStreetMap contributors</span></li>
             <li><div class="cl-h"><b>China-Railway-Station-Database</b><i>CC0-1.0</i></div><span>车站坐标补缺（394 / 3,267 站，约 12.1%）· undef-i</span></li>
             <li><div class="cl-h"><b>OurAirports</b><i>Unlicense</i></div><span>机场坐标数据源（JDD_APT_XY，airports.csv）· David Megginson</span></li>
@@ -515,13 +659,27 @@
             <li><div class="cl-h"><b>全国火车站名与坐标库</b><i>ODbL 1.0</i></div><span>火车票智能联想（拼音反查 + 编辑距离 ≤2 模糊兜底）与行程地图铁路弧线</span></li>
             <li><div class="cl-h"><b>全国地铁线路站点数据</b><i>—</i></div><span>地铁票面与行程地图（IndexedDB jdd-metro 坐标缓存）</span></li>
           </ul>
-        <h4 class="credit-head"><span class="cb-no">四</span>字体</h4>
-        <ul class="credit-list">
+        </div>
+      </details>
+
+      <details class="credit-group reveal d1">
+        <summary><span class="cg-no">四</span>字体<span class="cg-count">2 项</span>
+          <svg class="cg-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <div class="credit-body">
+          <ul class="credit-list">
             <li><div class="cl-h"><b>MiSans（小米兰亭）</b><i>《MiSans 字体知识产权许可协议》</i></div><span>全站显示字体（标题 / 正文 / 标签）；本项目内嵌其子集（GB2312 常用全集 + ASCII，Regular 400 / Demibold 600）。小米主导，联合蒙纳、汉仪共同制作</span></li>
             <li><div class="cl-h"><b>PingFang SC / Microsoft YaHei</b><i>系统字体</i></div><span>MiSans 未覆盖时的回退，随操作系统分发，无需署名</span></li>
           </ul>
-        <h4 class="credit-head"><span class="cb-no">五</span>AI 与云服务（均需用户明确确认后才联网）</h4>
-        <ul class="credit-list">
+        </div>
+      </details>
+
+      <details class="credit-group reveal">
+        <summary><span class="cg-no">五</span>AI 与云服务（需用户明确确认后才联网）<span class="cg-count">6 项</span>
+          <svg class="cg-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <div class="credit-body">
+          <ul class="credit-list">
             <li><div class="cl-h"><b>Agnes AI</b><i>OpenAI 兼容接口</i></div><span>Agnes 3.0 Flash / 2.5 Flash 视觉大模型 OCR，火车票 / 登机牌工坊默认 AI 识别引擎；另负责中文片名 → 英文片名转换</span></li>
             <li><div class="cl-h"><b>OMDb API</b><i>免费接口</i></div><span>影演票工坊电影海报自动匹配</span></li>
             <li><div class="cl-h"><b>OCR.space</b><i>免费云识别</i></div><span>火车票工坊联网 OCR 备选引擎（Key 仅存本机）</span></li>
@@ -529,80 +687,98 @@
             <li><div class="cl-h"><b>12306 官网</b><i>—</i></div><span>行程 PDF 官方下载入口；车站 / 车次数据参考</span></li>
             <li><div class="cl-h"><b>豆瓣 / 携程 / 大麦 / 必应图片</b><i>—</i></div><span>影演票工坊海报 / 景区图检索参考链路（提示与降级来源）</span></li>
           </ul>
-        <h4 class="credit-head"><span class="cb-no">六</span>安卓端运行环境（V5.3.0 起）</h4>
-        <ul class="credit-list">
+        </div>
+      </details>
+
+      <details class="credit-group reveal d1">
+        <summary><span class="cg-no">六</span>安卓端运行环境（V5.3.0 起）<span class="cg-count">3 项</span>
+          <svg class="cg-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <div class="credit-body">
+          <ul class="credit-list">
             <li><div class="cl-h"><b>Capacitor 8</b><i>MIT</i></div><span>安卓原生壳：WebView 容器与插件桥（相册导出等原生能力）。界面与业务逻辑仍是同一份 Web 代码</span></li>
             <li><div class="cl-h"><b>@capacitor 官方插件</b><i>MIT</i></div><span>filesystem / share / camera / preferences / app / status-bar / keyboard / splash-screen：落盘与分享、选图、本机配置、返回键、状态栏与键盘避让</span></li>
             <li><div class="cl-h"><b>AndroidX</b><i>Apache-2.0</i></div><span>AppCompat / Core / CoordinatorLayout / Core-Splashscreen / WebKit：安卓基础组件与 WebView 现代实现</span></li>
           </ul>
-      </div>
-
-      <div class="license-note">
-        <b>许可义务速览：</b>pdf.js / html2canvas / qrcode-generator / LZ-String / bwip-js / Capacitor 及其官方插件 / AndroidX 保留版权与许可声明；OpenStreetMap 署名 © OpenStreetMap contributors（分发含本表的修改版需以 ODbL 共享该数据库部分）；China-Railway-Station-Database（CC0）与 OurAirports（Unlicense）零义务；MiSans 需注明使用了 MiSans 字体；铁路查询数据授权自 RailGo 及原服务方，需标注来源（已内置于查询页脚），查询结果仅供参考，请以 12306 官方信息为准。
-      </div>
-
-      <div class="credit-more">
-        <a href="https://github.com/ajietudou007/TraceDot/blob/main/CREDITS.md" target="_blank" rel="noopener" class="glass-btn">查看完整 CREDITS.md ↗</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════ 关于作者 ══════════════ -->
-  <section class="wrap" id="creator">
-    <div class="glass-card pad">
-      <div class="creator-grid">
-        <div>
-          <span class="chip">ABOUT THE CREATOR</span>
-          <h2>一个人，也是一支充满温度的团队。</h2>
-          <p class="sec-lead">迹点点由<b>阿杰同学</b>全程独立构思、设计、前端开发与维护。从最早在 GitHub 上开源的 12306 火车票编辑器，一步步扩展为涵盖全国高铁、民航、城市轨道交通与演出门票的一体化旅行工坊。</p>
-          <div class="socials">
-            <a href="https://github.com/ajietudou007" target="_blank" rel="noopener">GitHub 主页 ↗</a>
-            <a href="https://b23.tv/nBL4aXt" target="_blank" rel="noopener">哔哩哔哩 ↗</a>
-            <a href="https://v.douyin.com/sMRNgbplBkQ/" target="_blank" rel="noopener">抖音 ↗</a>
-            <a href="https://xhslink.cn/o/9780LQiSR6U" target="_blank" rel="noopener">小红书 ↗</a>
-          </div>
         </div>
-        <aside class="creator-card">
-          <div class="avatar"><img src="avatar.jpg" alt="阿杰同学的头像" width="320" height="320" decoding="async"></div>
-          <b>阿杰同学</b>
-          <p class="cc-role">迹点点 · 全程独立开发</p>
-          <p class="cc-quote">“如果你也攒了一抽屉的旧票根，愿它们在这里变成一张会讲故事的时光地图。”</p>
-        </aside>
-      </div>
+      </details>
     </div>
-  </section>
+
+    <div class="license-note reveal">
+      <b>许可义务速览：</b>pdf.js / html2canvas / qrcode-generator / LZ-String / bwip-js / Capacitor 及其官方插件 / AndroidX 保留版权与许可声明；OpenStreetMap 署名 © OpenStreetMap contributors（分发含本表的修改版需以 ODbL 共享该数据库部分）；China-Railway-Station-Database（CC0）与 OurAirports（Unlicense）零义务；MiSans 需注明使用了 MiSans 字体；铁路查询数据授权自 RailGo 及原服务方，需标注来源（已内置于查询页脚），查询结果仅供参考，请以 12306 官方信息为准。
+    </div>
+  </div>
+</section>
 
 
+<!-- ══════════ 关于作者 ══════════ -->
+<section class="sec" id="creator" style="padding-top:0">
+  <div class="shell">
+    <div class="creator reveal">
+      <div>
+        <span class="kicker">About the creator</span>
+        <h2 class="h2">一个人，<br>也是一支有温度的团队。</h2>
+        <p class="lead">迹点点由<b>阿杰同学</b>全程独立构思、设计、开发与维护。从最早开源的 12306 火车票编辑器，扩展成覆盖铁路、民航、城市交通与影演票的四个工坊；网页端、桌面端、安卓端，以及正在内测的 V6 原生安卓版，都出自同一个人。</p>
+        <div class="socials">
+          <a href="https://github.com/ajietudou007" target="_blank" rel="noopener">GitHub 主页 ↗</a>
+          <a href="https://b23.tv/nBL4aXt" target="_blank" rel="noopener">哔哩哔哩 ↗</a>
+          <a href="https://v.douyin.com/sMRNgbplBkQ/" target="_blank" rel="noopener">抖音 ↗</a>
+          <a href="https://xhslink.cn/o/9780LQiSR6U" target="_blank" rel="noopener">小红书 ↗</a>
+        </div>
+      </div>
+      <aside class="creator-card">
+        <div class="avatar"><img src="avatar.jpg" alt="阿杰同学的头像" width="192" height="192" decoding="async"></div>
+        <b>阿杰同学</b>
+        <p class="cc-role">迹点点 · 全程独立开发</p>
+        <p class="cc-quote">“如果你也攒了一抽屉的旧票根，愿它们在这里变成一张会讲故事的时光地图。”</p>
+      </aside>
+    </div>
+  </div>
+</section>
 
 </main>
 
-<footer class="wrap foot">
-  <div class="foot-top">
-    <div class="foot-brand">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23F3EB30'/%3E%3Ccircle cx='31' cy='67' r='9.6' fill='none' stroke='%23202020' stroke-width='5.8'/%3E%3Ccircle cx='69' cy='32' r='9.6' fill='none' stroke='%23202020' stroke-width='5.8'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23202020'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23202020'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23202020'/%3E%3C/svg%3E" alt="迹点点 Logo" class="brand-logo">
-      <div><b>迹点点 TraceDot</b><i>旅行纪念票根工作室</i></div>
+<footer class="site-foot">
+  <div class="shell">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <img src="ic_brand_logo.png" alt="" width="40" height="40" decoding="async">
+        <div><b>迹点点 TraceDot</b><i>把每一次出发，收进一张票根</i></div>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <b>产品</b>
+          <a href="#studios">四大工坊</a>
+          <a href="#modules">能力模块</a>
+          <a href="#privacy">数据与云端</a>
+          <a href="changelog.html">更新日志</a>
+        </div>
+        <div class="foot-col">
+          <b>获取</b>
+          <a href="https://jidiandian.top/app/" target="_blank" rel="noopener">在线应用</a>
+          <a href="#download">全部下载</a>
+          <a href="https://github.com/ajietudou007/TraceDot" target="_blank" rel="noopener">GitHub ↗</a>
+          <a href="https://gitee.com/ajiepotato/TraceDot" target="_blank" rel="noopener">Gitee ↗</a>
+        </div>
+        <div class="foot-col">
+          <b>关注</b>
+          <a href="https://b23.tv/nBL4aXt" target="_blank" rel="noopener">哔哩哔哩 ↗</a>
+          <a href="https://v.douyin.com/sMRNgbplBkQ/" target="_blank" rel="noopener">抖音 ↗</a>
+          <a href="https://xhslink.cn/o/9780LQiSR6U" target="_blank" rel="noopener">小红书 ↗</a>
+        </div>
+      </div>
     </div>
-    <nav class="foot-nav">
-      <a href="#home">官网首页</a>
-      <a href="#download">下载应用</a>
-      <a href="https://jidiandian.top/app/" target="_blank" rel="noopener">在线应用</a>
-      <a href="changelog.html">更新日志</a>
-      <a href="https://github.com/ajietudou007/TraceDot" target="_blank" rel="noopener">GitHub ↗</a>
-      <a href="#credits">致谢</a>
-      <a href="#privacy">隐私声明</a>
-    </nav>
-  </div>
-
-  <div class="foot-note">
-    <b>免责声明：</b>本项目仅供个人纪念、手账与娱乐创作使用，与中国国家铁路集团（12306）、各航空公司及文旅机构均无隶属或合作关系。严禁将生成的票面用于报销、退票、逃票、诈骗或其他违法用途。
-  </div>
-
-  <div class="foot-base">
-    <span>© 2026 迹点点 TraceDot · MIT License</span>
-    <span class="mono">点点足迹，票记远方。</span>
+    <p class="foot-note">
+      <b>许可与内容：</b>迹点点以 MIT 协议开源，第三方组件、字体与素材的许可详见上方致谢与 CREDITS.md；
+      票面样式仅用于个人纪念与收藏，不具备任何乘车、乘机或入场效力。官网文案与视觉版权归作者所有。
+    </p>
+    <div class="foot-base">
+      <span>© 2026 迹点点 TraceDot · 阿杰同学</span>
+      <span>V5.5.2 · 2026-11-13 · 保持独立，保持可用</span>
+    </div>
   </div>
 </footer>
 
-<script src="glass.js?v=96e2ae0c53"></script>
+<script src="assets/site.js" defer></script>
 </body>
 </html>
