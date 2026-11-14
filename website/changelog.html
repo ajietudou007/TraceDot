@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>更新日志 · 迹点点 TraceDot V5.5.2</title>
-<meta name="description" content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V5.5.2（恢复安卓 V6 内测申请入口），五个阶段共 44 组版本记录。">
+<title>更新日志 · 迹点点 TraceDot V6.0.0</title>
+<meta name="description" content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V6.0.0（网页端与桌面端 V6 界面重构），五个阶段共 45 组版本记录。">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232E7FF2'/%3E%3Cstop offset='1' stop-color='%231E66D0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Ccircle cx='31' cy='67' r='9.8' fill='none' stroke='%23fff' stroke-width='5.9'/%3E%3Ccircle cx='69.5' cy='32.5' r='9.8' fill='none' stroke='%23fff' stroke-width='5.9'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23fff'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23fff'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/jdd.css">
@@ -16,7 +16,7 @@
     <a href="index.html" class="brandmark" aria-label="迹点点首页">
       <img src="ic_brand_logo.png" alt="" width="34" height="34" decoding="async">
       <span class="bm-txt"><b>迹点点</b><i>TRACEDOT</i></span>
-      <span class="ver-tag">V5.5.2</span>
+      <span class="ver-tag">V6.0.0</span>
     </a>
     <nav class="nav-links" aria-label="主导航">
       <a href="index.html#news">新版本</a>
@@ -44,7 +44,7 @@
   <a href="index.html#client">客户端</a>
   <a href="index.html#download">下载</a>
   <a href="changelog.html">更新日志</a>
-  <a href="index.html#download" class="mm-primary">下载客户端 V5.5.2</a>
+  <a href="index.html#download" class="mm-primary">下载客户端</a>
 </div>
 
 <main id="cl-top">
@@ -59,12 +59,12 @@
         <span class="light">遵循 Keep a Changelog</span>
       </span>
       <h1>每一次出发与沉淀，<br>都留在这条<em>时间轴</em>上。</h1>
-      <p class="cl-hero-lead">从前身「12306 火车票票根编辑器」，一路走到四个工坊、十种票面、账号与加密备份的 V5.5.2，共五个阶段、44 组版本记录。这里写下每次技术取舍、视觉重塑，也写下那些被修掉的坑；最新一版恢复了安卓 V6 内测申请通道。</p>
+      <p class="cl-hero-lead">从前身「12306 火车票票根编辑器」，一路走到四个工坊、十种票面、账号与加密备份的 V6.0.0，共五个阶段、45 组版本记录。这里写下每次技术取舍、视觉重塑，也写下那些被修掉的坑；最新一版把网页端与桌面端的应用本体重构为 V6 界面。</p>
     </div>
     <div class="cl-stats" aria-label="版本统计">
-      <div class="cl-stat"><b>44</b><i>收录迭代版本</i></div>
+      <div class="cl-stat"><b>45</b><i>收录迭代版本</i></div>
       <div class="cl-stat"><b>5</b><i>大演进阶段</i></div>
-      <div class="cl-stat"><b>V5.5.2</b><i>当前稳定版本</i></div>
+      <div class="cl-stat"><b>V6.0.0</b><i>当前稳定版本</i></div>
       <div class="cl-stat"><b>MIT</b><i>全部源码公开</i></div>
     </div>
   </div>
@@ -73,8 +73,8 @@
 <div class="cl-wrap">
   <div class="cl-bar">
     <div class="cl-chips" id="clChips" role="group" aria-label="按阶段筛选">
-      <button class="cl-chip on" data-stage="all">全部<b>44</b></button>
-      <button class="cl-chip" data-stage="stage-5">第五阶段<b>31</b></button>
+      <button class="cl-chip on" data-stage="all">全部<b>45</b></button>
+      <button class="cl-chip" data-stage="stage-5">第五阶段<b>32</b></button>
       <button class="cl-chip" data-stage="stage-4">第四阶段<b>10</b></button>
       <button class="cl-chip" data-stage="stage-3">第三阶段<b>1</b></button>
       <button class="cl-chip" data-stage="stage-2">第二阶段<b>1</b></button>
@@ -89,14 +89,43 @@
   <div class="cl-stream" id="clStream">
     <div class="cl-stage" data-stage="stage-5">
       <span class="cl-stage-no">五</span>
-      <div><h2>第五阶段 · V5 视觉与体验重塑</h2><i>2026-10-16 ~ 11-13 · 31 条</i></div>
+      <div><h2>第五阶段 · V5 视觉与体验重塑</h2><i>2026-10-16 ~ 11-15 · 32 条</i></div>
     </div>
+    <article class="glass-card cl-entry" id="v6-0-0" data-stage="stage-5">
+      <span class="cl-node" aria-hidden="true"></span>
+      <div class="cl-top">
+        <div class="cl-verline">
+          <h3 class="cl-ver">V6.0.0</h3>
+          <span class="cl-badge live">最新稳定版</span><span class="cl-badge">网页端</span><span class="cl-badge">桌面端</span>
+        </div>
+        <time class="cl-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="5.2" width="16.8" height="15.2" rx="2.4"/><path d="M3.6 10h16.8"/><path d="M8.4 3.2v4M15.6 3.2v4"/></svg>2026-11-15</time>
+      </div>
+      <div class="cl-hls">
+        <div class="cl-hl ">
+          <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.4" y="3.4" width="17.2" height="17.2" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>V6 界面重构：纸面质感、克制描边与双色强调</div>
+          <p>网页端与桌面端的应用本体换成 V6 设计系统：票面、地图、工坊、珍藏册与年度报告统一到同一套排版、留白与强调色规则，去掉多余的阴影与渐变。</p>
+        </div>
+        <div class="cl-hl alt">
+          <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/><path d="M20.2 12.4 9.6 23 4.2 17.6" opacity=".45"/></svg></span>工坊草稿修复 + 更新门禁对齐</div>
+          <p>已有草稿时只读不写，导入与恢复不再覆盖正在填写的表单，旧票据草稿按原键名迁移；强制更新门禁统一读页面自身的版本常量，避免写死的旧版本号导致误报。</p>
+        </div>
+      </div>
+      <details class="cl-more" open>
+        <summary><span class="cl-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 9V4.4H9"/><path d="M14 4.4h5.6V10"/><path d="M19.6 15v4.6H14"/><path d="M10 19.6H4.4V15"/></svg></span>详细条目 (Changes) <b>4</b></summary>
+        <ul class="cl-items">
+          <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>在线网页端换新</strong>：<code>https://jidiandian.top/app/</code> 直接可用，页面内版本号为 V6.0.0，免安装、数据仍留在本机浏览器。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>桌面端热更新</strong>：<code>release/latest.json</code> 升到 6.0.0 并指向 <code>release/TraceDot-V6.0.0.html</code>；壳不重打包，5.5.2 用户启动后自动下载，重启即生效。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>门禁不误伤</strong>：页面自身的强制更新门禁读正式清单 <code>/app/latest.json</code>（安卓 5.5.2 / 554），6.0.0 不会被判为「有新版本」而挡住用户。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>安卓两条线不动</strong>：安卓正式版仍为 5.5.2（versionCode 554），安卓 V6 内测仍为 6.0.2，本次只升网页端与桌面端应用内容。</p></li>
+        </ul>
+      </details>
+    </article>
     <article class="glass-card cl-entry" id="v5-5-2" data-stage="stage-5">
       <span class="cl-node" aria-hidden="true"></span>
       <div class="cl-top">
         <div class="cl-verline">
           <h3 class="cl-ver">V5.5.2</h3>
-          <span class="cl-badge live">最新稳定版</span><span class="cl-badge">网页端</span><span class="cl-badge">桌面端</span><span class="cl-badge">安卓端</span><span class="cl-badge">内测</span>
+          <span class="cl-badge">网页端</span><span class="cl-badge">桌面端</span><span class="cl-badge">安卓端</span><span class="cl-badge">内测</span>
         </div>
         <time class="cl-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="5.2" width="16.8" height="15.2" rx="2.4"/><path d="M3.6 10h16.8"/><path d="M8.4 3.2v4M15.6 3.2v4"/></svg>2026-11-13</time>
       </div>
@@ -1406,7 +1435,7 @@
     <div class="foot-top">
       <div class="foot-brand">
         <img src="ic_brand_logo.png" alt="" width="40" height="40" decoding="async">
-        <div><b>迹点点 TraceDot</b><i>旅行纪念票根工作室 · V5.5.2</i></div>
+        <div><b>迹点点 TraceDot</b><i>旅行纪念票根工作室 · V6.0.0</i></div>
       </div>
       <div class="foot-cols">
         <div class="foot-col">
