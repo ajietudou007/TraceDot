@@ -1,14 +1,13 @@
 {
   "apk": {
-    "versionCode": 554,
-    "versionName": "5.5.2",
-    "url": "https://jidiandian.top/app/jidiandian-5.5.2.apk?v=554"
+    "versionCode": 603,
+    "versionName": "6.0.3",
+    "url": "https://jidiandian.top/app/jidiandian-6.0.3.apk?v=603"
   },
   "page": "https://jidiandian.top/website/#download",
   "changelog": [
-    "恢复「申请内测版」入口（我的 → 更多 → 申请内测版），申请目标为安卓端 6.0.1 内测；桌面端与网页端没有内测包",
-    "审批通过后可在申请页直接看到状态与安卓端内测包下载地址，申请记录与后台「内测审批」实时对应",
-    "5.5.2 自身仍走正式更新通道，不切换内测通道；5.5.1 的激活码云端校验与强制更新门禁保持不变",
-    "三端版本统一 5.5.2（安卓 versionCode 554），签名与线上一致，可直接覆盖安装"
+    "V6.0.3 正式版（versionCode 603）：网页端与安卓端版本统一，安卓由内测转为正式渠道",
+    "火车票工坊导入字段修正：粘贴按显式标签识别，CSV 表头改为「取票机号」",
+    "可直接覆盖安装 5.5.2 与 6.x 内测包，本地票根、计划与激活状态不受影响"
   ]
 }
