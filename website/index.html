@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>迹点点 TraceDot · 把每一次出发，变成一张会讲故事的票根</title>
-<meta name="description" content="迹点点 TraceDot V6.0.3：四大工坊、十种票面，把车票、登机牌、城市交通与影演票收进一本珍藏册；本地优先存储，可选账号与零知识加密备份，跨设备恢复。">
+<meta name="description" content="迹点点 TraceDot V6.0.4：四大工坊、十种票面，把车票、登机牌、城市交通与影演票收进一本珍藏册；本地优先存储，可选账号与零知识加密备份，跨设备恢复。">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232E7FF2'/%3E%3Cstop offset='1' stop-color='%231E66D0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Ccircle cx='31' cy='67' r='9.8' fill='none' stroke='%23fff' stroke-width='5.9'/%3E%3Ccircle cx='69.5' cy='32.5' r='9.8' fill='none' stroke='%23fff' stroke-width='5.9'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23fff'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23fff'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/jdd.css">
@@ -17,7 +17,7 @@
     <a href="#top" class="brandmark" aria-label="迹点点首页">
       <img src="ic_brand_logo.png" alt="" width="34" height="34" decoding="async">
       <span class="bm-txt"><b>迹点点</b><i>TRACEDOT</i></span>
-      <span class="ver-tag">V6.0.3</span>
+      <span class="ver-tag">V6.0.4</span>
     </a>
     <nav class="nav-links" aria-label="主导航">
       <a href="#news">新版本</a>
@@ -58,7 +58,7 @@
   <div class="shell hero-inner">
     <span class="eyebrow">
       <span class="pulse"></span>
-      <span>TRACEDOT V6.0.3</span>
+      <span>TRACEDOT V6.0.4</span>
       <span class="sep"></span>
       <span class="light">本地优先 · 云端备份可选 · 开源</span>
     </span>
@@ -155,37 +155,37 @@
       <div class="news-left">
         <div class="news-meta">
           <span class="kicker">Latest release</span>
-          <span class="ver-tag">V6.0.3</span>
-          <span class="news-date">2026-11-18</span>
+          <span class="ver-tag">V6.0.4</span>
+          <span class="news-date">2026-11-19</span>
         </div>
-        <h2 class="h2">网页端与安卓端统一到 V6.0.3，<br>安卓<em>转为正式渠道</em>。</h2>
+        <h2 class="h2">强制更新提醒不再反复弹，<br>行程地图<em>更跟手</em>。</h2>
         <p class="lead">
-          网页端修正火车票工坊的导入字段：粘贴时按显式标签识别，CSV 表头改为「取票机号」；
-          安卓端由内测转为正式渠道（versionCode 603），可直接覆盖 5.5.2 与 6.x 内测包，本地数据不受影响。
-          桌面端仍只换页面，启动后热更新到 V6.0.3，安装包本身仍是 V5.5.2。
+          旧页面把安卓 APK 版本当成了网页版本，关掉提醒、切回前台又重新拦截；
+          本版改为只按网页本体版本判定，安卓升号不会再触发弹窗。
+          行程地图同步做了性能优化。安卓端本次不变，仍为 V6.0.3（versionCode 603）。
         </p>
         <div class="news-foot">
-          <span class="news-pill">网页 / 桌面 / 安卓 · V6.0.3 · 安卓 versionCode 603</span>
-          <a class="sec-link" href="changelog.html#v6-0-3">查看完整条目 <span>↗</span></a>
+          <span class="news-pill">网页 / 桌面 · V6.0.4 · 安卓仍为 V6.0.3（603）</span>
+          <a class="sec-link" href="changelog.html#v6-0-4">查看完整条目 <span>↗</span></a>
         </div>
       </div>
       <div class="news-right">
         <div class="news-list">
           <div class="news-item">
             <span class="ni-no">01</span>
-            <div><b>火车票导入字段修正</b><p>粘贴时按显式标签识别，CSV 表头改为「取票机号」；导入后票号与取票机号不再错位。</p></div>
+            <div><b>强制更新提醒不再反复弹</b><p>旧页面误把安卓 APK 版本当成网页版本，关掉弹层、切回前台又会重弹；本版按网页本体版本判定，更新完成后提醒即消失。</p></div>
           </div>
           <div class="news-item">
             <span class="ni-no">02</span>
-            <div><b>网页端与安卓端版本统一</b><p>两端同号 6.0.3，网页端在线版与桌面热更新页面、安卓正式包保持同一版本口径。</p></div>
+            <div><b>行程地图性能优化</b><p>同一条线路只画一次，动画在页面不可见时暂停，拖动改走快路径；长账本下拖动与缩放更稳定。</p></div>
           </div>
           <div class="news-item">
             <span class="ni-no">03</span>
-            <div><b>安卓转为正式渠道</b><p>正式清单升到 versionCode 603，可直接覆盖 5.5.2 与 6.x 内测包，票根、计划与激活状态不受影响。</p></div>
+            <div><b>桌面端补齐旧页面</b><p>桌面壳启动后会拉取本页面，长期停在 5.5.x 的客户端会一次性换到 V6.0.4，无需重装安装包。</p></div>
           </div>
           <div class="news-item">
             <span class="ni-no">04</span>
-            <div><b>更新门禁按平台分流</b><p>网页端与桌面端只比对网页本体版本，不再因安卓 APK 升号被拦；安卓客户端仍按 APK 版本拦截。</p></div>
+            <div><b>安卓端保持不变</b><p>安卓正式渠道仍为 V6.0.3（versionCode 603），本次不改动，已安装用户无需重新下载。</p></div>
           </div>
         </div>
       </div>
@@ -469,10 +469,10 @@
         <div>
           <span class="kicker">Download</span>
           <h2 class="h2">选一个平台，<br>把票根收进来。</h2>
-          <p class="lead">网页端免安装，安卓与桌面端为本地应用。网页端、桌面端与安卓端均已为 <b>V6.0.3</b>；安卓正式包 versionCode 603，桌面安装包仍是 5.5.2、启动后热更新到 V6.0.3。</p>
+          <p class="lead">网页端免安装，安卓与桌面端为本地应用。网页端与桌面端为 <b>V6.0.4</b>；安卓端本次不变，正式包仍为 V6.0.3（versionCode 603）。桌面安装包是 5.5.2，启动后热更新到 V6.0.4。</p>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-          <span class="dl-badge"><i></i>STABLE · V6.0.3</span>
+          <span class="dl-badge"><i></i>STABLE · V6.0.4</span>
           <span class="dl-line" id="dlLineHint"></span>
         </div>
       </div>
@@ -483,8 +483,8 @@
           <p>浏览器直接打开，免安装；数据存在本机浏览器。</p>
         </div>
         <div class="plat">
-          <div class="pl-top"><b>桌面端</b><span class="st">V6.0.3</span></div>
-          <p>Windows 安装版 / 便携版，macOS Apple 芯片与 Intel；安装包 5.5.2，启动后热更新到 V6.0.3。</p>
+          <div class="pl-top"><b>桌面端</b><span class="st">V6.0.4</span></div>
+          <p>Windows 安装版 / 便携版，macOS Apple 芯片与 Intel；安装包 5.5.2，启动后热更新到 V6.0.4。</p>
         </div>
         <div class="plat">
           <div class="pl-top"><b>安卓端</b><span class="st">V6.0.3</span></div>
@@ -506,7 +506,7 @@
           </a>
           <a class="dl-item" href="changelog.html">
             <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.6h14v15H5z"/><path d="M8.4 9h7.2"/><path d="M8.4 12.6h7.2"/><path d="M8.4 16.2h4.2"/></svg></span>
-            <span class="di-txt"><b>本版更新说明</b><i>V6.0.3 · 火车票导入字段修正 · 安卓转正式</i></span>
+            <span class="di-txt"><b>本版更新说明</b><i>V6.0.4 · 强制更新提醒修复 · 行程地图性能</i></span>
             <span class="di-act">查看 →</span>
           </a>
         </div>
@@ -529,12 +529,12 @@
           <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="4.6" width="16.8" height="11.2" rx="1.8"/><path d="M8.4 19.4h7.2"/></svg>Windows · 桌面端</h3>
           <a class="dl-item js-gh-dl" href="https://github.com/ajietudou007/TraceDot/releases/download/v5.5.2/TraceDot-Setup-5.5.2-x64.exe" target="_blank" rel="noopener">
             <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6v11.6"/><path d="M7.4 10.8 12 15.4l4.6-4.6"/><path d="M4.6 19.4h14.8"/></svg></span>
-            <span class="di-txt"><b>安装版 · x64</b><i>开始菜单与卸载入口 · 启动后热更新到 V6.0.3</i></span>
+            <span class="di-txt"><b>安装版 · x64</b><i>开始菜单与卸载入口 · 启动后热更新到 V6.0.4</i></span>
             <span class="di-act">下载 ↓</span>
           </a>
           <a class="dl-item js-gh-dl" href="https://github.com/ajietudou007/TraceDot/releases/download/v5.5.2/TraceDot-5.5.2-portable-x64.zip" target="_blank" rel="noopener">
             <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 7.4h6v6h-6z"/><path d="M13.4 7.4h6v6h-6z"/><path d="M4.6 15.6h6v4h-6z"/><path d="M13.4 15.6h6v4h-6z"/></svg></span>
-            <span class="di-txt"><b>便携版 · x64</b><i>解压即用 · 启动后热更新到 V6.0.3</i></span>
+            <span class="di-txt"><b>便携版 · x64</b><i>解压即用 · 启动后热更新到 V6.0.4</i></span>
             <span class="di-act">下载 ↓</span>
           </a>
         </div>
@@ -543,12 +543,12 @@
           <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.4" y="4.4" width="17.2" height="12" rx="1.8"/><path d="M8.4 20h7.2"/><path d="M12 16.4V20"/></svg>macOS · 桌面端</h3>
           <a class="dl-item js-gh-dl" href="https://github.com/ajietudou007/TraceDot/releases/download/v5.5.2/TraceDot-5.5.2-arm64.dmg" target="_blank" rel="noopener">
             <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6v11.6"/><path d="M7.4 10.8 12 15.4l4.6-4.6"/><path d="M4.6 19.4h14.8"/></svg></span>
-            <span class="di-txt"><b>Apple 芯片 · arm64</b><i>M 系列芯片 · 启动后热更新到 V6.0.3</i></span>
+            <span class="di-txt"><b>Apple 芯片 · arm64</b><i>M 系列芯片 · 启动后热更新到 V6.0.4</i></span>
             <span class="di-act">下载 ↓</span>
           </a>
           <a class="dl-item js-gh-dl" href="https://github.com/ajietudou007/TraceDot/releases/download/v5.5.2/TraceDot-5.5.2-x64.dmg" target="_blank" rel="noopener">
             <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.4 5.4h13.2v13.2H5.4z"/><path d="M9 9h6v6H9z"/></svg></span>
-            <span class="di-txt"><b>Intel 芯片 · x64</b><i>2020 年前的 Mac · 启动后热更新到 V6.0.3</i></span>
+            <span class="di-txt"><b>Intel 芯片 · x64</b><i>2020 年前的 Mac · 启动后热更新到 V6.0.4</i></span>
             <span class="di-act">下载 ↓</span>
           </a>
         </div>
@@ -773,7 +773,7 @@
     </p>
     <div class="foot-base">
       <span>© 2026 迹点点 TraceDot · 阿杰同学</span>
-      <span>V6.0.3 · 2026-11-18 · 保持独立，保持可用</span>
+      <span>V6.0.4 · 2026-11-19 · 保持独立，保持可用</span>
     </div>
   </div>
 </footer>
