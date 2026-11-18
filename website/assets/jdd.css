@@ -237,6 +237,9 @@ h1,h2,h3,h4,p{margin:0;text-wrap:pretty}
   position:relative;width:100%;display:grid;place-items:center;
   margin:-11% 0 -6.5%;
   perspective:1000px;perspective-origin:50% 42%;
+  /* 装饰层：倾斜后的轨道盒会盖住下方 CTA，必须让指针穿透，
+     否则「在线打开网页端」的点击会被 .orbit-stage / .spin 吃掉 */
+  pointer-events:none;
 }
 .orbit-tilt{
   --mx:0;--my:0;--o:min(600px,90vw);--rr:.4;--tilt:64deg;--roll:-7deg;
