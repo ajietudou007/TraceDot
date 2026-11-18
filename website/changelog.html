@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>更新日志 · 迹点点 TraceDot V6.0.4</title>
-<meta name="description" content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V6.0.4（修复强制更新提醒反复弹出、行程地图性能优化），五个阶段共 47 组版本记录。">
+<meta name="description" content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V6.0.4（修复强制更新提醒反复弹出、行程地图性能优化、珍藏册预览骨架屏与真实进度），五个阶段共 47 组版本记录。">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232E7FF2'/%3E%3Cstop offset='1' stop-color='%231E66D0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Ccircle cx='31' cy='67' r='9.8' fill='none' stroke='%23fff' stroke-width='5.9'/%3E%3Ccircle cx='69.5' cy='32.5' r='9.8' fill='none' stroke='%23fff' stroke-width='5.9'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23fff'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23fff'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/jdd.css">
@@ -59,7 +59,7 @@
         <span class="light">遵循 Keep a Changelog</span>
       </span>
       <h1>每一次出发与沉淀，<br>都留在这条<em>时间轴</em>上。</h1>
-      <p class="cl-hero-lead">从前身「12306 火车票票根编辑器」，一路走到四个工坊、十种票面、账号与加密备份的 V6.0.4，共五个阶段、47 组版本记录。这里写下每次技术取舍、视觉重塑，也写下那些被修掉的坑；最新一版修掉了强制更新提醒反复弹出的问题，并把行程地图的线路绘制与拖动做了性能优化。</p>
+      <p class="cl-hero-lead">从前身「12306 火车票票根编辑器」，一路走到四个工坊、十种票面、账号与加密备份的 V6.0.4，共五个阶段、47 组版本记录。这里写下每次技术取舍、视觉重塑，也写下那些被修掉的坑；最新一版修掉了强制更新提醒反复弹出的问题，把行程地图的线路绘制与拖动做了性能优化，并给珍藏册的票面预览补上了骨架屏占位与真实生成进度。</p>
     </div>
     <div class="cl-stats" aria-label="版本统计">
       <div class="cl-stat"><b>47</b><i>收录迭代版本</i></div>
@@ -109,11 +109,18 @@
           <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/><path d="M20.2 12.4 9.6 23 4.2 17.6" opacity=".45"/></svg></span>行程地图性能优化</div>
           <p>同一条线路只画一次并去重，动画在页面不可见时暂停，拖动改走快路径；长账本下拖动、缩放与切换年份更稳，不再重复叠加绘制。</p>
         </div>
+        <div class="cl-hl alt">
+          <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/><path d="M20.2 12.4 9.6 23 4.2 17.6" opacity=".45"/></svg></span>珍藏册预览有加载反馈</div>
+          <p>票面尚未生成的位置先铺与票面同尺寸的骨架屏（浅色底 + 流光 / 呼吸动画），出图后原位替换，不跳动也不塌陷；底部显示「已生成 N / 总数」的真实进度，只随真实回图推进，生成完自动消失；列表刷新重渲染不再整表重建，骨架动画不会被重置。</p>
+        </div>
       </div>
       <details class="cl-more" open>
-        <summary><span class="cl-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 9V4.4H9"/><path d="M14 4.4h5.6V10"/><path d="M19.6 15v4.6H14"/><path d="M10 19.6H4.4V15"/></svg></span>详细条目 (Changes) <b>5</b></summary>
+        <summary><span class="cl-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 9V4.4H9"/><path d="M14 4.4h5.6V10"/><path d="M19.6 15v4.6H14"/><path d="M10 19.6H4.4V15"/></svg></span>详细条目 (Changes) <b>8</b></summary>
         <ul class="cl-items">
           <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>门禁数据源收口</strong>：胶囊、关于面板与全屏强制层三处统一读 <code>https://jidiandian.top/release/latest.json</code> 的 <code>version</code>，不再读 <code>app/latest.json</code> 的 <code>apk.versionName</code>。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>珍藏册预览加载体验</strong>：未出图的票面先用与票面同尺寸的骨架屏占位（浅色底 + 流光 / 呼吸动画），出图后原位替换，媒体区高度固定，不跳动也不塌陷。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>真实生成进度</strong>：底部显示「已生成 N / 总数」与进度条，分母是整册票面数、分子只随真实回图增长，不按时间估算；生成完自动淡出移除，失败超过重试上限才显示「预览暂不可用」。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>刷新不再整表重建</strong>：列表中票面未变时直接跳过重建，只补齐缺失预览，骨架动画不会被复位，已出图的票面也不再闪一下。</p></li>
           <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>落盘结构同步改名</strong>：localStorage 里保存的强制结论由 <code>apkVersion</code> 改为 <code>ver</code>，启动重建弹层时按新键判断，旧键不再命中。</p></li>
           <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>在线网页端与桌面端内容</strong>：<code>https://jidiandian.top/app/</code> 与 <code>release/TraceDot-V6.0.4.html</code> 均为 V6.0.4；<code>release/latest.json</code> 与 <code>latest-beta.json</code> 指向新页面，壳启动后自动拉取并提示重启。</p></li>
           <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>旧页面替换</strong>：长期停在 5.5.x 的桌面客户端，会在壳拉取到本页面后一次性换到 V6.0.4，反复弹窗随之停止；无需重装安装包。</p></li>
