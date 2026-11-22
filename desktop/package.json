@@ -43,7 +43,8 @@
       "target": [
         { "target": "nsis", "arch": ["x64"] },
         { "target": "zip", "arch": ["x64"] }
-      ]
+      ],
+      "artifactName": "TraceDot-${version}-portable-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
