@@ -1,13 +1,14 @@
 {
   "channel": "beta",
   "apk": {
-    "versionCode": 612,
-    "versionName": "6.1.1",
-    "url": "https://jidiandian.top/app/beta/jidiandian-6.1.1.apk?v=612",
-    "publishedAt": 1795247346153
+    "versionCode": 613,
+    "versionName": "6.1.2",
+    "url": "https://jidiandian.top/app/beta/jidiandian-6.1.2.apk?v=613",
+    "publishedAt": 1795360927460
   },
   "page": "https://jidiandian.top/website/#download",
   "changelog": [
+    "V6.1.2（versionCode 613）：修复 6.1/6.1.1 检测不到内测更新的问题（更新检查前先按服务端内测状态校正渠道，清单请求加时间戳绕开 CDN 缓存）",
     "V6.1.1（versionCode 612）：「我的 → 语音与播报 → 语音广播」原生重写，功能对齐铁路广播操作台",
     "本版修复：内测申请页通过后直接显示版本与下载入口；设置页「检查新版本」改为真实检查；更新卡片浏览器下载改为 APK 直链",
     "站点选择：关键词联想 + 热门车站，选中后自动拉取 RailGo 当日车次（车次号/始发终到/时刻/晚点/状态/检票口）",
