@@ -52,8 +52,19 @@ jobs:
           cache: npm
           cache-dependency-path: desktop/package-lock.json
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
       - name: Install dependencies
         run: npm install
+        working-directory: desktop
+
+      # 内置离线语音：装 PyInstaller / sherpa-onnx，拉标贝模型，打成 onedir 服务
+      - name: Build TTS service
+        run: ./scripts/build-service.ps1
         working-directory: desktop
 
       - name: Build Windows installer
@@ -66,6 +77,7 @@ jobs:
           name: TraceDot-win
           path: |
             desktop/dist_electron/TraceDot-Setup-*.exe
+            desktop/dist_electron/TraceDot-*.zip
             desktop/dist_electron/latest.yml
 
       - name: Attach to GitHub Release
@@ -75,11 +87,14 @@ jobs:
           overwrite_files: true
           files: |
             desktop/dist_electron/TraceDot-Setup-*.exe
+            desktop/dist_electron/TraceDot-*.zip
             desktop/dist_electron/latest.yml
           fail_on_unmatched_files: false
 
-  build-mac:
-    name: macOS 安装包
+  # macOS 分两个 job 原生构建：PyInstaller 不能交叉编译，
+  # Apple 芯片包在 arm64 机器上出，Intel 包在 x64 机器上出，各自带匹配架构的语音服务。
+  build-mac-arm64:
+    name: macOS 安装包（Apple 芯片）
     if: ${{ github.event_name != 'workflow_dispatch' || inputs.target == 'both' || inputs.target == 'mac' }}
     runs-on: macos-latest
     steps:
@@ -104,18 +119,28 @@ jobs:
           cache: npm
           cache-dependency-path: desktop/package-lock.json
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
       - name: Install dependencies
         run: npm install
         working-directory: desktop
 
-      - name: Build macOS dmg + zip
-        run: npm run prep && npx electron-builder --mac --publish never
+      - name: Build TTS service
+        run: bash scripts/build-service.sh
+        working-directory: desktop
+
+      - name: Build macOS dmg + zip (arm64)
+        run: npm run prep && npx electron-builder --mac --arm64 --publish never
         working-directory: desktop
 
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: TraceDot-mac
+          name: TraceDot-mac-arm64
           path: |
             desktop/dist_electron/*.dmg
             desktop/dist_electron/*.zip
@@ -130,4 +155,67 @@ jobs:
             desktop/dist_electron/*.dmg
             desktop/dist_electron/*.zip
             desktop/dist_electron/latest-mac.yml
+          fail_on_unmatched_files: false
+
+  build-mac-x64:
+    name: macOS 安装包（Intel）
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.target == 'both' || inputs.target == 'mac' }}
+    runs-on: macos-15-intel
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: 校验版本号与标签一致
+        if: startsWith(github.ref, 'refs/tags/')
+        working-directory: desktop
+        run: |
+          v=$(node -p "require('./package.json').version")
+          echo "desktop/package.json = $v / tag = ${GITHUB_REF_NAME}"
+          if [ "v$v" != "${GITHUB_REF_NAME}" ]; then
+            echo "标签与 desktop/package.json 版本不一致，拒绝构建（避免覆盖 Release 的更新清单）"
+            exit 1
+          fi
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: desktop
+
+      - name: Build TTS service
+        run: bash scripts/build-service.sh
+        working-directory: desktop
+
+      - name: Build macOS dmg + zip (x64)
+        run: npm run prep && npx electron-builder --mac --x64 --publish never
+        working-directory: desktop
+
+      # latest-mac.yml 只由 arm64 job 上传，避免两份不同架构的更新清单互相覆盖
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: TraceDot-mac-x64
+          path: |
+            desktop/dist_electron/*.dmg
+            desktop/dist_electron/*.zip
+
+      - name: Attach to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag_name || github.ref_name }}
+          overwrite_files: true
+          files: |
+            desktop/dist_electron/*.dmg
+            desktop/dist_electron/*.zip
           fail_on_unmatched_files: false

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>更新日志 · 迹点点 TraceDot V6.0.4</title>
-<meta name="description" content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V6.0.4（修复强制更新提醒反复弹出、行程地图性能优化、珍藏册预览骨架屏与真实进度），五个阶段共 47 组版本记录。">
+<title>更新日志 · 迹点点 TraceDot V6.1.0</title>
+<meta name="description" content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V6.1.0（桌面端内置标贝离线语音、网页端语音广播入口、恢复码密钥域分离），五个阶段共 48 组版本记录。">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232E7FF2'/%3E%3Cstop offset='1' stop-color='%231E66D0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Ccircle cx='31' cy='67' r='9.8' fill='none' stroke='%23fff' stroke-width='5.9'/%3E%3Ccircle cx='69.5' cy='32.5' r='9.8' fill='none' stroke='%23fff' stroke-width='5.9'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23fff'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23fff'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/jdd.css">
@@ -16,7 +16,7 @@
     <a href="index.html" class="brandmark" aria-label="迹点点首页">
       <img src="ic_brand_logo.png" alt="" width="34" height="34" decoding="async">
       <span class="bm-txt"><b>迹点点</b><i>TRACEDOT</i></span>
-      <span class="ver-tag">V6.0.4</span>
+      <span class="ver-tag">V6.1.0</span>
     </a>
     <nav class="nav-links" aria-label="主导航">
       <a href="index.html#news">新版本</a>
@@ -59,12 +59,12 @@
         <span class="light">遵循 Keep a Changelog</span>
       </span>
       <h1>每一次出发与沉淀，<br>都留在这条<em>时间轴</em>上。</h1>
-      <p class="cl-hero-lead">从前身「12306 火车票票根编辑器」，一路走到四个工坊、十种票面、账号与加密备份的 V6.0.4，共五个阶段、47 组版本记录。这里写下每次技术取舍、视觉重塑，也写下那些被修掉的坑；最新一版修掉了强制更新提醒反复弹出的问题，把行程地图的线路绘制与拖动做了性能优化，并给珍藏册的票面预览补上了骨架屏占位与真实生成进度。</p>
+      <p class="cl-hero-lead">从前身「12306 火车票票根编辑器」，一路走到四个工坊、十种票面、账号与加密备份的 V6.1.0，共五个阶段、48 组版本记录。这里写下每次技术取舍、视觉重塑，也写下那些被修掉的坑；最新一版把铁路广播操作台收进网页端与桌面端，桌面安装包内置标贝离线语音，并给恢复码的密钥派生做了域分离加固。</p>
     </div>
     <div class="cl-stats" aria-label="版本统计">
-      <div class="cl-stat"><b>47</b><i>收录迭代版本</i></div>
+      <div class="cl-stat"><b>48</b><i>收录迭代版本</i></div>
       <div class="cl-stat"><b>5</b><i>大演进阶段</i></div>
-      <div class="cl-stat"><b>V6.0.4</b><i>当前稳定版本</i></div>
+      <div class="cl-stat"><b>V6.1.0</b><i>当前稳定版本</i></div>
       <div class="cl-stat"><b>MIT</b><i>全部源码公开</i></div>
     </div>
   </div>
@@ -73,8 +73,8 @@
 <div class="cl-wrap">
   <div class="cl-bar">
     <div class="cl-chips" id="clChips" role="group" aria-label="按阶段筛选">
-      <button class="cl-chip on" data-stage="all">全部<b>47</b></button>
-      <button class="cl-chip" data-stage="stage-5">第五阶段<b>34</b></button>
+      <button class="cl-chip on" data-stage="all">全部<b>48</b></button>
+      <button class="cl-chip" data-stage="stage-5">第五阶段<b>35</b></button>
       <button class="cl-chip" data-stage="stage-4">第四阶段<b>10</b></button>
       <button class="cl-chip" data-stage="stage-3">第三阶段<b>1</b></button>
       <button class="cl-chip" data-stage="stage-2">第二阶段<b>1</b></button>
@@ -89,14 +89,49 @@
   <div class="cl-stream" id="clStream">
     <div class="cl-stage" data-stage="stage-5">
       <span class="cl-stage-no">五</span>
-      <div><h2>第五阶段 · V5 视觉与体验重塑</h2><i>2026-10-16 ~ 11-19 · 34 条</i></div>
+      <div><h2>第五阶段 · V5 视觉与体验重塑</h2><i>2026-10-16 ~ 11-23 · 35 条</i></div>
     </div>
+    <article class="glass-card cl-entry" id="v6-1-0" data-stage="stage-5">
+      <span class="cl-node" aria-hidden="true"></span>
+      <div class="cl-top">
+        <div class="cl-verline">
+          <h3 class="cl-ver">V6.1.0</h3>
+          <span class="cl-badge live">最新稳定版</span><span class="cl-badge">网页端</span><span class="cl-badge">桌面端</span>
+        </div>
+        <time class="cl-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="5.2" width="16.8" height="15.2" rx="2.4"/><path d="M3.6 10h16.8"/><path d="M8.4 3.2v4M15.6 3.2v4"/></svg>2026-11-23</time>
+      </div>
+      <div class="cl-hls">
+        <div class="cl-hl ">
+          <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h2l4 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 5.5a9 9 0 0 1 0 13"/></svg></span>桌面端内置标贝离线语音</div>
+          <p>安装包随附 sherpa-onnx 语音服务与标贝女声模型。壳启动时挑一个空闲端口拉起本地服务，<code>/health</code> 返回就绪后把服务地址通过 <code>?bakerBase=</code> 注入页面；语音广播在本机合成，不联网、也无需另装广播操作台，服务缺失时页面自动回退在线中继。</p>
+        </div>
+        <div class="cl-hl alt">
+          <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.4" y="3.4" width="17.2" height="17.2" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>网页端新增「语音广播」入口</div>
+          <p>顶栏新增语音广播按钮，内嵌完整操作台：站点与车次联想，开始检票、停止检票、列车到达、即将发车、晚点通知、安全提示、重点旅客、应急广播 8 个场景，中英双语稿件自动生成、可编辑，提示音与音色/语速可调。</p>
+        </div>
+        <div class="cl-hl alt">
+          <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.4" y="4.4" width="15.2" height="15.2" rx="3"/><path d="M12 8.4v4.2"/><path d="M12 16v.2"/></svg></span>恢复码密钥域分离</div>
+          <p>恢复码派生的认证值与此前用于包裹备份 DEK 的密钥改用不同域前缀（<code>jdd:recovery-kek:v2:</code>），服务端即使拿到恢复认证值也无法解开零知识备份；旧恢复码通过 legacy 派生继续可用。</p>
+        </div>
+      </div>
+      <details class="cl-more" open>
+        <summary><span class="cl-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 9V4.4H9"/><path d="M14 4.4h5.6V10"/><path d="M19.6 15v4.6H14"/><path d="M10 19.6H4.4V15"/></svg></span>详细条目 (Changes) <b>6</b></summary>
+        <ul class="cl-items">
+          <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>桌面端离线语音服务</strong>：PyInstaller 打成 onedir 服务（含标贝模型），随包放在 <code>resources/service</code>；壳启动后自动拉起，退出时结束子进程，端口占用或服务缺失都不阻塞页面打开。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>语音广播入口</strong>：网页端顶栏新增按钮，全屏内嵌广播操作台；桌面端识别到内置服务后直接使用，网页端可手动填写局域网地址使用自建服务。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>恢复码安全加固</strong>：新增 <code>RECOVERY_KEK_SALT_PREFIX</code>，恢复码的认证密钥与备份密钥从同一派生值拆成两个域；解锁时先试 v2，再回退旧派生，已有恢复码不受影响。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>安装包直接是 V6.1.0</strong>：Windows NSIS / 便携 zip、macOS arm64 / x64 的 dmg 与 zip 由 CI 同时产出，安装即最新，不再依赖启动后热更新补齐；后续内容更新仍走原清单通道。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>构建方式调整</strong>：CI 增加 Python 环境，先下载标贝模型再用 PyInstaller 打服务，随后 electron-builder 出包；macOS 的 arm64 与 x64 分别在对应架构机器上原生构建，避免交叉编译出不匹配的语音服务。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>版本与渠道</strong>：<code>release/latest.json</code> 与 <code>latest-beta.json</code> 指向 <code>release/TraceDot-V6.1.0.html</code>；安卓端本次不变，正式包仍为 V6.0.3（versionCode 603）。</p></li>
+        </ul>
+      </details>
+    </article>
     <article class="glass-card cl-entry" id="v6-0-4" data-stage="stage-5">
       <span class="cl-node" aria-hidden="true"></span>
       <div class="cl-top">
         <div class="cl-verline">
           <h3 class="cl-ver">V6.0.4</h3>
-          <span class="cl-badge live">最新稳定版</span><span class="cl-badge">网页端</span><span class="cl-badge">桌面端</span>
+          <span class="cl-badge">网页端</span><span class="cl-badge">桌面端</span>
         </div>
         <time class="cl-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="5.2" width="16.8" height="15.2" rx="2.4"/><path d="M3.6 10h16.8"/><path d="M8.4 3.2v4M15.6 3.2v4"/></svg>2026-11-19</time>
       </div>
@@ -1502,7 +1537,7 @@
     <div class="foot-top">
       <div class="foot-brand">
         <img src="ic_brand_logo.png" alt="" width="40" height="40" decoding="async">
-        <div><b>迹点点 TraceDot</b><i>旅行纪念票根工作室 · V6.0.4</i></div>
+        <div><b>迹点点 TraceDot</b><i>旅行纪念票根工作室 · V6.1.0</i></div>
       </div>
       <div class="foot-cols">
         <div class="foot-col">

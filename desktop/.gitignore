@@ -2,3 +2,8 @@ node_modules/
 dist_electron/
 icon.iconset/
 app/
+resources/
+service/
+tts_models/
+__pycache__/
+*.pyc

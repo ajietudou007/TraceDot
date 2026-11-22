@@ -1,13 +1,15 @@
 {
   "name": "tracedot-desktop",
   "productName": "迹点点",
-  "version": "5.5.2",
-  "description": "迹点点 TraceDot 桌面端：单文件应用包装为原生窗口",
+  "version": "6.1.0",
+  "description": "迹点点 TraceDot 桌面端：单文件应用包装为原生窗口，内置标贝离线语音",
   "main": "main.js",
   "private": true,
   "scripts": {
     "start": "npm run prep && electron .",
     "prep": "node prep.js",
+    "service:win": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-service.ps1",
+    "service:mac": "bash scripts/build-service.sh",
     "dist:mac": "npm run prep && electron-builder --mac",
     "dist:win": "npm run prep && electron-builder --win",
     "dist": "npm run prep && electron-builder --mac --win"
@@ -24,13 +26,16 @@
       "preload.js",
       "app/**"
     ],
+    "extraResources": [
+      {
+        "from": "service/dist/tts_baker_service",
+        "to": "service"
+      }
+    ],
     "asar": true,
     "artifactName": "TraceDot-${version}-${arch}.${ext}",
     "mac": {
-      "target": [
-        { "target": "dmg", "arch": ["arm64", "x64"] },
-        { "target": "zip", "arch": ["arm64", "x64"] }
-      ],
+      "target": ["dmg", "zip"],
       "category": "public.app-category.utilities",
       "identity": null
     },

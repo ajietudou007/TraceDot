@@ -3,12 +3,14 @@ const path = require('path');
 const fs = require('fs');
 const https = require('https');
 const crypto = require('crypto');
+const net = require('net');
+const { spawn } = require('child_process');
 
 /* 手动下载统一走官网下载区：Windows 安装包与单文件网页版已切 Gitee 国内线路直发，
    macOS 两个包仍走 GitHub（页面自动择优公益加速线路）。
    GitHub 发布页仍从「项目主页」进入，用于查历史版本。 */
 const RELEASES_URL = 'https://jidiandian.top/#download';
-const APP_VERSION = '5.5.2';
+const APP_VERSION = '6.1.0';
 let win = null;
 
 /* ---------- 壳与网页分离 ----------
@@ -253,6 +255,59 @@ function ensurePage() {
   return reseedPage(seedHtml, seedVer, '内容摘要与种子不一致');
 }
 
+/* ---------- 内置标贝语音服务 ----------
+   随包带 sherpa-onnx 离线女声；启动时找一个空闲端口拉起 exe，
+   再把地址通过 ?bakerBase= 注入页面，网页端「语音广播」即可直接离线播报。
+   找不到内置服务时页面自动回退在线中继，不影响主流程。 */
+let ttsProc = null;
+let ttsPort = 0;
+
+function findFreePort() {
+  return new Promise((resolve, reject) => {
+    const srv = net.createServer();
+    srv.unref();
+    srv.on('error', reject);
+    srv.listen(0, '127.0.0.1', () => {
+      const port = srv.address().port;
+      srv.close(() => resolve(port));
+    });
+  });
+}
+
+function ttsServicePath() {
+  const exe = process.platform === 'win32' ? 'tts_baker_service.exe' : 'tts_baker_service';
+  const packed = path.join(process.resourcesPath || '', 'service', exe);
+  if (fs.existsSync(packed)) return { cmd: packed, cwd: path.dirname(packed) };
+  const local = path.join(__dirname, 'resources', 'service', exe);
+  if (fs.existsSync(local)) return { cmd: local, cwd: path.dirname(local) };
+  return null;
+}
+
+async function startTtsService() {
+  try {
+    const svc = ttsServicePath();
+    if (!svc) {
+      console.warn('未找到内置语音服务，页面将使用在线中继');
+      return;
+    }
+    ttsPort = await findFreePort();
+    ttsProc = spawn(svc.cmd, ['--port', String(ttsPort)], {
+      cwd: svc.cwd,
+      windowsHide: true,
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
+    ttsProc.stdout.on('data', (d) => console.log('[tts] ' + String(d).trim()));
+    ttsProc.stderr.on('data', (d) => console.log('[tts] ' + String(d).trim()));
+    ttsProc.on('error', (e) => console.warn('语音服务启动失败:', e && e.message));
+    ttsProc.on('exit', (code) => {
+      console.log('语音服务退出 code=' + code);
+      ttsProc = null;
+    });
+  } catch (e) {
+    console.warn('语音服务初始化失败:', e && e.message);
+  }
+}
+
 function loadApp() {
   let localReady = false;
   try {
@@ -262,7 +317,9 @@ function loadApp() {
   }
   /* 本地页面不可用（重铺失败且原本就缺失）时直接加载包内种子，
      宁可少一次热更新能力，也不能让窗口停在加载失败页 */
-  win.loadFile(localReady ? pagePath() : seedPath('index.html'));
+  const file = localReady ? pagePath() : seedPath('index.html');
+  const opts = ttsPort ? { query: { bakerBase: 'http://127.0.0.1:' + ttsPort } } : undefined;
+  win.loadFile(file, opts);
 }
 
 /* 把重定向的 Location 补全成绝对地址。
@@ -929,7 +986,7 @@ function appMenuExtra() {
   ];
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   /* 网页侧设置通道：落标记文件；刚切到内测时立刻拉一次内测内容清单，
      用户申请获批后不用再手动点「检查内容更新」。 */
   ipcMain.on('jdd:set-beta-channel', (e, ch) => {
@@ -948,6 +1005,7 @@ app.whenReady().then(() => {
     console.warn('ensure page failed:', e && e.message);
   }
   buildMenu();
+  await startTtsService();
   createWindow();
   setupUpdater();
   if (app.isPackaged) {
@@ -962,4 +1020,15 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
+});
+
+app.on('will-quit', () => {
+  if (ttsProc) {
+    try {
+      ttsProc.kill();
+    } catch (e) {
+      /* 服务已退出 */
+    }
+    ttsProc = null;
+  }
 });
