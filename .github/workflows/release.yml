@@ -22,6 +22,12 @@ on:
 permissions:
   contents: write
 
+# Windows runner 上 Python 的 stdout 走 ANSI 代码页（cp1252），
+# tts_baker.py 的中文进度输出会抛 UnicodeEncodeError，这里统一强制 UTF-8。
+env:
+  PYTHONUTF8: "1"
+  PYTHONIOENCODING: "utf-8"
+
 jobs:
   build-win:
     name: Windows 安装包
