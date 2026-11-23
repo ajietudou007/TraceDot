@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>更新日志 · 迹点点 TraceDot V6.1.4</title>
-<meta name="description" content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V6.1.4（安卓端一键导出全部票根、返回定位修复、恢复码跨端统一），五个阶段共 51 组版本记录。">
+<meta name="description" content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V6.1.4（安卓端一键导出全部票根、返回定位修复、恢复码跨端统一），六个阶段共 51 组版本记录。">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232E7FF2'/%3E%3Cstop offset='1' stop-color='%231E66D0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Ccircle cx='31' cy='67' r='9.8' fill='none' stroke='%23fff' stroke-width='5.9'/%3E%3Ccircle cx='69.5' cy='32.5' r='9.8' fill='none' stroke='%23fff' stroke-width='5.9'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23fff'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23fff'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/jdd.css">
@@ -59,11 +59,11 @@
         <span class="light">遵循 Keep a Changelog</span>
       </span>
       <h1>每一次出发与沉淀，<br>都留在这条<em>时间轴</em>上。</h1>
-      <p class="cl-hero-lead">从前身「12306 火车票票根编辑器」，一路走到四个工坊、十种票面、账号与加密备份的 V6.1.4，共五个阶段、51 组版本记录。这里写下每次技术取舍、视觉重塑，也写下那些被修掉的坑；最新一版给安卓端补上一键导出全部票根图片与返回定位修复，并把恢复码派生域与网页端统一，换端找回不再失败。</p>
+      <p class="cl-hero-lead">从前身「12306 火车票票根编辑器」，一路走到四个工坊、十种票面、账号与加密备份的 V6.1.4，共六个阶段、51 组版本记录。这里写下每次技术取舍、视觉重塑，也写下那些被修掉的坑；最新一版给安卓端补上一键导出全部票根图片与返回定位修复，并把恢复码派生域与网页端统一，换端找回不再失败。</p>
     </div>
     <div class="cl-stats" aria-label="版本统计">
       <div class="cl-stat"><b>51</b><i>收录迭代版本</i></div>
-      <div class="cl-stat"><b>5</b><i>大演进阶段</i></div>
+      <div class="cl-stat"><b>6</b><i>大演进阶段</i></div>
       <div class="cl-stat"><b>V6.1.4</b><i>当前稳定版本</i></div>
       <div class="cl-stat"><b>MIT</b><i>全部源码公开</i></div>
     </div>
@@ -74,7 +74,8 @@
   <div class="cl-bar">
     <div class="cl-chips" id="clChips" role="group" aria-label="按阶段筛选">
       <button class="cl-chip on" data-stage="all">全部<b>51</b></button>
-      <button class="cl-chip" data-stage="stage-5">第五阶段<b>38</b></button>
+      <button class="cl-chip" data-stage="stage-6">第六阶段<b>10</b></button>
+      <button class="cl-chip" data-stage="stage-5">第五阶段<b>28</b></button>
       <button class="cl-chip" data-stage="stage-4">第四阶段<b>10</b></button>
       <button class="cl-chip" data-stage="stage-3">第三阶段<b>1</b></button>
       <button class="cl-chip" data-stage="stage-2">第二阶段<b>1</b></button>
@@ -87,11 +88,11 @@
   </div>
 
   <div class="cl-stream" id="clStream">
-    <div class="cl-stage" data-stage="stage-5">
-      <span class="cl-stage-no">五</span>
-      <div><h2>第五阶段 · V5 视觉与体验重塑</h2><i>2026-10-16 ~ 11-23 · 38 条</i></div>
+    <div class="cl-stage" data-stage="stage-6">
+      <span class="cl-stage-no">六</span>
+      <div><h2>第六阶段 · V5.5 → V6 原生重构与账号体系</h2><i>2026-11-10 ~ 11-23 · 10 条</i></div>
     </div>
-    <article class="glass-card cl-entry" id="v6-1-4" data-stage="stage-5">
+    <article class="glass-card cl-entry" id="v6-1-4" data-stage="stage-6">
       <span class="cl-node" aria-hidden="true"></span>
       <div class="cl-top">
         <div class="cl-verline">
@@ -126,7 +127,7 @@
         </ul>
       </details>
     </article>
-    <article class="glass-card cl-entry" id="v6-1-1" data-stage="stage-5">
+    <article class="glass-card cl-entry" id="v6-1-1" data-stage="stage-6">
       <span class="cl-node" aria-hidden="true"></span>
       <div class="cl-top">
         <div class="cl-verline">
@@ -159,7 +160,7 @@
         </ul>
       </details>
     </article>
-    <article class="glass-card cl-entry" id="v6-1-3" data-stage="stage-5">
+    <article class="glass-card cl-entry" id="v6-1-3" data-stage="stage-6">
       <span class="cl-node" aria-hidden="true"></span>
       <div class="cl-top">
         <div class="cl-verline">
@@ -196,7 +197,7 @@
         </ul>
       </details>
     </article>
-    <article class="glass-card cl-entry" id="v6-1-0" data-stage="stage-5">
+    <article class="glass-card cl-entry" id="v6-1-0" data-stage="stage-6">
       <span class="cl-node" aria-hidden="true"></span>
       <div class="cl-top">
         <div class="cl-verline">
@@ -231,7 +232,7 @@
         </ul>
       </details>
     </article>
-    <article class="glass-card cl-entry" id="v6-0-4" data-stage="stage-5">
+    <article class="glass-card cl-entry" id="v6-0-4" data-stage="stage-6">
       <span class="cl-node" aria-hidden="true"></span>
       <div class="cl-top">
         <div class="cl-verline">
@@ -268,7 +269,7 @@
         </ul>
       </details>
     </article>
-    <article class="glass-card cl-entry" id="v6-0-3" data-stage="stage-5">
+    <article class="glass-card cl-entry" id="v6-0-3" data-stage="stage-6">
       <span class="cl-node" aria-hidden="true"></span>
       <div class="cl-top">
         <div class="cl-verline">
@@ -298,7 +299,7 @@
         </ul>
       </details>
     </article>
-    <article class="glass-card cl-entry" id="v6-0-0" data-stage="stage-5">
+    <article class="glass-card cl-entry" id="v6-0-0" data-stage="stage-6">
       <span class="cl-node" aria-hidden="true"></span>
       <div class="cl-top">
         <div class="cl-verline">
@@ -327,7 +328,7 @@
         </ul>
       </details>
     </article>
-    <article class="glass-card cl-entry" id="v5-5-2" data-stage="stage-5">
+    <article class="glass-card cl-entry" id="v5-5-2" data-stage="stage-6">
       <span class="cl-node" aria-hidden="true"></span>
       <div class="cl-top">
         <div class="cl-verline">
@@ -357,7 +358,7 @@
         </ul>
       </details>
     </article>
-    <article class="glass-card cl-entry" id="v5-5-1" data-stage="stage-5">
+    <article class="glass-card cl-entry" id="v5-5-1" data-stage="stage-6">
       <span class="cl-node" aria-hidden="true"></span>
       <div class="cl-top">
         <div class="cl-verline">
@@ -386,7 +387,7 @@
         </ul>
       </details>
     </article>
-    <article class="glass-card cl-entry" id="v5-5-0" data-stage="stage-5">
+    <article class="glass-card cl-entry" id="v5-5-0" data-stage="stage-6">
       <span class="cl-node" aria-hidden="true"></span>
       <div class="cl-top">
         <div class="cl-verline">
@@ -415,6 +416,10 @@
         </ul>
       </details>
     </article>
+    <div class="cl-stage" data-stage="stage-5">
+      <span class="cl-stage-no">五</span>
+      <div><h2>第五阶段 · V5 视觉与体验重塑</h2><i>2026-10-16 ~ 11-05 · 28 条</i></div>
+    </div>
     <article class="glass-card cl-entry" id="v5-4-2" data-stage="stage-5">
       <span class="cl-node" aria-hidden="true"></span>
       <div class="cl-top">
