@@ -32,7 +32,7 @@
 ### 修复
 
 - **注册失败**：服务端校验此前只接受 `iv.ct` 两段，安卓的 `v2.iv.ct` 被判定「wrappedDekRecovery 格式不正确」。服务端现放行 `v2.` 前缀并原样存回，注册 / 改密 / 找回 / 管理后台重置全部覆盖；已装的 6.1.3 无需升级即可注册。
-- **珍藏册返回跳顶**：页面离开组合时把滚动偏移存入进程级记忆，回来按原偏移恢复；进详情、切筛选、导出图片后返回都停在原来的浏览位置。
+- **珍藏册返回跳顶**：滚动位置改由常驻的应用根容器（`AppRoot` 持有 `ScrollState`）保存，不再依赖页面销毁时存取；进详情、切筛选、编辑保存、导出图片后返回都停在原来的浏览位置。
 - **恢复码跨端解不开**：安卓 v2 盐值由 `jdd:recovery-wrap:v2:` 改为与网页端一致的 `jdd:recovery-kek:v2:`，新包裹不再带前缀；解包按「网页 v2 → 6.1.3 旧 v2 → v1」逐级尝试，网页注册的账号也能在安卓找回。
 
 ### 变更
@@ -41,7 +41,7 @@
 
 ### 发布
 
-- 安卓：`app/latest.json` 与 `app/latest-beta.json` 升到 615 / 6.1.4，APK 为 `app/jidiandian-6.1.4.apk`（16,566,373 字节，SHA-256 `1ca95a4b…6574b4f`）。
+- 安卓：`app/latest.json` 与 `app/latest-beta.json` 升到 615 / 6.1.4，APK 为 `app/jidiandian-6.1.4.apk`（16,566,373 字节，SHA-256 `ef3ecaf6…a79d602b`，同 versionCode 重打包，补入珍藏册编辑返回定位修复）。
 - 网页端 / 桌面端：`release/latest.json` 与 `release/latest-beta.json` 升到 6.1.1，指向 `release/TraceDot-V6.1.1.html`（13,571,277 字节）；桌面壳仍为 6.1.0，启动后热更新。
 - 官网首页与更新日志同步到 V6.1.4 / V6.1.1；GitHub 与 Gitee 推送。
 
