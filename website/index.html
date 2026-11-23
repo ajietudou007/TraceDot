@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>迹点点 TraceDot · 把每一次出发，变成一张会讲故事的票根</title>
-<meta name="description" content="迹点点 TraceDot V6.1.0：四大工坊、十种票面，把车票、登机牌、城市交通与影演票收进一本珍藏册；本地优先存储，可选账号与零知识加密备份，跨设备恢复。">
+<meta name="description" content="迹点点 TraceDot V6.1.1：四大工坊、十种票面，把车票、登机牌、城市交通与影演票收进一本珍藏册；本地优先存储，可选账号与零知识加密备份，跨设备恢复。">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232E7FF2'/%3E%3Cstop offset='1' stop-color='%231E66D0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Ccircle cx='31' cy='67' r='9.8' fill='none' stroke='%23fff' stroke-width='5.9'/%3E%3Ccircle cx='69.5' cy='32.5' r='9.8' fill='none' stroke='%23fff' stroke-width='5.9'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23fff'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23fff'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/jdd.css?v=20261119b">
@@ -17,7 +17,7 @@
     <a href="#top" class="brandmark" aria-label="迹点点首页">
       <img src="ic_brand_logo.png" alt="" width="34" height="34" decoding="async">
       <span class="bm-txt"><b>迹点点</b><i>TRACEDOT</i></span>
-      <span class="ver-tag">V6.1.0</span>
+      <span class="ver-tag">V6.1.1</span>
     </a>
     <nav class="nav-links" aria-label="主导航">
       <a href="#news">新版本</a>
@@ -58,7 +58,7 @@
   <div class="shell hero-inner">
     <span class="eyebrow">
       <span class="pulse"></span>
-      <span>TRACEDOT V6.1.0</span>
+      <span>TRACEDOT V6.1.1</span>
       <span class="sep"></span>
       <span class="light">本地优先 · 云端备份可选 · 开源</span>
     </span>
@@ -155,41 +155,41 @@
       <div class="news-left">
         <div class="news-meta">
           <span class="kicker">Latest release</span>
-          <span class="ver-tag">V6.1.0</span>
+          <span class="ver-tag">V6.1.1</span>
           <span class="news-date">2026-11-23</span>
         </div>
-        <h2 class="h2">桌面端内置离线语音，<br>语音广播<em>开口即用</em>。</h2>
+        <h2 class="h2">注册与找回打通，<br>珍藏册<em>一键导出全部票根</em>。</h2>
         <p class="lead">
-          V6.1.0 把「铁路广播操作台」收进网页端与桌面端：站点与车次联想、8 个播报场景、
-          中英双语稿件、提示音与音色语速调节。桌面安装包随附标贝女声离线引擎，
-          合成在本机完成，不联网也能播报。账号侧同步加固了恢复码的密钥派生；安卓端同日均已升到 V6.1.3（versionCode 614），一并修复更新检查、站内消息与地图滑动。
+          V6.1.1 先把账号链路修通：安卓注册不再被密钥包裹格式拦下，恢复码派生也与网页端统一，
+          换端找回不会再解不开。安卓端同日发到 V6.1.4（versionCode 615）：珍藏册右上角可一键导出
+          全部票根图片，进详情或导出后返回仍停在原位；网页端与桌面端内容同步到 V6.1.1。
         </p>
         <div class="news-foot">
-          <span class="news-pill">网页 / 桌面 · V6.1.0 · 安卓 V6.1.3（614）</span>
-          <a class="sec-link" href="changelog.html#v6-1-0">查看完整条目 <span>↗</span></a>
+          <span class="news-pill">网页 / 桌面 · V6.1.1 · 安卓 V6.1.4（615）</span>
+          <a class="sec-link" href="changelog.html#v6-1-1">查看完整条目 <span>↗</span></a>
         </div>
       </div>
       <div class="news-right">
         <div class="news-list">
           <div class="news-item">
             <span class="ni-no">01</span>
-            <div><b>桌面端内置标贝离线语音</b><p>安装包随附 sherpa-onnx 语音服务与标贝女声模型，启动时自动拉起本地服务，语音广播无需联网、也无需另装广播操作台。</p></div>
+            <div><b>注册失败已修复</b><p>服务端此前只认两段式密钥包裹，安卓注册会被判「wrappedDekRecovery 格式不正确」。现已在服务端放行带 v2. 前缀的包裹并保留原格式存回，已装的 6.1.3 也能直接注册。</p></div>
           </div>
           <div class="news-item">
             <span class="ni-no">02</span>
-            <div><b>网页端新增「语音广播」入口</b><p>站点与车次联想，8 个播报场景（开始检票、停止检票、列车到达、即将发车、晚点通知、安全提示、重点旅客、应急广播），中英双语稿件自动生成、可编辑。</p></div>
+            <div><b>一键导出全部票根图片</b><p>安卓珍藏册右上角新增导出按钮：逐张生成票面并保存到相册「Pictures/迹点点」，弹层内显示导出进度与成功 / 失败数量，结束后 Toast 汇总。</p></div>
           </div>
           <div class="news-item">
             <span class="ni-no">03</span>
-            <div><b>恢复码密钥域分离</b><p>恢复码派生的认证值与此前用于包裹备份的密钥改用不同的域前缀，服务端即使拿到恢复认证值，也无法解开零知识加密备份；旧恢复码仍可正常解锁。</p></div>
+            <div><b>珍藏册返回不再跳顶</b><p>进详情、筛选或导出图片再返回时，珍藏册会停在原来的浏览位置，不再直接滑回最顶部。</p></div>
           </div>
           <div class="news-item">
             <span class="ni-no">04</span>
-            <div><b>桌面安装包直接是 V6.1.0</b><p>本轮重新打包 Windows 与 macOS 安装包，安装即 V6.1.0，不再依赖启动后的内容热更新补齐；后续内容更新仍走原通道。</p></div>
+            <div><b>恢复码跨端统一</b><p>网页端 6.1.1 的找回密码可解开安卓账号的恢复码包裹（含 6.1.3 的 v2. 前缀与旧派生域）；安卓 6.1.4 的派生盐也与网页端对齐，换端找回不再失败。</p></div>
           </div>
           <div class="news-item">
             <span class="ni-no">05</span>
-            <div><b>安卓端 V6.1.3 转正式</b><p>安卓正式渠道升到 V6.1.3（versionCode 614）：地图滑动更流畅、返回不重播钉点动画，更新检查与站内消息修复，可直接覆盖安装。</p></div>
+            <div><b>安卓端 V6.1.4 发布</b><p>安卓正式与内测渠道同步升到 V6.1.4（versionCode 615），签名不变，可直接覆盖安装 6.0.x 与 6.1.x 内测包。</p></div>
           </div>
         </div>
       </div>
@@ -473,10 +473,10 @@
         <div>
           <span class="kicker">Download</span>
           <h2 class="h2">选一个平台，<br>把票根收进来。</h2>
-          <p class="lead">网页端免安装，安卓与桌面端为本地应用。网页端与桌面端为 <b>V6.1.0</b>，安卓端为 <b>V6.1.3</b>（versionCode 614）。桌面安装包即 V6.1.0，内置标贝离线语音；安卓 APK 可直接覆盖 6.0.x / 6.1.x 内测包。</p>
+          <p class="lead">网页端免安装，安卓与桌面端为本地应用。网页端与桌面端内容为 <b>V6.1.1</b>，安卓端为 <b>V6.1.4</b>（versionCode 615）。桌面安装包为 6.1.0，启动后内容热更新到 V6.1.1；安卓 APK 可直接覆盖 6.0.x / 6.1.x 内测包。</p>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-          <span class="dl-badge"><i></i>STABLE · V6.1.0</span>
+          <span class="dl-badge"><i></i>STABLE · V6.1.1</span>
           <span class="dl-line" id="dlLineHint"></span>
         </div>
       </div>
@@ -487,12 +487,12 @@
           <p>浏览器直接打开，免安装；数据存在本机浏览器。</p>
         </div>
         <div class="plat">
-          <div class="pl-top"><b>桌面端</b><span class="st">V6.1.0</span></div>
-          <p>Windows 安装版 / 便携版，macOS Apple 芯片与 Intel；安装包即 V6.1.0，内置标贝离线语音。</p>
+          <div class="pl-top"><b>桌面端</b><span class="st">V6.1.1</span></div>
+          <p>Windows 安装版 / 便携版，macOS Apple 芯片与 Intel；安装包为 6.1.0，启动后自动热更新到 V6.1.1，内置标贝离线语音。</p>
         </div>
         <div class="plat">
-          <div class="pl-top"><b>安卓端</b><span class="st">V6.1.3</span></div>
-          <p>正式版 APK（versionCode 614），可覆盖 6.0.x 与 6.1.x 内测包。</p>
+          <div class="pl-top"><b>安卓端</b><span class="st">V6.1.4</span></div>
+          <p>正式版 APK（versionCode 615），可覆盖 6.0.x 与 6.1.x 内测包。</p>
         </div>
         <div class="plat">
           <div class="pl-top"><b>安卓 V6</b><span class="st">正式</span></div>
@@ -510,21 +510,21 @@
           </a>
           <a class="dl-item" href="changelog.html">
             <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.6h14v15H5z"/><path d="M8.4 9h7.2"/><path d="M8.4 12.6h7.2"/><path d="M8.4 16.2h4.2"/></svg></span>
-            <span class="di-txt"><b>本版更新说明</b><i>V6.1.0 · 内置离线语音 · 语音广播入口 · 恢复码密钥域分离</i></span>
+            <span class="di-txt"><b>本版更新说明</b><i>V6.1.1 · 找回密码跨端兼容 · 注册修复 · 桌面热更新到本版</i></span>
             <span class="di-act">查看 →</span>
           </a>
         </div>
 
         <div class="dl-group">
           <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.8" width="10" height="18.4" rx="2.6"/><path d="M10.4 18.4h3.2"/></svg>安卓端 · Android</h3>
-          <a class="dl-item" href="https://jidiandian.top/app/jidiandian-6.1.3.apk?v=614" target="_blank" rel="noopener">
+          <a class="dl-item" href="https://jidiandian.top/app/jidiandian-6.1.4.apk?v=615" target="_blank" rel="noopener">
             <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6v11.6"/><path d="M7.4 10.8 12 15.4l4.6-4.6"/><path d="M4.6 19.4h14.8"/></svg></span>
-            <span class="di-txt"><b>安卓 APK · V6.1.3</b><i>正式版 · versionCode 614 · 直接安装</i></span>
+            <span class="di-txt"><b>安卓 APK · V6.1.4</b><i>正式版 · versionCode 615 · 直接安装</i></span>
             <span class="di-act">下载 ↓</span>
           </a>
-          <a class="dl-item" href="changelog.html#v6-1-3">
+          <a class="dl-item" href="changelog.html#v6-1-4">
             <span class="di-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4 19 19H5z"/><path d="M12 9v4"/><path d="M12 16v.2"/></svg></span>
-            <span class="di-txt"><b>V6.1.3 更新说明</b><i>地图滑动更流畅 · 更新检查与站内消息修复 · 可覆盖内测包</i></span>
+            <span class="di-txt"><b>V6.1.4 更新说明</b><i>一键导出全部票根 · 返回不跳顶 · 恢复码跨端统一</i></span>
             <span class="di-act">看说明 →</span>
           </a>
         </div>
@@ -777,7 +777,7 @@
     </p>
     <div class="foot-base">
       <span>© 2026 迹点点 TraceDot · 阿杰同学</span>
-      <span>V6.1.3 · 2026-11-23 · 保持独立，保持可用</span>
+      <span>V6.1.4 · 2026-11-23 · 保持独立，保持可用</span>
     </div>
   </div>
 </footer>

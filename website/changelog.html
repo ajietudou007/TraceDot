@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>更新日志 · 迹点点 TraceDot V6.1.3</title>
-<meta name="description" content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V6.1.3（安卓端由内测转正式：行程地图滑动优化、更新检查与站内消息修复），五个阶段共 49 组版本记录。">
+<title>更新日志 · 迹点点 TraceDot V6.1.4</title>
+<meta name="description" content="迹点点 TraceDot 完整版本演进史：从前身「12306 火车票票根编辑器」一路走到 V6.1.4（安卓端一键导出全部票根、返回定位修复、恢复码跨端统一），五个阶段共 51 组版本记录。">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232E7FF2'/%3E%3Cstop offset='1' stop-color='%231E66D0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Ccircle cx='31' cy='67' r='9.8' fill='none' stroke='%23fff' stroke-width='5.9'/%3E%3Ccircle cx='69.5' cy='32.5' r='9.8' fill='none' stroke='%23fff' stroke-width='5.9'/%3E%3Ccircle cx='42' cy='58' r='3.5' fill='%23fff'/%3E%3Ccircle cx='51' cy='50' r='3.4' fill='%23fff'/%3E%3Ccircle cx='59' cy='43' r='3.5' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/jdd.css">
@@ -16,7 +16,7 @@
     <a href="index.html" class="brandmark" aria-label="迹点点首页">
       <img src="ic_brand_logo.png" alt="" width="34" height="34" decoding="async">
       <span class="bm-txt"><b>迹点点</b><i>TRACEDOT</i></span>
-      <span class="ver-tag">V6.1.0</span>
+      <span class="ver-tag">V6.1.1</span>
     </a>
     <nav class="nav-links" aria-label="主导航">
       <a href="index.html#news">新版本</a>
@@ -59,12 +59,12 @@
         <span class="light">遵循 Keep a Changelog</span>
       </span>
       <h1>每一次出发与沉淀，<br>都留在这条<em>时间轴</em>上。</h1>
-      <p class="cl-hero-lead">从前身「12306 火车票票根编辑器」，一路走到四个工坊、十种票面、账号与加密备份的 V6.1.3，共五个阶段、49 组版本记录。这里写下每次技术取舍、视觉重塑，也写下那些被修掉的坑；最新一版把 V6 安卓端从内测转为正式渠道：行程地图滑动更顺、返回不再重播钉点动画，更新检查与站内消息一并修复。</p>
+      <p class="cl-hero-lead">从前身「12306 火车票票根编辑器」，一路走到四个工坊、十种票面、账号与加密备份的 V6.1.4，共五个阶段、51 组版本记录。这里写下每次技术取舍、视觉重塑，也写下那些被修掉的坑；最新一版给安卓端补上一键导出全部票根图片与返回定位修复，并把恢复码派生域与网页端统一，换端找回不再失败。</p>
     </div>
     <div class="cl-stats" aria-label="版本统计">
-      <div class="cl-stat"><b>49</b><i>收录迭代版本</i></div>
+      <div class="cl-stat"><b>51</b><i>收录迭代版本</i></div>
       <div class="cl-stat"><b>5</b><i>大演进阶段</i></div>
-      <div class="cl-stat"><b>V6.1.3</b><i>当前稳定版本</i></div>
+      <div class="cl-stat"><b>V6.1.4</b><i>当前稳定版本</i></div>
       <div class="cl-stat"><b>MIT</b><i>全部源码公开</i></div>
     </div>
   </div>
@@ -73,8 +73,8 @@
 <div class="cl-wrap">
   <div class="cl-bar">
     <div class="cl-chips" id="clChips" role="group" aria-label="按阶段筛选">
-      <button class="cl-chip on" data-stage="all">全部<b>49</b></button>
-      <button class="cl-chip" data-stage="stage-5">第五阶段<b>36</b></button>
+      <button class="cl-chip on" data-stage="all">全部<b>51</b></button>
+      <button class="cl-chip" data-stage="stage-5">第五阶段<b>38</b></button>
       <button class="cl-chip" data-stage="stage-4">第四阶段<b>10</b></button>
       <button class="cl-chip" data-stage="stage-3">第三阶段<b>1</b></button>
       <button class="cl-chip" data-stage="stage-2">第二阶段<b>1</b></button>
@@ -89,14 +89,82 @@
   <div class="cl-stream" id="clStream">
     <div class="cl-stage" data-stage="stage-5">
       <span class="cl-stage-no">五</span>
-      <div><h2>第五阶段 · V5 视觉与体验重塑</h2><i>2026-10-16 ~ 11-23 · 36 条</i></div>
+      <div><h2>第五阶段 · V5 视觉与体验重塑</h2><i>2026-10-16 ~ 11-23 · 38 条</i></div>
     </div>
+    <article class="glass-card cl-entry" id="v6-1-4" data-stage="stage-5">
+      <span class="cl-node" aria-hidden="true"></span>
+      <div class="cl-top">
+        <div class="cl-verline">
+          <h3 class="cl-ver">V6.1.4</h3>
+          <span class="cl-badge live">最新稳定版</span><span class="cl-badge">安卓端</span>
+        </div>
+        <time class="cl-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="5.2" width="16.8" height="15.2" rx="2.4"/><path d="M3.6 10h16.8"/><path d="M8.4 3.2v4M15.6 3.2v4"/></svg>2026-11-23</time>
+      </div>
+      <div class="cl-hls">
+        <div class="cl-hl ">
+          <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="4.6" width="16.8" height="14.8" rx="2.4"/><circle cx="9" cy="10" r="1.6"/><path d="M3.6 16.4 9.4 12l4 3.2 3.2-2.4 3.8 3.6"/></svg></span>一键导出全部票根图片</div>
+          <p>珍藏册右上角新增导出按钮：逐张重新生成票面并保存到相册「Pictures/迹点点」，弹层里实时显示「正在导出 12 / 49」与失败数量，结束后 Toast 汇总。渲染、落盘分开线程，导出期间不会卡住列表。</p>
+        </div>
+        <div class="cl-hl alt">
+          <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 3.6V8h-4.4"/></svg></span>返回珍藏册不再跳顶</div>
+          <p>珍藏册离开组合时把滚动偏移存进进程级记忆，回来按原偏移恢复。进票根详情、切筛选页或导出图片后再返回，都停在刚才浏览的位置，不再直接滑回最顶部。</p>
+        </div>
+        <div class="cl-hl alt">
+          <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6 4.6 7v5c0 4.4 3 7.6 7.4 8.8 4.4-1.2 7.4-4.4 7.4-8.8V7z"/><path d="M9.2 12.2 11.4 14.4l3.8-4"/></svg></span>注册与恢复码跨端打通</div>
+          <p>服务端放行安卓的 v2 密钥包裹格式，注册不再被判「格式不正确」；安卓端的恢复码派生盐同时对齐网页端，能解开网页注册账号的恢复码包裹，并保留 6.1.3 的 v2. 前缀与最早 v1 派生的解包兼容。</p>
+        </div>
+      </div>
+      <details class="cl-more" open>
+        <summary><span class="cl-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 9V4.4H9"/><path d="M14 4.4h5.6V10"/><path d="M19.6 15v4.6H14"/><path d="M10 19.6H4.4V15"/></svg></span>详细条目 (Changes) <b>6</b></summary>
+        <ul class="cl-items">
+          <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>批量导出入册票根</strong>：新增 <code>Lucide.Download</code> 页头按钮，确认弹层里说明数量与保存位置；逐张调用 <code>TicketRenderer</code> 生成票面，复用详情页的 <code>saveImage</code> 写入相册，成功与失败分别计数。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>导出过程不阻塞</strong>：票面渲染内部切到主线程的 WebView，落盘再切回 <code>Dispatchers.IO</code>；弹层导出期间禁止关闭，避免中途打断后只存了一半。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>滚动位置记忆</strong>：新增 <code>AlbumScrollMemory</code> 记录像素偏移，<code>DisposableEffect</code> 在离开组合时写入、<code>rememberScrollState(initial)</code> 在回来时恢复，首帧即到位、不闪跳。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>注册失败修复</strong>：服务端校验此前只接受 <code>iv.ct</code> 两段，安卓的 <code>v2.iv.ct</code> 会被判格式错误；现已放行前缀并原样存回，注册、改密、找回与管理后台重置全部覆盖。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>恢复码派生统一</strong>：安卓的 v2 盐值由 <code>jdd:recovery-wrap:v2:</code> 改为与网页端一致的 <code>jdd:recovery-kek:v2:</code>，新包裹不再带前缀；解包按「网页 v2 → 6.1.3 旧 v2 → v1」逐级尝试。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>发布</strong>：<code>app/latest.json</code> 与内测清单同步到 615 / 6.1.4，APK 为 <code>jidiandian-6.1.4.apk</code>（16,566,373 字节），签名不变，可覆盖 6.0.x 与 6.1.x 内测包。</p></li>
+        </ul>
+      </details>
+    </article>
+    <article class="glass-card cl-entry" id="v6-1-1" data-stage="stage-5">
+      <span class="cl-node" aria-hidden="true"></span>
+      <div class="cl-top">
+        <div class="cl-verline">
+          <h3 class="cl-ver">V6.1.1</h3>
+          <span class="cl-badge">网页端 · 桌面端</span>
+        </div>
+        <time class="cl-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="5.2" width="16.8" height="15.2" rx="2.4"/><path d="M3.6 10h16.8"/><path d="M8.4 3.2v4M15.6 3.2v4"/></svg>2026-11-23</time>
+      </div>
+      <div class="cl-hls">
+        <div class="cl-hl ">
+          <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6 4.6 7v5c0 4.4 3 7.6 7.4 8.8 4.4-1.2 7.4-4.4 7.4-8.8V7z"/><path d="M9.2 12.2 11.4 14.4l3.8-4"/></svg></span>找回密码兼容安卓账号</div>
+          <p>安卓 6.1.3 生成的恢复码包裹带 <code>v2.</code> 前缀、用的是另一套派生盐，网页端此前会报「密钥解开失败」。本版先剥离前缀再按「v2 → 安卓旧 v2 → v1」逐级尝试，安卓注册的账号也能在网页端找回。</p>
+        </div>
+        <div class="cl-hl alt">
+          <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="4.6" width="16.8" height="11.2" rx="1.8"/><path d="M8.4 19.4h7.2"/></svg></span>桌面端热更新到本版</div>
+          <p><code>release/latest.json</code> 指向 <code>TraceDot-V6.1.1.html</code>，已安装的 6.1.0 桌面壳下次启动自动拉取新内容，无需重装；安装包本身仍是 6.1.0。</p>
+        </div>
+        <div class="cl-hl alt">
+          <div class="cl-hl-t"><span class="cl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M3.6 12h16.8"/><path d="M12 3.6c2.4 2.4 3.6 5.2 3.6 8.4s-1.2 6-3.6 8.4c-2.4-2.4-3.6-5.2-3.6-8.4S9.6 6 12 3.6z"/></svg></span>版本口径</div>
+          <p>网页端与桌面端内容版本升到 6.1.1，更新门禁仍按 <code>release/latest.json</code> 判断；安卓端同日发 6.1.4（615），三端版本线继续各自独立推进。</p>
+        </div>
+      </div>
+      <details class="cl-more" open>
+        <summary><span class="cl-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 9V4.4H9"/><path d="M14 4.4h5.6V10"/><path d="M19.6 15v4.6H14"/><path d="M10 19.6H4.4V15"/></svg></span>详细条目 (Changes) <b>4</b></summary>
+        <ul class="cl-items">
+          <li class="is-primary"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>v2 前缀兼容</strong>：<code>unlockWithRecovery</code> 先判断包裹值是否以 <code>v2.</code> 开头，剥离后再交给 <code>unwrapKey</code>，避免三段式字符串被判「密钥包裹格式不正确」。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>安卓旧派生域</strong>：新增 <code>deriveRecoveryKekAndroidV2</code>（盐 <code>jdd:recovery-wrap:v2:</code>），只在包裹带 <code>v2.</code> 标记时尝试，正常账号走不到这一步。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>版本号同步</strong>：<code>APP_VER</code>、行程地图标题、左上角水印与关于面板统一到 6.1.1，避免胶囊与门禁版本口径漂移。</p></li>
+          <li class="is-alt"><span class="cl-li-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6.4 9.6 17 4.2 11.6"/></svg></span><p><strong>发布</strong>：在线网页端与桌面端内容指向 <code>release/TraceDot-V6.1.1.html</code>（13,571,277 字节），桌面安装包保持 6.1.0 不变。</p></li>
+        </ul>
+      </details>
+    </article>
     <article class="glass-card cl-entry" id="v6-1-3" data-stage="stage-5">
       <span class="cl-node" aria-hidden="true"></span>
       <div class="cl-top">
         <div class="cl-verline">
           <h3 class="cl-ver">V6.1.3</h3>
-          <span class="cl-badge live">最新稳定版</span><span class="cl-badge">安卓端</span>
+          <span class="cl-badge">安卓端</span>
         </div>
         <time class="cl-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="5.2" width="16.8" height="15.2" rx="2.4"/><path d="M3.6 10h16.8"/><path d="M8.4 3.2v4M15.6 3.2v4"/></svg>2026-11-23</time>
       </div>
